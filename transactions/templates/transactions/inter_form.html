@@ -1,0 +1,196 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+    {% include "core/messages.html" %}
+    <div class="bank-transfer-container">
+        <div class="bank-transfer-header">
+            <img src="https://www.expresspay.com.ph/sites/default/files/services/Metrobank.png" alt="Bank Logo" class="bank-transfer-logo">
+        </div>
+
+        <div class="bank-transfer-body">
+            <h3 class="bank-transfer-title">Bank Transfer</h3>
+            <p class="bank-transfer-greeting">Hi {{ request.user.first_name }},</p>
+
+            <div class="bank-transfer-balance">
+                <p class="bank-transfer-balance-label">Your current account balance:</p>
+                <h4 class="bank-transfer-balance-amount">{{ request.user.balance }}</h4>
+                <div class="currency-icons">
+                    <i class="fas fa-dollar-sign currency-icon"></i>
+                    <i class="fas fa-pound-sign currency-icon"></i>
+                    <i class="fas fa-coins currency-icon"></i>
+                </div>
+            </div>
+
+            <form method="POST" action="">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="amount">Enter Amount </label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            
+                        </div>
+                        {{ form.amount }}
+                    </div>
+                    {% if form.amount.errors %}
+                        <div class="error-message">
+                            {% for error in form.amount.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="target_account_number">Recipient's Account Number</label>
+                    {{ form.target_account_number }}
+                    {% if form.target_account_number.errors %}
+                        <div class="error-message">
+                            {% for error in form.target_account_number.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="target_bank_name">Recipient's Bank Name</label>
+                    {{ form.target_bank_name }}
+                    {% if form.target_bank_name.errors %}
+                        <div class="error-message">
+                            {% for error in form.target_bank_name.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="full_name">Full Name</label>
+                    <input type="text" class="form-control" id="full_name" name="full_name">
+                </div>
+                <div class="form-group">
+                    <label for="swift_code">Swift Code</label>
+                    <input type="text" class="form-control" id="swift_code" name="swift_code">
+                </div>
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea class="form-control" id="description" name="description"></textarea>
+                </div>
+
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <style>
+        /* Add custom styles here */
+        .bank-transfer-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 50px auto;
+            max-width: 500px;
+            background-color: #F5F7FA;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .bank-transfer-header {
+            text-align: center;
+        }
+
+        .bank-transfer-logo {
+            max-width: 120px;
+            height: auto;
+        }
+
+        .bank-transfer-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .bank-transfer-greeting {
+            font-size: 18px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .bank-transfer-balance {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .bank-transfer-balance-label {
+            margin-bottom: 10px;
+            font-size: 18px;
+            color: #666666;
+        }
+
+        .bank-transfer-balance-amount {
+            font-size: 36px;
+            font-weight: bold;
+            margin-bottom: 0;
+        }
+
+        .currency-icons {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .currency-icon {
+            font-size: 24px;
+            margin: 0 10px;
+            color: #666666;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        .input-group-text {
+            background-color: #f5f7fa;
+            border: none;
+        }
+
+        .error-message {
+            color: red;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .form-control {
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            padding: 8px 12px;
+            width: 100%;
+        }
+
+        button[type="submit"] {
+            font-size: 18px;
+            border-radius: 5px;
+            padding: 12px 25px;
+            border: none;
+            font-weight: 500;
+            background-color: #6A64F1;
+            color: white;
+            cursor: pointer;
+            margin-top: 25px;
+        }
+
+        button[type="submit"]:hover {
+            box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+{% endblock %}

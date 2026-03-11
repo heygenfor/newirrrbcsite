@@ -1,0 +1,183 @@
+
+{% extends 'core/base.html' %}
+
+{% block title %} Summary   {{ block.super }}{% endblock title %}
+
+{% block content %}
+{% include "core/messages.html" %}
+
+
+<div class="nk-content">
+                                <div class="nk-block-between-md g-4 card-bordered">
+                                    <div class="nk-block-head-content">
+                                        <h4 class="nk-block-title fw-normal">Customer care Desk.</h4>
+                                        <div class="nk-block-des">
+                                            <p>You can Request For The PDF file of Your Transaction Activities in the Support Panel.</p>
+                                        </div>
+                                    </div>
+                                    <!-- .nk-block-head-content -->
+                                    <div class="nk-block-head-content">
+<ul class="nk-block-tools gx-3">
+    <li>
+        <a href="{% url 'transactions:history_pdf_export' %}?export=pdf" class="btn btn-secondary btn-light text-light">
+            <span>Export Request</span><em class="icon ni ni-wallet-out"></em>
+        </a>
+    </li>
+</ul>
+
+                                    </div>
+                                    <!-- .nk-block-head-content -->
+                                </div><br>
+    <iframe src="//www.exchangerates.org.uk/widget/ER-LRTICKER.php?w=1400&amp;s=1&amp;mc=GBP&amp;mbg=F0F0F0&amp;bs=yes&amp;bc=000044&amp;f=verdana&amp;fs=10px&amp;fc=000044&amp;lc=000044&amp;lhc=FE9A00&amp;vc=FE9A00&amp;vcu=008000&amp;vcd=FF0000&amp;" height="30"
+        width="100%" frameborder="0" scrolling="no" marginwidth="0" marginheight="0"></iframe>
+    <div class="card card-preview">
+        <div class="card-inner p-0">
+            <table id="summary-table" class="datatable-init table">
+                <thead>
+                    <tr>
+                        <th>Ref</th>
+                        <th>Type</th>
+                        <th>Scope</th>
+                        <th>Amount</th>
+                        <th>Date</th>
+                        <th>Description</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for deposit in crypto_history reversed %}
+                    <tr>
+                        <td>{{ deposit.pk }}{{ user.account_no }}{{ deposit.pk }}</td>
+                        <td>Deposit</td>
+                        <td>Transfer</td>
+                        <td><b>{{ user.account.account_currency }}</b> {{ deposit.amount }}</td>
+                        <td>{{ deposit.date }}</td>
+                        <td>{{ deposit.payment_method }}</td>
+                        <td><strong class='text-success'>{{ deposit.status }}</strong></td>
+                    </tr>
+                    {% endfor %}
+
+                    {% for deposit in payment_history reversed %}
+                    <tr>
+                        <td>{{ deposit.pk }}{{ user.account_no }}{{ deposit.pk }}</td>
+                        <td>Deposit</td>
+                        <td>Transfer</td>
+                        <td><b>{{ user.account.account_currency }}</b> {{ deposit.amount }}</td>
+                        <td>{{ deposit.date }}</td>
+                        <td>{{ deposit.payment_method }}</td>
+                        <td><strong class='text-success'>{{ deposit.status }}</strong></td>
+                    </tr>
+                    {% endfor %}
+
+                    {% for withdrawal in withdrawal_history reversed %}
+                    <tr>
+                        <td>{{ withdrawal.pk }}{{ user.account_no }}{{ withdrawal.pk }}</td>
+                        <td>Debit</td>
+                        <td>Transfer</td>
+                        <td><b>{{ user.account.account_currency }}</b> {{ withdrawal.amount }}</td>
+                        <td>{{ withdrawal.date }}</td>
+                        <td>{{ withdrawal.recipient_bank_name }}</td>
+                        <td><strong class='text-success'>{{ withdrawal.status }}</strong></td>
+                    </tr>
+                    {% endfor %}
+
+                    {% for payment in pay_bills reversed %}
+                    <tr>
+                        <td>{{ payment.pk }}{{ user.account_no }}{{ payment.pk }}</td>
+                        <td>Pay Bill</td>
+                        <td>{{ payment.delivery_method }}</td>
+                        <td><b>{{ user.account.account_currency }}</b> {{ payment.amount }}</td>
+                        <td>{{ payment.day }}/{{ payment.month }}/{{ payment.year }}</td>
+                        <td>{{ payment.nickname }}</td>
+                        <td><strong class='text-success'>{{ payment.status }}</strong></td>
+                    </tr>
+                    {% endfor %}
+
+                <!-- Add Local Withdrawals Sent -->
+                {% for transfer in local_withdrawals_sent reversed %}
+                <tr>
+                    <td>LW{{ transfer.pk }}{{ user.account_no }}{{ transfer.pk }}</td>
+                    <td>{{ transfer.transaction_type|default:"Debit" }}</td>
+                    <td>Local Transfer</td>
+                    <td><b>{{ user.account.account_currency }}</b> {{ transfer.amount }}</td>
+                    <td>{{ transfer.timestamp|date:"d/m/Y" }}</td>
+                    <td>To: {{ transfer.recipient_name }}</td>
+                    <td><strong class='text-success'>{{ transfer.status }}</strong></td>
+                </tr>
+                {% endfor %}
+
+                <!-- Add Local Withdrawals Received -->
+                {% for transfer in local_withdrawals_received reversed %}
+                <tr>
+                    <td>LW{{ transfer.pk }}{{ user.account_no }}{{ transfer.pk }}</td>
+                    <td>{{ transfer.transaction_type|default:"Credit" }}</td>
+                    <td>Local Transfer</td>
+                    <td><b>{{ user.account.account_currency }}</b> {{ transfer.amount }}</td>
+                    <td>{{ transfer.timestamp|date:"d/m/Y" }}</td>
+                    <td>From: {{ transfer.sender_name }}</td>
+                    <td><strong class='text-success'>{{ transfer.status }}</strong></td>
+                </tr>
+                {% endfor %}
+                    
+                <!-- PayPal Withdrawals -->
+                {% for withdrawal in paypal_withdrawals reversed %}
+                <tr>
+                    <td>PP{{ withdrawal.pk }}{{ user.account_no }}{{ withdrawal.pk }}</td>
+                    <td>Debit</td>
+                    <td>PayPal Withdrawal</td>
+                    <td><b>{{ user.account.account_currency }}</b> {{ withdrawal.amount }}</td>
+                    <td>{{ withdrawal.timestamp|date:"d/m/Y" }}</td>
+                    <td>PayPal: {{ withdrawal.paypal_email }}</td>
+                    <td><strong class='text-success'>{{ withdrawal.status }}</strong></td>
+                </tr>
+                {% endfor %}
+
+                <!-- Skrill Withdrawals -->
+                {% for withdrawal in skrill_withdrawals reversed %}
+                <tr>
+                    <td>SK{{ withdrawal.pk }}{{ user.account_no }}{{ withdrawal.pk }}</td>
+                    <td>Debit</td>
+                    <td>Skrill Withdrawal</td>
+                    <td><b>{{ user.account.account_currency }}</b> {{ withdrawal.amount }}</td>
+                    <td>{{ withdrawal.timestamp|date:"d/m/Y" }}</td>
+                    <td>Skrill: {{ withdrawal.skrill_email }}</td>
+                    <td><strong class='text-success'>{{ withdrawal.status }}</strong></td>
+                </tr>
+                {% endfor %}
+
+                <!-- Revolut Withdrawals -->
+                {% for withdrawal in revolut_withdrawals reversed %}
+                <tr>
+                    <td>RV{{ withdrawal.pk }}{{ user.account_no }}{{ withdrawal.pk }}</td>
+                    <td>Debit</td>
+                    <td>Revolut Withdrawal</td>
+                    <td><b>{{ user.account.account_currency }}</b> {{ withdrawal.amount }}</td>
+                    <td>{{ withdrawal.timestamp|date:"d/m/Y" }}</td>
+                    <td>Revolut: {{ withdrawal.revolut_email }}</td>
+                    <td><strong class='text-success'>{{ withdrawal.status }}</strong></td>
+                </tr>
+                {% endfor %}
+
+                <!-- Wise Withdrawals -->
+                {% for withdrawal in wise_withdrawals reversed %}
+                <tr>
+                    <td>WS{{ withdrawal.pk }}{{ user.account_no }}{{ withdrawal.pk }}</td>
+                    <td>Debit</td>
+                    <td>Wise Withdrawal</td>
+                    <td><b>{{ user.account.account_currency }}</b> {{ withdrawal.amount }}</td>
+                    <td>{{ withdrawal.timestamp|date:"d/m/Y" }}</td>
+                    <td>Wise: {{ withdrawal.wise_email }}</td>
+                    <td><strong class='text-success'>{{ withdrawal.status }}</strong></td>
+                </tr>
+                {% endfor %}
+
+                    
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock content %}

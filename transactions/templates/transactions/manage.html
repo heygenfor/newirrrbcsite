@@ -1,0 +1,161 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+{% include "core/messages.html" %}
+
+
+                <div class="nk-content">
+                    <div class="container-xl wide-lg">
+                        <div class="nk-content-body">
+                            <div class="nk-block-head">
+                                <div class="nk-block-head-sub">
+                                </div>
+                                <div class="nk-block-between-md g-4 card-bordered">
+                                    <div class="nk-block-head-content">
+                                        <h4 class="nk-block-title fw-normal">Manage Digital Assets.</h4>
+                                        <div class="nk-block-des">
+                                            <p>
+                                                ROYAL BANK assets management tool enables users to tie in multiple crypto accounts and wallets so that they can easily keep an eye on all of their cryptocurrency holdings using a single dashboard.
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="nk-block-head-content">
+                                        <ul class="nk-block-tools gx-3">
+                                            <li><a href="{% url 'transactions:payment_create' %}" class="btn btn-light text-primary"><span><em class="icon ni ni-bitcoin"></em> Crypto Currencies</span></a></li>
+                                        </ul>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="container-fluid">
+                        <div class="nk-block-head-xs">
+                            <div class="nk-block-between-md">
+                                <div class="nk-block-head-content">
+                                    <h5 class="nk-block-title title">Digital Wallets</h5>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- .nk-block-head -->
+                        <div class="row g-2">
+
+                            <div class="col-sm-4">
+                                <div class="card bg-light">
+                                    <div class="nk-wgw sm">
+                                        <a class="nk-wgw-inner" href="#">
+                                            <div class="nk-wgw-name">
+                                                <div class="nk-wgw-icon">
+                                                    <em class="icon ni ni-sign-usdt"></em> </div>
+                                                <h5 class="nk-wgw-title title">USDT TRC20</h5>
+                                            </div>
+                                            <div class="nk-wgw-balance">
+                                                <div class="amount">{{ user.account.usdt_trc20s }}<span class="currency currency-nio">USDT</span><br></div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="card bg-light">
+                                    <div class="nk-wgw sm">
+                                        <a class="nk-wgw-inner" href="#">
+                                            <div class="nk-wgw-name">
+                                                <div class="nk-wgw-icon">
+                                                    <em class="icon ni ni-sign-btc"></em> </div>
+                                                <h5 class="nk-wgw-title title">Bitcoin</h5>
+                                            </div>
+                                            <div class="nk-wgw-balance">
+                                                <div class="amount">{{ user.account.bitcoins }}<span class="currency currency-nio">BTC</span><br></div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="col-sm-4">
+                                <div class="card bg-light">
+                                    <div class="nk-wgw sm">
+                                        <a class="nk-wgw-inner" href="#">
+                                            <div class="nk-wgw-name">
+                                                <div class="nk-wgw-icon">
+                                                    <em class="icon ni ni-sign-eth-alt"></em> </div>
+                                                <h5 class="nk-wgw-title title">Ethereum</h5>
+                                            </div>
+                                            <div class="nk-wgw-balance">
+                                                <div class="amount">{{ user.account.ethereums }}<span class="currency currency-nio">ETH</span><br></div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <!-- .row -->
+
+
+                        <ul class="nk-nav nav nav-tabs">
+                            <li class="nav-item">
+                                <a class="nav-link active" href="javascript:void">Deposit History</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'transactions:payment_create' %}">Deposit</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'transactions:create_withdrawal' %}">Withdraw Fiat<span class="badge badge-primary"></span></a>
+                            </li>
+                        </ul>
+
+                        <!-- footer @e -->
+                    </div>
+                    <!-- wrap @e -->
+                </div>
+                <div class="nk-content">
+<div class="card card-preview ">
+                                        <div class="card-inner p-0">
+                            <table class="datatable-init table">
+                            <thead>
+                                <tr>
+                                    <th>Ref </th>
+                                    <th>Status</th>
+                                    <th>Amount</th>
+                                    <th>Date </th>
+                                    <th>Description</th>
+                                    <th>Type</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for obj in cryptowithdrawals %}
+                                <tr>
+                                    <td>{{ obj.pk }}{{ user.account_no }}{{ obj.pk }}</td>
+                                    <td class='text-success'>{{ obj.status }}</td>
+                                    <td><b>USD</b> {{ obj.amount }}</td>
+                                    <td>{{ obj.date }}</td>
+                                    <td>{{ obj.payment_method }}</td>
+                                    <td><strong class='text-success'>Transfer</strong></td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+
+                        
+                            <tbody>
+                                {% for obj in cryptowithdra %}
+                                <tr>
+                                    <td>{{ obj.pk }}{{ user.account_no }}{{ obj.pk }}</td>
+                                    <td class='text-success'>{{ obj.status }}</td>
+                                    <td><b>USD</b> {{ obj.amount }}</td>
+                                    <td>{{ obj.date }}</td>
+                                    <td>{{ obj.payment_method }}</td>
+                                    <td><strong class='text-success'>Transfer</strong></td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+
+                        
+                    </table>
+</div>
+</div>
+</div>
+
+{% endblock %}

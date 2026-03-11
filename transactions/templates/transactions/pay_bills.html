@@ -1,0 +1,239 @@
+
+{% extends 'core/base.html' %}
+
+{% block content %}
+                <div class="nk-content">
+                    <div class="container-xl wide-lg">
+                        <div class="nk-content-body">
+                            <div class="nk-block-head">
+                                <div class="nk-block-head-sub">
+                                </div>
+                                <div class="nk-block-between-md g-4 card-bordered">
+                                    <div class="nk-block-head-content">
+                                        <h4 class="nk-block-title fw-normal">Internet Banking Bill Pay.</h4>
+                                        <div class="nk-block-des">
+                                            <p>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="nk-block-head-content">
+                                        <ul class="nk-block-tools gx-3">
+                                            <li><a href="{% url 'transactions:withdrawal' %}" class="btn btn-secondary btn-light text-light"><span>Transfer Fund</span><em class="icon ni ni-wallet-out"></em></a></li>
+                                        </ul>
+
+                                    </div>
+                                    <!-- .nk-block-head-content -->
+                                </div>
+                                <!-- .nk-block-between -->
+                            </div>
+                            <!-- .nk-block-head -->
+                        </div>
+                    </div>
+
+                    <div class="card card-bordered">
+                        <div class="card-header text-light" style="background-color:#033d75;">
+                            <ul class="nav nav-tabs mt-n3">
+                                <li class="nav-item ">
+                                    <a class="nav-link active text-light" data-toggle="tab" href="#tabItem5"><em class="icon ni ni-wallet-alt"></em> <span >Pay a Biller</span></a>
+                                </li>
+                           
+                            </ul>
+                        </div>
+                        <div class="card-inner">
+                            <div class="tab-content">
+                                <div class="tab-pane active" id="tabItem5">
+
+                                    <p>
+                                        <div class="buysell-field form-group">
+                                            <div class="form-label-group">
+                                                <label class="form-label">Choose payment account</label>
+                                            </div>
+                                            <input type="hidden" value="btc" name="bs-currency" id="buysell-choose-currency-modal">
+                                            <div class="dropdown buysell-cc-dropdown">
+                                                <a href="#" class="buysell-cc-choosen dropdown-indicator" data-toggle="dropdown">
+                                                    <div class="coin-item coin-btc">
+                                                        <div class="coin-icon">
+                                                            <em class="icon ni ni-wallet-out"></em>
+                                                        </div>
+                                                        <div class="coin-info">
+                                                            <span class="coin-name">{{ user.account.account_type }}</span>
+                                                            <span class="coin-text">Balance({{ user.account.account_currency }}{{ user.balance }})</span>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                                <div class="dropdown-menu dropdown-menu-auto dropdown-menu-mxh">
+                                                    <ul class="buysell-cc-list">
+                                                        <li class="buysell-cc-item selected">
+                                                            <a href="#" class="buysell-cc-opt" data-currency="btc">
+                                                                <div class="coin-item coin-btc">
+                                                                    <div class="coin-icon">
+                                                                        <em class="icon ni ni-wallet-out"></em>
+                                                                    </div>
+                                                                    <div class="coin-info">
+                                                                        <span class="coin-name">{{ user.account.account_type }}</span>
+                                                                        <span class="coin-text">9482{{ user.account_no }}0**</span>
+                                                                    </div>
+                                                                </div>
+                                                            </a>
+                                                        </li>
+                                                        <!-- .buysell-cc-item -->
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            <!-- .dropdown -->
+                                        </div>
+                                        <!-- .buysell-field -->
+<form method="post" class="mt-4">
+  {% csrf_token %}
+
+  <div class="form-group">
+    <label for="{{ form.address1.id_for_label }}">Address 1:</label>
+    {{ form.address1 }}
+    {% if form.address1.errors %}
+      <span class="text-danger">{{ form.address1.errors }}</span>
+    {% endif %}
+  </div>
+
+  <div class="form-group">
+    <label for="{{ form.address2.id_for_label }}">Address 2:</label>
+    {{ form.address2 }}
+    {% if form.address2.errors %}
+      <span class="text-danger">{{ form.address2.errors }}</span>
+    {% endif %}
+  </div>
+
+  <div class="form-group">
+    <div class="row">
+      <div class="col-md-6">
+        <label for="{{ form.city.id_for_label }}">City:</label>
+        {{ form.city }}
+        {% if form.city.errors %}
+          <span class="text-danger">{{ form.city.errors }}</span>
+        {% endif %}
+      </div>
+      <div class="col-md-6">
+        <label for="{{ form.state.id_for_label }}">State:</label>
+        {{ form.state }}
+        {% if form.state.errors %}
+          <span class="text-danger">{{ form.state.errors }}</span>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="{{ form.zipcode.id_for_label }}">Zipcode:</label>
+    {{ form.zipcode }}
+    {% if form.zipcode.errors %}
+      <span class="text-danger">{{ form.zipcode.errors }}</span>
+    {% endif %}
+  </div>
+
+  <div class="form-group">
+    <label for="{{ form.nickname.id_for_label }}">Payee:</label>
+    {{ form.nickname }}
+    {% if form.nickname.errors %}
+      <span class="text-danger">{{ form.nickname.errors }}</span>
+    {% endif %}
+  </div>
+
+  <div class="form-group">
+    <label for="{{ form.delivery_method.id_for_label }}">Delivery Method:</label>
+    {{ form.delivery_method }}
+    {% if form.delivery_method.errors %}
+      <span class="text-danger">{{ form.delivery_method.errors }}</span>
+    {% endif %}
+  </div>
+
+  <div class="form-group">
+    <label for="{{ form.memo.id_for_label }}">Memo (Max 80 characters):</label>
+    {{ form.memo }}
+    {% if form.memo.errors %}
+      <span class="text-danger">{{ form.memo.errors }}</span>
+    {% endif %}
+  </div>
+
+  <div class="form-group">
+    <label for="{{ form.account_number.id_for_label }}">Account Number:</label>
+    {{ form.account_number }}
+    {% if form.account_number.errors %}
+      <span class="text-danger">{{ form.account_number.errors }}</span>
+    {% endif %}
+  </div>
+
+  <div class="form-group">
+    <label for="{{ form.amount.id_for_label }}">Amount:</label>
+    {{ form.amount }}
+    {% if form.amount.errors %}
+      <span class="text-danger">{{ form.amount.errors }}</span>
+    {% endif %}
+  </div>
+
+  <div class="form-group">
+    <label>Date of Delivery:</label>
+    <div class="row">
+      <div class="col-sm-4">
+        {{ form.day }}
+      </div><br>
+      <div class="col-sm-4">
+        {{ form.month }}
+      </div><br>
+      <div class="col-sm-4">
+        {{ form.year }}
+      </div><br>
+    </div>
+    {% if form.day.errors or form.month.errors or form.year.errors %}
+      <span class="text-danger">Please select a valid date.</span>
+    {% endif %}
+  </div>
+
+  <div class="form-group col-md-12">
+    <div class="form-control-wrap">
+      <div class="custom-control custom-control-sm custom-switch">
+        {{ form.add_to_favorites }}
+        <label class="custom-control-label" for="{{ form.add_to_favorites.id_for_label }}">Add this Payee to your favorites</label>
+      </div>
+      {% if form.add_to_favorites.errors %}
+        <span class="text-danger">{{ form.add_to_favorites.errors }}</span>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="form-group text-center">
+    <button type="submit" class="btn btn-primary btn-block">Pay Bill</button>
+  </div>
+</form>
+
+
+                                            </p>
+                                        </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.1.2/css/tempusdominus-bootstrap-4.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.1.2/js/tempusdominus-bootstrap-4.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      $('#datePicker').datetimepicker({
+        format: 'YYYY-MM-DD',
+        icons: {
+          time: 'fa fa-clock',
+          date: 'fa fa-calendar',
+          up: 'fa fa-chevron-up',
+          down: 'fa fa-chevron-down',
+          previous: 'fa fa-chevron-left',
+          next: 'fa fa-chevron-right',
+          today: 'fa fa-calendar-day',
+          clear: 'fa fa-trash',
+          close: 'fa fa-times'
+        }
+      });
+    });
+  </script>
+{% endblock %}

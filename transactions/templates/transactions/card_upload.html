@@ -1,0 +1,161 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Upload | {{ block.super }}{% endblock title %}
+
+{% block content %}
+  {% include "core/messages.html" %}
+                <div class="nk-content nk-content-fluid">
+                    <div class="container-xl wide-lg">
+                        <div class="nk-content-body">
+                            <div class="nk-block-head">
+                                <div class="nk-block-head-sub">
+                                </div>
+                                <div class="nk-block-between-md g-4 card-bordered">
+                                    <div class="nk-block-head-content">
+                                        <h4 class="nk-block-title fw-normal">make purchases using a line of credit & more.</h4>
+                                        <div class="nk-block-des">
+                                            <p>you can now link your external card to ROYAL BANK account in just a few steps!</p>
+                                        </div>
+                                    </div>
+                                    <!-- .nk-block-head-content -->
+                                    <div class="nk-block-head-content">
+                                        <ul class="nk-block-tools gx-3">
+                                            <li><a href="pay-bills" class="btn btn-secondary btn-light text-light"><span>Pay bills</span><em class="icon ni ni-wallet-out"></em></a></li>
+                                        </ul>
+
+                                    </div>
+                                    <!-- .nk-block-head-content -->
+                                </div>
+                                <!-- .nk-block-between -->
+                            </div>
+                            <!-- .nk-block-head -->
+                        </div>
+                        </div>
+                        <div class="card card-bordered">
+                        <div class="card-header font-weight-bold text-light" style="background-color:#033d75;">Link Your Card</div>
+                        <div class="card-inner">
+                            <h5 class="card-title">Card linking tips</h5>
+                            <p class="card-text"><em class="icon ni ni-alert-circle text-danger" style="font-size: 18px; font-weight: 600;"></em> Your card will be linked to your account.</p>
+                            <hr>
+<form method="POST" enctype="multipart/form-data">
+  {% csrf_token %}
+  <div class="buysell-field form-group">
+    <div class="form-label-group">
+      <label class="form-label">Select Account</label>
+    </div>
+    <div class="dropdown buysell-cc-dropdown">
+      <a href="#" class="buysell-cc-choosen dropdown-indicator" data-toggle="dropdown">
+        <div class="coin-item coin-btc">
+          <div class="coin-icon">
+            <em class="icon ni ni-sign-usd"></em>
+          </div>
+          <div class="coin-info">
+            <span class="coin-name">{{ user.account.account_type }} ({{ user.account.account_currency }})</span>
+            <span class="coin-text">Available Balance: {{ user.account.account_currency }} {{ user.balance }}</span>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <div class="buysell-field form-group row">
+    <div class="col-lg-6 col-sm-6 p-2">
+{% with card_type_field=form.as_card_type_field %}
+  <div class="form-group">
+    <label for="{{ card_type_field.id_for_label }}">Card Type:</label>
+    <div class="form-control-wrap">
+      <div class="form-icon form-icon-right">
+        <em class="icon ni ni-credit-card-fill"></em>
+        <em class="icon ni ni-chevron-down"></em>
+      </div>
+      {{ card_type_field }}
+    </div>
+    {% if card_type_field.errors %}
+      <span class="error-message">{{ card_type_field.errors|first }}</span>
+    {% endif %}
+  </div>
+{% endwith %}
+
+
+      <div class="form-group">
+        <label for="{{ form.card_owner.id_for_label }}">Card Owner:</label>
+        <div class="form-control-wrap">
+          <div class="form-icon form-icon-right">
+            <em class="icon ni ni-user-fill"></em>
+          </div>
+          {{ form.card_owner }}
+        </div>
+        {% if form.card_owner.errors %}
+        <span class="error-message">{{ form.card_owner.errors|first }}</span>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="col-lg-6 col-sm-6 p-2">
+      <div class="form-group">
+        <label for="{{ form.card_number.id_for_label }}">Card Number:</label>
+        <div class="form-control-wrap">
+          <div class="form-icon form-icon-right">
+            <em class="icon ni ni-credit-card-fill"></em>
+          </div>
+          {{ form.card_number }}
+        </div>
+        {% if form.card_number.errors %}
+        <span class="error-message">{{ form.card_number.errors|first }}</span>
+        {% endif %}
+      </div>
+<div class="form-group">
+  <label for="{{ form.expiry_month.id_for_label }}">Expiry Date:</label>
+  <div class="form-control-wrap">
+    {{ form.expiry_month }}
+    {% if form.expiry_month.errors %}
+    <span class="error-message">{{ form.expiry_month.errors|first }}</span>
+    {% endif %}
+    <label class="form-label-outlined" for="{{ form.expiry_month.id_for_label }}"></label>
+  </div>
+</div>
+
+<div class="form-group">
+  <label for="{{ form.expiry_year.id_for_label }}"></label>
+  <div class="form-control-wrap">
+    {{ form.expiry_year }}
+    {% if form.expiry_year.errors %}
+    <span class="error-message">{{ form.expiry_year.errors|first }}</span>
+    {% endif %}
+    <label class="form-label-outlined" for="{{ form.expiry_year.id_for_label }}"></label>
+  </div>
+</div>
+
+
+<div class="form-group">
+  <label for="{{ form.cvv.id_for_label }}">CVV:</label>
+  <div class="form-control-wrap">
+    <div class="form-icon form-icon-left">
+      <em class="icon ni ni-cc-new"></em>
+    </div>
+    {{ form.cvv }}
+  </div>
+  {% if form.cvv.errors %}
+  <span class="error-message">{{ form.cvv.errors|first }}</span>
+  {% endif %}
+</div>
+
+    </div>
+
+    <div class="cardResult"></div>
+
+    <div class="col-lg-12 col-sm-12 p-2">
+      <div class="form-group">
+        <button type="submit" class="btn btn-primary btn-block cardBtn">Link Card</button>
+      </div>
+    </div>
+  </div>
+</form>
+
+                            <!-- .buysell-form -->
+                        </div>
+                    </div>
+
+                    <!-- footer @e -->
+                </div>
+{% endblock content %}

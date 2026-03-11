@@ -1,0 +1,411 @@
+
+<!-- templates/transactions/paypal_withdrawal.html -->
+{% extends 'core/base.html' %}
+
+
+{% block content %}
+<style>
+.finance-page {
+  --primary: #1e40af;
+  --primary-light: #3b82f6;
+  --success: #059669;
+  --border: #e2e8f0;
+  padding: 1rem;
+}
+
+.fin-card {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.fin-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary) 0%, var(--primary-light) 100%);
+  border-radius: 0.75rem 0.75rem 0 0;
+}
+
+.fin-card-header {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.method-logo {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: white;
+  color: white;
+}
+
+.method-title {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #1e293b;
+  margin: -3;
+}
+
+.fin-card-body {
+  padding: 1.5rem;
+}
+
+.fin-form {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.input-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+}
+
+.form-group {
+  margin: 0;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #475569;
+  margin-bottom: 0.375rem;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  transition: all 0.2s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: var(--primary-light);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.amount-field {
+  position: relative;
+}
+
+.amount-field::before {
+  content: '$';
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #64748b;
+  font-weight: 500;
+}
+
+.amount-field input {
+  padding-left: 1.75rem;
+}
+
+.submit-action {
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.status-text {
+  font-size: 0.875rem;
+  color: var(--success);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.submit-btn {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 0.625rem 1.25rem;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s;
+}
+
+.submit-btn:hover {
+  background: var(--primary-light);
+}
+
+.loader {
+  display: none;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #fff;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (max-width: 768px) {
+  .input-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .fin-card-body {
+    padding: 1rem;
+  }
+}
+</style>
+<br><br><br><br>
+<div class="finance-page">
+  <div class="fin-card">
+    <div class="fin-card-header">
+      <div class="method-logo">
+<img style="max-width:60px;max-height: 50px;"  src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/New_Wise_%28formerly_TransferWise%29_logo.svg/1280px-New_Wise_%28formerly_TransferWise%29_logo.svg.png" alt=" Wise ">
+      </div> <br>
+      <small class="method-title"> Withdrawal</small>
+    </div>
+    
+    <div class="fin-card-body">
+      <form method="post" class="fin-form">
+        {% csrf_token %}
+        
+        <div class="input-grid">
+          <div class="form-group">
+            <label for="{{ form.wise_email.id_for_label }}">Wise  Email</label>
+            {{ form.wise_email }}
+          </div>
+          
+          <div class="form-group">
+            <label for="{{ form.amount.id_for_label }}">Amount</label>
+            <div class="amount-field">
+              {{ form.amount }}
+            </div>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="{{ form.description.id_for_label }}">Description</label>
+          {{ form.description }}
+        </div>
+        
+        <div class="submit-action">
+          <div class="status-text">
+            <svg style="width: 30px;height: 30px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 6L9 17l-5-5"/>
+            </svg>
+            Instant withdrawal available
+          </div>
+          <button type="submit" class="submit-btn">
+            <span>Withdraw Funds</span>
+            <div class="loader"></div>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('.fin-form');
+    
+    form.addEventListener('submit', function(e) {
+        const button = this.querySelector('.submit-btn');
+        const loader = this.querySelector('.loader');
+        const buttonText = button.querySelector('span');
+        
+        // Lock button width to prevent layout shift
+        button.style.width = button.offsetWidth + 'px';
+        
+        // Fade out text and show loader
+        buttonText.style.opacity = '0.5';
+        loader.style.display = 'block';
+        
+        // Disable button to prevent double submission
+        button.disabled = true;
+        
+        // Optional: Add a timeout to reset the button if submission takes too long
+        setTimeout(function() {
+            buttonText.style.opacity = '1';
+            loader.style.display = 'none';
+            button.disabled = false;
+            button.style.width = 'auto';
+        }, 10000); // Reset after 10 seconds if no response
+    });
+});
+
+</script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('.fin-form');
+    const loaderOverlay = document.getElementById('loaderOverlay') || createLoaderOverlay();
+
+    form.addEventListener('submit', async function(e) {
+        e.preventDefault(); // Prevent default form submission
+
+        // Fetch user transfer code requirement from Django context
+        const transferCodeRequired = {{ request.user.transfer_code_required|yesno:"true,false"|lower }};
+        const userTransferCode = "{{ request.user.transfer_code }}"; // Fetch actual transfer code
+
+        let proceedWithSubmission = false;
+
+        if (transferCodeRequired) {
+            const { value: transferCode } = await Swal.fire({
+                title: "🔐 Secure Transfer Code",
+                text: "Please enter your transfer code to proceed.",
+                input: "password",
+                inputPlaceholder: "Enter your transfer code",
+                inputAttributes: {
+                    maxlength: "30",
+                    autocapitalize: "off",
+                    autocorrect: "off",
+                    style: "text-align: center; font-size: 16px;"
+                },
+                showCancelButton: true,
+                confirmButtonText: "✅ Confirm",
+                cancelButtonText: "❌ Cancel",
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                background: "#ffffff",
+                backdrop: "rgba(0, 0, 0, 0.7)",
+                customClass: {
+                    popup: "custom-popup",
+                    confirmButton: "confirm-btn",
+                    cancelButton: "cancel-btn",
+                    input: "transfer-input"
+                },
+                inputValidator: (value) => {
+                    if (!value) {
+                        return "⚠ Transfer code is required!";
+                    } else if (value !== userTransferCode) {
+                        return "❌ Incorrect transfer code!";
+                    }
+                }
+            });
+
+            if (transferCode && transferCode === userTransferCode) {
+                proceedWithSubmission = true;
+            } else {
+                return; // Stop if canceled or incorrect code
+            }
+        } else {
+            proceedWithSubmission = true;
+        }
+
+        // If OTP verification is successful
+        if (proceedWithSubmission) {
+            // Show loader overlay immediately
+            loaderOverlay.style.display = 'flex';
+
+            // Disable form submission to prevent multiple submissions
+            const submitButton = form.querySelector('button[type="submit"]');
+            submitButton.disabled = true;
+
+            // Optional: Add a message to the loader
+            const loaderMessage = loaderOverlay.querySelector('.loader-message');
+            if (loaderMessage) {
+                loaderMessage.textContent = 'Processing your transfer...';
+            }
+
+            // Submit the form
+            form.submit();
+        }
+    });
+
+    // Function to create loader overlay if it doesn't exist
+    function createLoaderOverlay() {
+        const overlay = document.createElement('div');
+        overlay.id = 'loaderOverlay';
+        overlay.className = 'loader-overlay';
+        overlay.style.display = 'none';
+        overlay.innerHTML = `
+            <div class="loader-container">
+                <div class="spinner-border" role="status">
+                    <span class="visually-hidden"></span>
+                </div>
+                <p class="loader-message mt-3">Processing your request...</p>
+            </div>
+        `;
+        document.body.appendChild(overlay);
+        return overlay;
+    }
+});
+</script>
+
+<style>
+  .loader-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8); /* Darker background for better contrast */
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      backdrop-filter: blur(5px);
+  }
+
+  .loader-container {
+      text-align: center;
+      background: #ffffff; /* White background for the loader */
+      padding: 40px; /* Increased padding for a spacious look */
+      border-radius: 20px; /* More rounded corners */
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2); /* Softer shadow for depth */
+      animation: fadeIn 0.3s ease; /* Fade-in animation */
+  }
+
+  @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+  }
+
+  .spinner-border {
+      width: 4rem; /* Larger spinner */
+      height: 4rem; /* Larger spinner */
+      border-width: 0.3em; /* Thicker border */
+      border-top-color: #007bff; /* Primary color for the spinner */
+      animation: spin 1s linear infinite; /* Continuous spin animation */
+  }
+
+  @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+  }
+
+  .loader-message {
+      color: #333; /* Dark text for better readability */
+      margin-top: 15px;
+      font-weight: 600; /* Slightly bolder text */
+      font-size: 1.2rem; /* Larger font size */
+  }
+</style>
+{% endblock %}

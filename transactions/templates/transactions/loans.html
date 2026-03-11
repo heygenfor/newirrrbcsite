@@ -1,0 +1,59 @@
+{% extends "core/base.html" %}
+{% block title %} {{ title }} | {{ block.super }}{% endblock title %}
+
+{% block content %}
+{% include "core/messages.html" %}
+
+                <div class="nk-content nk-content-fluid">
+                    <div class="container-xl wide-lg">
+                        <div class="nk-content-body">
+                            <div class="nk-block-head">
+                                <div class="nk-block-between-md g-4">
+                                    <div class="nk-block-head-content">
+                                        <h2 class="nk-block-title fw-normal">Your Loan Requests</h2>
+                                        <div class="nk-block-des">
+                                            <p>See full list of loan requests you have made so far.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- .nk-block-head -->
+                           {% for withdrawal in recent_loans reversed %}
+                            <div class="nk-block nk-block-sm">
+                                <div class="tranx-list tranx-list-stretch card card-bordered">
+
+                                    <div class="tranx-item">
+                                        <div class="tranx-col">
+                                            <div class="tranx-info">
+                                                <div class="tranx-badge">
+                                                    <span class="tranx-icon">
+                                                       <em class="icon ni ni-check-circle-fill text-success title h2"></em>                                                    </span>
+                                                </div>
+                                                <div class="tranx-data">
+                                                    <div class="tranx-label">{{ withdrawal.credit_facility }}</div>
+                                                    <div class="tranx-date"> {{ withdrawal.requested_at }}</div>
+                                                    <div class="tranx-date">Tenure - {{ withdrawal.payment_tenure }}*</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tranx-col">
+                                            <div class="tranx-amount">
+                                                <div class="number">{{ withdrawal.amount }} <span class="currency currency-btc">{{ user.account.account_currency }}</span></div>
+                                                <div class="tranx-date">200.25 <span class="tranx-date">{{ user.account.account_currency }}</span>/Monthly Interest</div>
+                                                <div class="tranx-date">Ref: {{ withdrawal.pk }}{{ user.account_no }}{{ withdrawal.pk }} </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- .nk-tranx-item -->
+                                </div>
+                            </div>
+                        {% empty %}
+				          <tr>
+				            <td colspan="7">No recent international withdrawals found.</td>
+				          </tr>
+				        {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+{% endblock %}

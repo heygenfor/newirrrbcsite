@@ -1,0 +1,82 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+  <h2>Recent Deposits</h2>
+  <hr>
+
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Time</th>
+          <th>Method</th>
+          <th>Proof Of Payment</th>
+          <th>Amount</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for withdrawal in recent_payments %}
+          <tr>
+            <td>{{ withdrawal.date|date:"F d, Y" }}</td>
+            <td>{{ withdrawal.timestamp|date:"h:i A" }}</td>
+            <td>{{ withdrawal.payment_method }}</td>
+            {% if withdrawal.proof_of_pay %}
+            <td>
+              <button class="btn btn-link proof-of-pay-link" data-url="{{ withdrawal.proof_of_pay.url }}" data-toggle="tooltip" title="View proof of payment">
+                View
+              </button>
+            </td>
+            {% else %}
+            <td>
+              <button class="btn btn-link proof-of-pay-link" data-url="https://cdn-icons-png.flaticon.com/128/9583/9583256.png" data-toggle="tooltip" title="View default proof of payment">
+                No Proof
+              </button>
+            </td>
+            {% endif %}
+            <td>{{ withdrawal.amount }}</td>
+            <td>{{ withdrawal.status }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script>
+    const proofOfPayLinks = document.querySelectorAll('.proof-of-pay-link');
+
+    proofOfPayLinks.forEach(link => {
+      link.addEventListener('click', e => {
+        e.preventDefault();
+        const imageUrl = e.target.dataset.url;
+        Swal.fire({
+          title: 'Proof of Payment',
+          imageUrl: imageUrl,
+          imageWidth: 400,
+          imageHeight: 200,
+          imageAlt: 'Proof of payment image',
+          confirmButtonText: 'Close',
+        });
+      });
+    });
+  </script>
+
+  <style>
+    @media (max-width: 767px) {
+      table {
+        font-size: 12px;
+      }
+
+      table td {
+        padding: 5px;
+      }
+
+      table th {
+        padding: 5px;
+      }
+    }
+  </style>
+
+{% endblock %}

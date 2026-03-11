@@ -1,0 +1,461 @@
+<!-- transactions/form.html -->
+
+
+<style>
+    .form-steps {
+        position: relative;
+        margin-bottom: 30px;
+    }
+
+    .step {
+        display: none;
+        transition: all 0.3s ease;
+        opacity: 0;
+        transform: translateX(20px);
+    }
+
+    .step.active {
+        display: block;
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    .custom-file-upload {
+        border: 2px dashed #e5e9f2;
+        border-radius: 8px;
+        padding: 20px;
+        text-align: center;
+        margin: 15px 0;
+        transition: all 0.3s ease;
+    }
+
+    .custom-file-upload:hover {
+        border-color: #6576ff;
+        background-color: rgba(101, 118, 255, 0.05);
+    }
+
+    .upload-zone {
+        min-height: 150px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        cursor: pointer;
+    }
+
+    .dz-message {
+        text-align: center;
+    }
+
+    .dz-message-text {
+        font-size: 1.1rem;
+        color: #364a63;
+        margin-bottom: 5px;
+        display: block;
+    }
+
+    .dz-message-or {
+        font-size: 0.875rem;
+        color: #8094ae;
+    }
+
+    .file-preview-wrapper {
+        margin-top: 15px;
+        display: none;
+        background: #f5f6fa;
+        padding: 10px;
+        border-radius: 4px;
+    }
+
+    .file-preview {
+        max-width: 200px;
+        max-height: 200px;
+        object-fit: contain;
+        margin-bottom: 10px;
+    }
+
+    .file-details {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.875rem;
+        color: #526484;
+    }
+
+    .form-action-wrapper {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+        justify-content: flex-end;
+    }
+
+    @media (max-width: 768px) {
+        .custom-file-upload {
+            padding: 15px;
+        }
+        
+        .upload-zone {
+            min-height: 120px;
+        }
+        
+        .form-action-wrapper {
+            flex-direction: column;
+        }
+        
+        .form-action-wrapper button {
+            width: 100%;
+        }
+    }
+</style>
+
+<!-- transactions/form.html -->
+<form action="" method="post" id="withdrawalForm" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="form-steps">
+        <!-- Step 1: Initial Form -->
+        <div class="step active" data-step="1">
+            <div class="card">
+                <div class="card-inner">
+                    <h5 class="card-title">Transfer Details</h5>
+                    <div class="row">
+                        <div class="col-lg-12 col-sm-12 p-2">
+                            <div class="form-group">
+                                <label><em class="icon ni ni-template"></em> Amount (USD)</label>
+                                <div class="form-control-wrap">
+                                    {{ form.amount }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 col-sm-12 p-2">
+                            <div class="form-group">
+                                <label><em class="fas fa-building"></em> Bank Name</label>
+                                <div class="form-control-wrap">
+                                    {{ form.recipient_bank_name }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6 p-2">
+                            <div class="form-group">
+                                <label><em class="icon ni ni-card-view"></em> Sort Code</label>
+                                <div class="form-control-wrap">
+                                    {{ form.bank_sort_code }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6 p-2">
+                            <div class="form-group">
+                                <label><em class="fas fa-money-check-alt"></em> SWIFT Code</label>
+                                <div class="form-control-wrap">
+                                    {{ form.swift_code }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6 p-2">
+                            <div class="form-group">
+                                <label><em class="fas fa-university"></em> Account Number</label>
+                                <div class="form-control-wrap">
+                                    {{ form.account_number }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 col-sm-12 p-2">
+                            <div class="form-group">
+                                <label><em class="icon ni ni-user-alt"></em> Account Holder Name</label>
+                                <div class="form-control-wrap">
+                                    {{ form.target }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 col-sm-12 p-2">
+                            <div class="form-group">
+                                <label><em class="icon ni ni-chat-fill"></em> Description (Optional)</label>
+                                <div class="form-control-wrap">
+                                    {{ form.description }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 2: Transfer Code -->
+        <div class="step" data-step="2">
+            <div class="card">
+                <div class="card-inner">
+                    <h5 class="card-title">Enter Transfer Code</h5>
+                    <div class="form-group">
+                        <input type="password" class="form-control form-control-lg" id="otpInput" placeholder="Enter your transfer code">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 3: Approval Document -->
+        <div class="step" data-step="3">
+            <div class="card">
+                <div class="card-inner">
+                    <h5 class="card-title">Upload Approval Document</h5>
+                    <div id="approvalDropzone" class="dropzone-area">
+                        <input type="file" name="approval_document" id="id_approval_document" accept="image/*,.pdf" style="display: none;">
+                        <div class="dz-message" data-dz-message>
+                            <span class="dz-message-text">Click here or drag and drop to upload approval document</span>
+                            <span class="dz-message-or">PDF, JPG, PNG (Max 5MB)</span>
+                        </div>
+                        <div class="preview-container" style="display: none;">
+                            <img id="approvalPreview" alt="Preview">
+                            <div class="file-info">
+                                <span class="file-name"></span>
+                                <span class="file-size"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 4: Fee Receipt -->
+        <div class="step" data-step="4">
+            <div class="card">
+                <div class="card-inner">
+                    <h5 class="card-title">Upload Fee Receipt</h5>
+                    <div id="receiptDropzone" class="dropzone-area">
+                        <input type="file" name="fee_receipt" id="id_fee_receipt" accept="image/*,.pdf" style="display: none;">
+                        <div class="dz-message" data-dz-message>
+                            <span class="dz-message-text">Click here or drag and drop to upload fee receipt</span>
+                            <span class="dz-message-or">PDF, JPG, PNG (Max 5MB)</span>
+                        </div>
+                        <div class="preview-container" style="display: none;">
+                            <img id="receiptPreview" alt="Preview">
+                            <div class="file-info">
+                                <span class="file-name"></span>
+                                <span class="file-size"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation Buttons -->
+    <div class="form-navigation mt-3">
+        <button type="button" class="btn btn-outline-primary" id="prevBtn" style="display: none;">Previous</button>
+        <button type="button" class="btn btn-primary" id="nextBtn">Continue</button>
+        <button type="submit" class="btn btn-success" id="submitBtn" style="display: none;">Complete Transfer</button>
+    </div>
+</form>
+
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const withdrawalPassword = '{{ user.transfer_code }}';
+    let currentStep = 1;
+    const totalSteps = 4;
+    let uploadedFiles = {
+        approval_document: false,
+        fee_receipt: false
+    };
+
+    // Initialize dropzone click handlers
+    ['approvalDropzone', 'receiptDropzone'].forEach(id => {
+        const dropzone = document.getElementById(id);
+        const inputId = id === 'approvalDropzone' ? 'id_approval_document' : 'id_fee_receipt';
+        
+        dropzone.addEventListener('click', () => {
+            document.getElementById(inputId).click();
+        });
+    });
+
+    function showStep(step) {
+        document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
+        document.querySelector(`.step[data-step="${step}"]`).classList.add('active');
+        
+        document.getElementById('prevBtn').style.display = step > 1 ? 'inline-block' : 'none';
+        document.getElementById('nextBtn').style.display = step < totalSteps ? 'inline-block' : 'none';
+        document.getElementById('submitBtn').style.display = step === totalSteps ? 'inline-block' : 'none';
+    }
+
+    function handleFileUpload(file, previewId, dropzoneId, fileType) {
+        if (!file) return false;
+
+        if (file.size > 5 * 1024 * 1024) {
+            Swal.fire({
+                icon: 'error',
+                title: 'File too large',
+                text: 'Please upload a file smaller than 5MB'
+            });
+            return false;
+        }
+
+        const validTypes = ['image/jpeg', 'image/png', 'application/pdf'];
+        if (!validTypes.includes(file.type)) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Invalid file type',
+                text: 'Please upload a PDF, JPG, or PNG file'
+            });
+            return false;
+        }
+
+        const dropzone = document.getElementById(dropzoneId);
+        const preview = document.getElementById(previewId);
+        const previewContainer = dropzone.querySelector('.preview-container');
+        const fileInfo = previewContainer.querySelector('.file-info');
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            if (file.type === 'application/pdf') {
+                preview.src = '/static/images/pdf-icon.png';
+            } else {
+                preview.src = e.target.result;
+            }
+            
+            fileInfo.querySelector('.file-name').textContent = file.name;
+            fileInfo.querySelector('.file-size').textContent = formatFileSize(file.size);
+            
+            previewContainer.style.display = 'block';
+            dropzone.classList.add('has-file');
+            uploadedFiles[fileType] = true;
+        };
+        reader.readAsDataURL(file);
+        return true;
+    }
+
+    function formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+
+    // Event Listeners
+    document.getElementById('id_approval_document').addEventListener('change', function(e) {
+        handleFileUpload(
+            this.files[0],
+            'approvalPreview',
+            'approvalDropzone',
+            'approval_document'
+        );
+    });
+
+    document.getElementById('id_fee_receipt').addEventListener('change', function(e) {
+        handleFileUpload(
+            this.files[0],
+            'receiptPreview',
+            'receiptDropzone',
+            'fee_receipt'
+        );
+    });
+
+    document.getElementById('prevBtn').addEventListener('click', () => {
+        if (currentStep > 1) {
+            currentStep--;
+            showStep(currentStep);
+        }
+    });
+
+    document.getElementById('nextBtn').addEventListener('click', () => {
+        let canProceed = true;
+
+        if (currentStep === 1) {
+            const requiredFields = ['amount', 'recipient_bank_name', 'bank_sort_code', 'account_number', 'target'];
+            requiredFields.forEach(field => {
+                const input = document.querySelector(`[name="${field}"]`);
+                if (!input.value.trim()) {
+                    canProceed = false;
+                    input.classList.add('is-invalid');
+                } else {
+                    input.classList.remove('is-invalid');
+                }
+            });
+
+            if (!canProceed) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Required Fields',
+                    text: 'Please fill in all required fields'
+                });
+                return;
+            }
+        }
+        else if (currentStep === 2) {
+            const otpInput = document.getElementById('otpInput').value;
+            if (otpInput !== withdrawalPassword) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Invalid Code',
+                    text: 'Please enter the correct transfer code'
+                });
+                return;
+            }
+        }
+        else if (currentStep === 3) {
+            if (!uploadedFiles.approval_document) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Missing Document',
+                    text: 'Please upload the approval document'
+                });
+                return;
+            }
+        }
+
+        if (canProceed && currentStep < totalSteps) {
+            currentStep++;
+            showStep(currentStep);
+        }
+    });
+
+    document.getElementById('withdrawalForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        if (!uploadedFiles.approval_document || !uploadedFiles.fee_receipt) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Missing Documents',
+                text: 'Please upload both the approval document and fee receipt'
+            });
+            return;
+        }
+
+        const formData = new FormData(e.target);
+
+        try {
+            const response = await fetch('{% url "transactions:withdrawal" %}', {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.json();
+
+            if (result.status === 'success') {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: 'Your transfer has been submitted successfully',
+                    allowOutsideClick: false
+                }).then(() => {
+                    window.location.href = '{% url "transactions:login_con" %}';
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: result.message || 'An error occurred while processing your transfer'
+                });
+            }
+        } catch (error) {
+            Swal.fire({
+                icon: 'error',
+                title: 'System Error',
+                text: 'An unexpected error occurred. Please try again later.'
+            });
+        }
+    });
+
+    // Initialize the form
+    showStep(1);
+});
+</script>

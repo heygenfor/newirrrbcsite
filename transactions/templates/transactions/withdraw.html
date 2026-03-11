@@ -1,0 +1,58 @@
+{% extends 'core/base.html' %}
+
+{% block title %} Summary | {{ block.super }}{% endblock title %}
+
+{% block content %}
+{% include "core/messages.html" %}
+
+                <div class="nk-content">
+                    <iframe src="//www.exchangerates.org.uk/widget/ER-LRTICKER.php?w=1400&amp;s=1&amp;mc=GBP&amp;mbg=F0F0F0&amp;bs=yes&amp;bc=000044&amp;f=verdana&amp;fs=10px&amp;fc=000044&amp;lc=000044&amp;lhc=FE9A00&amp;vc=FE9A00&amp;vcu=008000&amp;vcd=FF0000&amp;" height="30"
+                        width="100%" frameborder="0" scrolling="no" marginwidth="0" marginheight="0"></iframe>
+                    <div class="card card-preview ">
+                        <div class="card-inner p-0">
+                            <table class="datatable-init table">
+                                <thead>
+                                    <tr>
+          <th>Date</th>
+          <th>Time</th>
+          <th>Target</th>
+          <th>Recipient Bank Name</th>
+          <th>Account Number</th>
+          <th>Amount</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for withdrawal in recent_withdrawals %}
+          <tr>
+            <td>{{ withdrawal.date|date:"F d, Y" }}</td>
+            <td>{{ withdrawal.timestamp|date:"h:i A" }}</td>
+            <td>{{ withdrawal.target }}</td>
+            <td>{{ withdrawal.recipient_bank_name }}</td>
+            <td>{{ withdrawal.account_number }}</td>
+            <td>{{ withdrawal.amount }}</td>
+            <td>{{ withdrawal.status }}</td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="7">No recent international withdrawals found.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+</div>
+  <style>
+    @media only screen and (max-width: 767px) {
+      table {
+        font-size: 12px;
+      }
+
+      table td, table th {
+        padding: 5px;
+      }
+    }
+  </style>
+
+{% endblock %}

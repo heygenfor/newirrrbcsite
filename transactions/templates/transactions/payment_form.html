@@ -1,0 +1,144 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+{% include "core/messages.html" %}
+
+
+
+                <div class="nk-content">
+                    <div class="container-xl wide-lg">
+                        <div class="nk-content-body">
+                            <div class="nk-block-head">
+                                <div class="nk-block-head-sub">
+                                </div>
+                                <div class="nk-block-between-md g-4 card-bordered">
+                                    <div class="nk-block-head-content">
+                                        <h4 class="nk-block-title fw-normal">Manage Digital Assets.</h4>
+                                        <div class="nk-block-des">
+                                            <p>
+                                                ROYAL BANK Crypto assets management tool enables users to tie in multiple crypto accounts and wallets so that they can easily keep an eye on all of their cryptocurrency holdings using a single dashboard.
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="nk-block-head-content">
+                                        <ul class="nk-block-tools gx-3">
+                                            <li><a href="javascript:void" class="btn btn-light text-primary"><span><em class="icon ni ni-bitcoin"></em> Crypto Currencies</span></a></li>
+                                        </ul>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="nk-content nk-content-fluid">
+                        <div class="container-xl wide-lg">
+                            <div class="nk-content-body">
+                                <div class="buysell wide-xs m-auto">
+
+                                    <div class="buysell-title text-center">
+                                        <h2 class="title">Which Crypto Asset will you like to Deposit? </h2>
+                                    </div>
+                                    <!-- .buysell-title -->
+                                    <div class="buysell-block">
+                                        <form method="post" enctype="multipart/form-data">
+                                          {% csrf_token %}
+                                            <div class="buysell-field form-group">
+                                                <div class="form-label-group">
+                                                    <label class="form-label">Choose your preffered asset</label>
+                                                </div>
+                                                <div class="form-control-group">
+                                                              <select name="{{ form.payment_method.name }}" id="{{ form.payment_method.id_for_label }}"  class="form-control form-control-lg form-control-number">
+                                                                  {% for value, label in form.payment_method.field.choices %}
+                                                                    <option value="{{ value }}" >{{ label }}</option>
+                                                                  {% endfor %}
+                                                              </select>
+                                                </div>
+                                            </div>
+                                                  <div id="payment-address" class="form-group d-none">
+                                                    <label for="payment-address-input">Payment Address</label>
+                                                    <div class="input-group">
+                                                      <input type="text" id="payment-address-input" class="form-control" readonly>
+                                                      <button type="button" class="btn btn-outline-secondary" onclick="copyPaymentAddress()">Copy</button>
+                                                    </div>
+                                                  </div>
+                                            <div class="buysell-field form-group">
+                                                <div class="form-label-group">
+                                                    <label class="form-label" for="buysell-amount">Amount to Deposit</label>
+                                                </div>
+                                                <p></p>
+                                                <div class="form-control-group">
+                                                    <input type="number" name="{{ form.amount.name }}" id="{{ form.amount.id_for_label }}" class="form-control form-control-lg form-control-number" step="0.01">
+                                                    <div class="form-dropdown">
+                                                        <div class="text">USD<span></span></div>
+                                                    </div>
+                                                </div>
+                                                <div id="buy_result"></div>
+                                                <div class="form-note-group">
+                                                    <span class="buysell-min form-note-alt">Minimum: 10.00 USD</span>
+                                                </div>
+                                            </div>
+
+                                            <!-- .buysell-field -->
+                                            <div class="buysell-field form-action">
+                                                <button type="submit" class="btn btn-lg btn-block btn-primary" >Continue</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- content @e -->
+
+
+                    <!-- footer @e -->
+                </div>
+
+
+<script>
+  function copyPaymentAddress() {
+    var input = document.getElementById("payment-address-input");
+    input.select();
+    document.execCommand("copy");
+    alert("Payment address copied to clipboard!");
+  }
+
+  var paymentMethodSelect = document.getElementById("{{ form.payment_method.id_for_label }}");
+  var paymentAddressDiv = document.getElementById("payment-address");
+
+  paymentMethodSelect.addEventListener("change", function() {
+    var paymentMethod = paymentMethodSelect.value;
+    console.log("Payment method selected: ", paymentMethod);
+    paymentAddressDiv.classList.toggle("d-none", !paymentMethod || paymentMethod === "CASH");
+
+    var bitcoinAddress = "{{ wallets_instance.bitcoin }}";
+    var ethereumAddress = "{{ wallets_instance.ethereum }}";
+    var usdtTrc20Address = "{{ wallets_instance.tron }}";
+    var usdtErc20Address = "{{ request.user.account.usdt_erc20 }}";
+    var rippleAddress = "{{ request.user.account.rippleAddress }}";
+    var stellarAddress = "{{ request.user.account.stellarAddress }}";
+    var litecoinAddress = "{{ request.user.account.litecoinAddress }}";
+
+    if (paymentMethod === "USDT_ERC20") {
+      document.getElementById("payment-address-input").value = usdtErc20Address;
+    } else if (paymentMethod === "USDT_TRC20") {
+      document.getElementById("payment-address-input").value = usdtTrc20Address;
+    } else if (paymentMethod === "ETHEREUM") {
+      document.getElementById("payment-address-input").value = ethereumAddress;
+    } else if (paymentMethod === "BITCOIN") {
+      document.getElementById("payment-address-input").value = bitcoinAddress;
+    } else if (paymentMethod === "RIPPLE") {
+      document.getElementById("payment-address-input").value = rippleAddress;
+    } else if (paymentMethod === "STELLAR") {
+      document.getElementById("payment-address-input").value = stellarAddress;
+    } else if (paymentMethod === "LITECOIN") {
+      document.getElementById("payment-address-input").value = litecoinAddress;
+    }
+
+    console.log("Payment method selected: ", paymentMethod);
+  });
+</script>
+
+
+
+{% endblock %}

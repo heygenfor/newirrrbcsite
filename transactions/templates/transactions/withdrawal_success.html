@@ -1,0 +1,150 @@
+<!-- templates/transactions/withdrawal_success.html -->
+{% extends 'core/base.html' %}
+
+
+{% block content %}
+{% include "core/flash-messages.html" %}
+
+<div class="container py-5">
+    <div class="card shadow-lg border-0 rounded">
+        <div class="card-body">
+            <div class="text-center mb-4">
+                <h2 class="card-title mb-2">{{ withdrawal_info.title }}</h2>
+                <i class="fas {{ withdrawal_info.icon }} fa-5x text-success success-checkmark"></i>
+                <div class="alert alert-success mt-3">
+                    <p class="mb-0">{{ withdrawal_info.message }}</p>
+                </div>
+                <p class="text-muted">Transaction ID: <span id="transactionId" class="fw-bold"></span></p>
+            </div>
+
+            <hr>
+
+            <h5 class="mt-4">Transaction Details</h5>
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Date:</strong> {{ transaction.timestamp|date:"F d, Y H:i" }}</p>
+                    <p><strong>Status:</strong> 
+                        <span class="badge 
+                            {% if transaction.status == 'completed' %} bg-success 
+                            {% elif transaction.status == 'pending' %} bg-warning 
+                            {% elif transaction.status == 'cancelled' %} bg-danger 
+                            {% else %} bg-secondary 
+                            {% endif %}">
+                            {{ transaction.status|title }}
+                        </span>
+                    </p>
+                    <p><strong>Amount:</strong> {{ user.account.account_currency }} {{ transaction.amount }}</p>
+                </div>
+                <div class="col-md-6">
+                    {% if withdrawal_type == 'local' %}
+                        <p><strong>Recipient Name:</strong> {{ transaction.recipient_name }}</p>
+                        <p><strong>Recipient Email:</strong> {{ transaction.recipient_email }}</p>
+                        <p><strong>Account Number:</strong> {{ transaction.recipient_account_number }}</p>
+                        <p><strong>Description:</strong> {{ transaction.description }}</p>
+                    {% else %}
+                        <p><strong>{{ withdrawal_type|title }} Email:</strong> 
+                        {% if withdrawal_type == 'paypal' %}
+                            {{ transaction.paypal_email }}
+                        {% elif withdrawal_type == 'skrill' %}
+                            {{ transaction.skrill_email }}
+                        {% elif withdrawal_type == 'revolut' %}
+                            {{ transaction.revolut_email }}
+                        {% elif withdrawal_type == 'wise' %}
+                            {{ transaction.wise_email }}
+                        {% endif %}
+                        </p>
+                        <p><strong>Description:</strong> {{ transaction.description }}</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="text-center mt-4">
+                <p class="text-muted">
+                    A confirmation email has been sent to your registered email address.<br>
+                    Please allow 24-48 hours for processing.
+                </p>
+                <div class="d-flex justify-content-center gap-3">
+                    <a href="{% url 'home' %}" class="btn btn-primary btn-lg">
+                        <i class="fas fa-home me-2"></i>Back to Dashboard
+                    </a>
+                    
+                    <a href="#" onclick="window.print()" class="btn btn-outline-secondary btn-lg">
+                        <i class="fas fa-print me-2"></i>Print Receipt
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function generateTransactionId() {
+    // Get user details
+    const fullName = "{{ user.full_name }}";
+    const accountNo = "{{ user.account_no }}";
+    const withdrawalType = "{{ withdrawal_type }}";
+    const withdrawalId = "{{ transaction.id }}";
+    const timestamp = new Date().getTime();
+
+    // Combine all elements
+    const rawId = `${fullName}-${accountNo}-${withdrawalType}-${withdrawalId}-${timestamp}`;
+
+    // Convert to base64 and take first 12 characters
+    const base64Id = btoa(rawId);
+    const shortId = base64Id.substring(0, 12).toUpperCase();
+
+    // Add prefix based on withdrawal type
+    const prefixMap = {
+        'local': 'LCL',
+        'paypal': 'PPL',
+        'skrill': 'SKR',
+        'revolut': 'RVT',
+        'wise': 'WIS'
+    };
+    const prefix = prefixMap[withdrawalType] || 'TXN';
+
+    // Format with prefix and dashes
+    return `${prefix}-${shortId.slice(0,4)}-${shortId.slice(4,8)}-${shortId.slice(8,12)}`;
+}
+
+// Set the transaction ID when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    const transactionIdElement = document.getElementById('transactionId');
+    const transactionId = generateTransactionId();
+    transactionIdElement.textContent = transactionId;
+});
+</script>
+
+<style>
+    .success-checkmark {
+        animation: scale-up 0.5s ease-in-out;
+    }
+    
+    @keyframes scale-up {
+        0% { transform: scale(0); }
+        100% { transform: scale(1); }
+    }
+
+    .card {
+        border-radius: 1rem;
+        border: 1px solid #e0e0e0;
+    }
+
+    .alert {
+        border-radius: 0.5rem;
+        font-size: 1.1rem;
+    }
+
+    .btn {
+        border-radius: 0.5rem;
+        padding: 10px 20px;
+    }
+
+    hr {
+        border-top: 1px solid #e0e0e0;
+        margin: 20px 0;
+    }
+</style>
+{% endblock %}

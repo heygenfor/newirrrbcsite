@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crypto Withdrawal Pending</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #fef8e0;
+            margin: 0;
+            padding: 0;
+        }
+        .email-container {
+            background-color: #ffffff;
+            margin: 30px auto;
+            padding: 20px;
+            max-width: 600px;
+            border-radius: 10px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            border-left: 5px solid #ffc107;
+        }
+        .email-header {
+            text-align: center;
+            padding-bottom: 20px;
+        }
+        .email-header img {
+            max-width: 180px;
+            margin-bottom: 15px;
+        }
+        .email-body {
+            padding: 20px;
+            color: #333333;
+        }
+        .email-body h2 {
+            color: #ffc107;
+            font-size: 26px;
+            margin-bottom: 20px;
+        }
+        .email-body p {
+            font-size: 16px;
+            color: #555555;
+            line-height: 1.8;
+            margin: 10px 0;
+        }
+        .withdrawal-details {
+            background-color: #fff8e6;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #ffe6b3;
+            margin-top: 20px;
+        }
+        .withdrawal-details p {
+            font-weight: bold;
+            margin: 5px 0;
+            font-size: 15px;
+            color: #444444;
+        }
+        .email-footer {
+            text-align: center;
+            font-size: 14px;
+            color: #888888;
+            margin-top: 30px;
+            padding: 20px;
+            border-top: 1px solid #ffe6b3;
+        }
+        .email-footer a {
+            color: #ffc107;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="email-header">
+            <img style="width: 60px;" src="https://webapi.hirevue.com/wp-content/uploads/2024/01/rbc-logo.png" alt="RBC BANK ">
+        </div>
+        <div class="email-body">
+            <h2>Crypto Withdrawal Pending</h2>
+            <p>Hello {{ crypto_withdraw.user.first_name }} {{ crypto_withdraw.user.last_name }},</p>
+            <p>Your crypto withdrawal request is currently pending. Here are the details:</p>
+            <div class="crypto-withdraw-details">
+                <p>Amount: ${{ crypto_withdraw.amount|floatformat:2 }}</p>
+                <p>Method: {{ crypto_withdraw.get_payment_method_display }}</p>
+                <p>Date: {{ crypto_withdraw.timestamp }}</p>
+                <p>Recipient Address: {{ crypto_withdraw.recipient_address }}</p>
+            </div>
+            <p>We will update you once the status changes. If you have any questions, contact us at <a href="mailto:support@joinrbc.com">support@joinrbc.com</a>.</p>
+        </div>
+        <div class="email-footer">
+            © 2025 RBC BANK. All rights reserved. | <a href="https://www.joinrbc.com">Visit our website</a>
+        </div>
+    </div>
+</body>
+</html>

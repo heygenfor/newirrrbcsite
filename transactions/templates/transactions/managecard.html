@@ -1,0 +1,35 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+  <h1>Manage Cards</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>Card Type</th>
+        <th>Card Number</th>
+        <th>Expiration Date</th>
+        <th>CVV Code</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% if user_cards %}
+        <h2>Your Cards:</h2>
+        {% for card in user_cards %}
+          <tr>
+            <td>{{ card.card_type }}</td>
+            <td>{{ card.card_number }}</td>
+            <td>{{ card.card_credential.expiry_date }}</td>
+            <td>{{ card.card_credential.cvv }}</td>
+          </tr>
+        {% endfor %}
+      {% endif %}
+{% if card_request.is_approved %}
+    <p>Your {{ card_request.card_type }} card:</p>
+    <p>Card number: {{ card_request.card_credential.card.card_number }}</p>
+    <p>CVV: {{ card_request.card_credential.cvv }}</p>
+    <p>Expiry date: {{ card_request.card_credential.expiry_date }}</p>
+{% endif %}
+
+    </tbody>
+  </table>
+{% endblock %}

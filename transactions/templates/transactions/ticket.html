@@ -1,0 +1,95 @@
+{% extends 'core/base.html' %}
+
+{% block title %} Transactions | {{ block.super }}{% endblock title %}
+
+{% block content %}
+{% include "core/messages.html" %}
+
+                <div class="nk-content nk-content-fluid">
+                    <div class="container-xl wide-lg">
+                        <div class="nk-content-body">
+                            <div class="nk-block-head">
+                                <div class="nk-block-head-sub">
+                                </div>
+                                <div class="nk-block-between-md g-4 card-bordered">
+                                    <div class="nk-block-head-content">
+                                        <h4 class="nk-block-title fw-normal">Customer care Desk.</h4>
+                                        <div class="nk-block-des">
+                                            <p>Our customer Care representatives are always committed in giving you the best banking experience.</p>
+                                        </div>
+                                    </div>
+                                    <!-- .nk-block-head-content -->
+                                    <div class="nk-block-head-content">
+                                        <ul class="nk-block-tools gx-3">
+                                            <li><a href="{% url 'transactions:withdrawal' %}" class="btn btn-secondary btn-light text-light"><span>Transfer Fund</span><em class="icon ni ni-wallet-out"></em></a></li>
+                                        </ul>
+                                    </div>
+                                    <!-- .nk-block-head-content -->
+                                </div>
+                                <!-- .nk-block-between -->
+                            </div>
+                            <!-- .nk-block-head -->
+                        </div>
+                    </div>
+                    <div class="card card-bordered card-preview">
+                        <div class="card-header font-weight-bold text-light" style="background-color:#033d75;">
+                            <h5 class="text-white"> <em class="icon ni ni-question"></em> Create a support ticket </h5>
+                        </div>
+                        <div class="card-body">
+                        <form action="{% url 'transactions:ticket' %}" method="post">
+                          {% csrf_token %}
+
+                          <div class="row">
+                            <div class="form-group col-lg-12">
+                              {{ form.tickets }}
+                            </div>
+                            <div class="form-group col-lg-12">
+                              {{ form.message }}
+                            </div>
+                            <div class="createResult"></div>
+                            <div class="form-group col-lg-12">
+                              <button class="btn btn-primary ticketBtn" type="submit" id="btn">Submit</button>
+                            </div>
+                          </div>
+                        </form>
+
+                        </div>
+                    </div>
+                    <!-------Previous tickets---->
+<div class="card card-bordered card-preview">
+  <div class="card-header font-weight-bold text-light" style="background-color:#033d75;">
+    <h5 class="text-white"> <em class="icon ni ni-question-alt"></em> Previous support tickets </h5>
+  </div>
+  <div class="card-body">
+    <div class="table-responsive">
+      <table class="datatable-init table">
+        <thead>
+          <tr>
+            <th>Department</th>
+            <th>Ticket ID</th>
+            <th>Date</th>
+            <th>Message</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for obj in ticketlist  %}
+          <tr>
+            <td>{{ obj.tickets }}</td>
+            <td>{{ obj.pk }}{{ user.account_no }}{{ obj.pk }}</td>
+            <td>{{ obj.timestamp }}</td>
+            <td>{{ obj.message }}</td>
+            <td class='text-success'>Recieved</td>
+            <td>{{ obj.payment_method }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+                </div>
+
+{% endblock content %}

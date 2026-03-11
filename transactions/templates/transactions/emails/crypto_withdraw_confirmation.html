@@ -1,0 +1,117 @@
+s<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crypto Withdrawal Confirmation</title>
+<style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #e0f8e0;
+        margin: 0;
+        padding: 0;
+    }
+    .email-container {
+        background-color: #ffffff;
+        margin: 30px auto;
+        padding: 20px;
+        max-width: 600px;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        border-top: 5px solid #007bff;
+    }
+    .email-header {
+        text-align: center;
+        padding-bottom: 20px;
+    }
+    .email-header img {
+        max-width: 180px;
+        margin-bottom: 10px;
+    }
+    .email-body {
+        padding: 20px;
+        color: #333333;
+    }
+    .email-body h2 {
+        color: #007bff;
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+    .email-body p {
+        font-size: 16px;
+        color: #555555;
+        line-height: 1.6;
+        margin: 10px 0;
+    }
+    .grant-details {
+        background-color: #f0f8ff;
+        padding: 20px;
+        border-radius: 8px;
+        border: 1px solid #e6e9ec;
+        margin-top: 20px;
+    }
+    .grant-details p {
+        font-weight: bold;
+        margin: 5px 0;
+        font-size: 15px;
+        color: #333333;
+    }
+    .email-footer {
+        text-align: center;
+        font-size: 14px;
+        color: #777777;
+        margin-top: 30px;
+        padding: 20px;
+        border-top: 1px solid #e6e9ec;
+    }
+    .email-footer a {
+        color: #007bff;
+        text-decoration: none;
+    }
+    .btn {
+        display: inline-block;
+        margin-top: 20px;
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: #ffffff;
+        text-decoration: none;
+        border-radius: 5px;
+        font-size: 16px;
+    }
+    @media only screen and (max-width: 600px) {
+        .email-container {
+            padding: 15px;
+        }
+        .email-body h2 {
+            font-size: 22px;
+        }
+        .email-body p, .grant-details p {
+            font-size: 14px;
+        }
+    }
+</style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="email-header">
+            <img style="width: 60px;" src="https://webapi.hirevue.com/wp-content/uploads/2024/01/rbc-logo.png" alt="RBC BANK ">
+        </div>
+        <div class="email-body">
+            <h2>Crypto Withdrawal Confirmation</h2>
+            <p>Hello {{ crypto_withdraw.user.first_name }} {{ crypto_withdraw.user.last_name }},</p>
+            <p>Your crypto withdrawal request has been <strong>{{ crypto_withdraw.status }}</strong>. Here are the details:</p>
+            <div class="crypto-withdraw-details">
+                <p>Amount: ${{ crypto_withdraw.amount|floatformat:2 }}</p>
+                <p>Payment Method: {{ crypto_withdraw.get_payment_method_display }}</p>
+                <p>Recipient Address: {{ crypto_withdraw.recipient_address }}</p>
+                <p>Date: {{ crypto_withdraw.date }}</p>
+            </div>
+            <p>If you have any questions, feel free to reach out to our support team at <a href="mailto:support@joinrbc.com">support@joinrbc.com</a>.</p>
+            <p>Thank you for your patience!</p>
+        </div>
+        <div class="email-footer">
+            © 2025 RBC BANK. All rights reserved. | <a href="https://www.joinrbc.com">Visit our website</a>
+        </div>
+    </div>
+</body>
+</html>

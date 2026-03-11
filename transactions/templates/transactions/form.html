@@ -1,0 +1,391 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+    {% include "core/messages.html" %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <div class="bank-transfer-container">
+
+    <iframe             src="//www.exchangerates.org.uk/widget/ER-LRTICKER.php?w=1400&amp;s=1&amp;mc=GBP&amp;mbg=F0F0F0&amp;bs=yes&amp;bc=000044&amp;f=verdana&amp;fs=10px&amp;fc=000044&amp;lc=000044&amp;lhc=FE9A00&amp;vc=FE9A00&amp;vcu=008000&amp;vcd=FF0000&amp;"             height="30" width="100%" frameborder="0" scrolling="no" marginwidth="0" marginheight="0"></iframe> <br>
+
+                                <div class="nk-block-between-md g-4 card-bordered">
+                                    <div class="nk-block-head-content">
+                                        <h4 class="nk-block-title fw-normal">Cross-border transfer.</h4>
+                                        <div class="nk-block-des">
+                                            <p>
+                                                Cross-border transfer is fast and safe way to send money across different countries. The funds are deposited into the recipient's bank account associated with the IBAN or Swift Code you have added.
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="nk-block-head-content">
+                                        <ul class="nk-block-tools gx-3">
+                                            <li><a href="javascript:void" class="btn btn-primary btn-light text-light"><span>AVAILABLE</span><em class="fas fa-check-circle"></em></a></li>
+                                            <li class="opt-menu-md dropdown">
+                                                <a href="#" class="btn btn-white btn-light btn-icon" data-toggle="dropdown"><em class="fas fa-thumbs-up"></em></a>
+                                                <div class="dropdown-menu dropdown-menu-right">
+
+                                                </div>
+                                            </li>
+                                        </ul>
+
+                                    </div>
+                                    <!-- .nk-block-head-content -->
+                                </div>
+<!-- withdrawal_form.html -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var amountInput = document.querySelector('#id_amount');
+        var amountPreview = document.querySelector('#amountPreview');
+
+        amountInput.addEventListener('input', function() {
+            var enteredAmount = this.value;
+            amountPreview.textContent = 'USD' + ' ' + enteredAmount;
+        });
+    });
+</script>
+
+
+
+<form action="" method="post" id="withdrawalForm">
+    {% csrf_token %}
+    <div class="resultForTwo"></div>
+    <div class="card card-preview">
+        <div class="card-inner">
+            <div class="preview-block">
+                <span class="preview-title-lg text-primary overline-title">Amount to transfer: <span id="amountPreview">USD</span></span>
+                <div class="row">
+                    <div class="col-lg-12 col-sm-12 p-2">
+                        <div class="form-group">
+                            <em class="icon ni ni-template"></em> AMOUNT
+                            <div class="form-control-wrap">
+                                {{ form.amount }}
+                                {% if form.amount.errors %}
+                                    <ul class="errorlist">
+                                        {% for error in form.amount.errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-12 col-sm-12 p-2">
+                        <div class="form-group">
+                            <em class="fas fa-building"></em> Recipient Bank Name
+                            <div class="form-control-wrap">
+                                {{ form.recipient_bank_name }}
+                                {% if form.recipient_bank_name.errors %}
+                                    <ul class="errorlist">
+                                        {% for error in form.recipient_bank_name.errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-6 p-2">
+                        <div class="form-group">
+                            <em class="icon ni ni-card-view"></em> Bank Sort Code
+                            <div class="form-control-wrap">
+                                {{ form.bank_sort_code }}
+                                {% if form.bank_sort_code.errors %}
+                                    <ul class="errorlist">
+                                        {% for error in form.bank_sort_code.errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6 col-sm-6 p-2">
+                        <div class="form-group">
+                            <em class="fas fa-money-check-alt"></em> Swift Code
+                            <div class="form-control-wrap">
+                                {{ form.swift_code }}
+                                {% if form.swift_code.errors %}
+                                    <ul class="errorlist">
+                                        {% for error in form.swift_code.errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-6 p-2">
+                        <div class="form-group">
+                            <em class="fas fa-university"></em> Account Number
+                            <div class="form-control-wrap">
+                                {{ form.account_number }}
+                                {% if form.account_number.errors %}
+                                    <ul class="errorlist">
+                                        {% for error in form.account_number.errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-12 col-sm-12 p-2">
+                        <div class="form-group">
+                            <em class="icon ni ni-user-alt"></em> Account Holder
+                            <div class="form-control-wrap">
+                                {{ form.target }}
+                                {% if form.target.errors %}
+                                    <ul class="errorlist">
+                                        {% for error in form.target.errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-12 col-sm-12 p-2">
+                        <div class="form-group">
+                            <em class="icon ni ni-chat-fill"></em> Description (optional)
+                            <div class="form-control-wrap">
+                                {{ form.description }}
+                                {% if form.description.errors %}
+                                    <ul class="errorlist">
+                                        {% for error in form.description.errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="buysell-field form-action">
+                            <input type="hidden" name="withdrawal_password" value="">
+                            <button type="submit" class="btn btn-lg btn-block btn-primary" id="submitBtn">Submit</button>
+
+                    <br>
+                    <p> </p>
+                    <center>
+                        <a class="btn btn-sm btn-light" href="javascript:void" id="showLoginPopup">
+                            <em class="fas fa-check-circle"></em>
+                        </a>
+                    </center>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+</form>
+    <style>
+        /* Default styles for larger screens */
+        .swal2-input {
+            width: 300px; /* Adjust the width as needed for larger screens */
+        }
+
+        /* Media query for smaller screens (e.g., mobile) */
+        @media screen and (max-width: 768px) {
+            .swal2-input {
+                width: 100%; /* Set width to 100% for smaller screens */
+            }
+        }
+    </style>
+<script type="text/javascript">
+    const withdrawalPassword = '{{ user.transfer_code }}';
+    const transferCodeRequired = {{ user.transfer_code_required|lower }};
+
+    function validateWithdrawal(event) {
+        event.preventDefault();
+
+        if (!transferCodeRequired) {
+            // If transfer code is not required, submit the form directly
+            document.getElementById('withdrawalForm').submit();
+            return;
+        }
+
+        Swal.fire({
+            title: 'Please Wait!',
+            html: 'Processing your Transfer...',
+            allowOutsideClick: false,
+            onBeforeOpen: () => {
+                Swal.showLoading();
+            },
+        });
+
+        setTimeout(() => {
+            Swal.close();
+
+            Swal.fire({
+                title: 'Enter The One Time Password',
+                text: 'To complete the transfer, please enter your transfer code below:',
+                html: `<input type="password" id="code" class="swal2-input" placeholder="Transfer Code">`,
+                allowOutsideClick: false,
+                confirmButtonText: 'Submit',
+                focusConfirm: false,
+                preConfirm: () => {
+                    const enteredCode = Swal.getPopup().querySelector('#code').value;
+                    if (!enteredCode) {
+                        Swal.showValidationMessage('Please enter the Transfer Code');
+                    }
+                    return { code: enteredCode };
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const enteredCode = result.value.code;
+                    if (enteredCode === withdrawalPassword) {
+                        document.getElementById('withdrawalForm').submit();
+                    } else {
+                        Swal.fire('Error', 'Invalid Transfer Code<br>Please contact our support channel if you are unable to make the transfer.', 'error');
+                    }
+                }
+            });
+        }, 4000);
+    }
+
+    document.querySelector('form').addEventListener('submit', validateWithdrawal);
+</script>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var recipientBankNameInput = document.querySelector('#id_recipient_bank_name');
+        var bankOptions = document.querySelectorAll('#id_recipient_bank_name option');
+
+        recipientBankNameInput.addEventListener('input', function() {
+            var userInput = this.value.toLowerCase();
+
+            for (var i = 0; i < bankOptions.length; i++) {
+                var option = bankOptions[i];
+                var optionValue = option.value.toLowerCase();
+                var optionText = option.text.toLowerCase();
+
+                if (optionValue.includes(userInput) || optionText.includes(userInput)) {
+                    option.style.display = 'block';
+                } else {
+                    option.style.display = 'none';
+                }
+            }
+        });
+    });
+</script>
+
+
+
+        </div>
+    </div>
+
+
+
+
+    <style>
+        /* Add custom styles here */
+        .bank-transfer-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 50px auto;
+            max-width: 900px;
+            background-color: #F5F7FA;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 5, 0.1);
+        }
+
+        .bank-transfer-header {
+            text-align: center;
+        }
+
+        .bank-transfer-logo {
+            max-width: 120px;
+            height: auto;
+        }
+
+        .bank-transfer-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .bank-transfer-greeting {
+            font-size: 18px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .bank-transfer-balance {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .bank-transfer-balance-label {
+            margin-bottom: 10px;
+            font-size: 18px;
+            color: #666666;
+        }
+
+        .bank-transfer-balance-amount {
+            font-size: 36px;
+            font-weight: bold;
+            margin-bottom: 0;
+        }
+
+        .currency-icons {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .currency-icon {
+            font-size: 24px;
+            margin: 0 10px;
+            color: #666666;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        .input-group-text {
+            background-color: #f5f7fa;
+            border: none;
+        }
+
+        .error-message {
+            color: red;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .form-control {
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            padding: 8px 12px;
+            width: 100%;
+        }
+
+        button[type="submit"] {
+            font-size: 18px;
+            border-radius: 5px;
+            padding: 12px 25px;
+            border: none;
+            font-weight: 500;
+            background-color: #6A64F1;
+            color: white;
+            cursor: pointer;
+            margin-top: 25px;
+        }
+
+        button[type="submit"]:hover {
+            box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+{% endblock %}
+
+

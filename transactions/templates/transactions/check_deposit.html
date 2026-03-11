@@ -1,0 +1,170 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Upload | {{ block.super }}{% endblock title %}
+
+{% block content %}
+  {% include "core/messages.html" %}
+{% load static %}
+                <div class="nk-content nk-content-fluid">
+                    <div class="container-xl wide-lg">
+                        <div class="nk-content-body">
+                            <div class="nk-block-head">
+                                <div class="nk-block-head-sub">
+                                </div>
+                                <div class="nk-block-between-md g-4 card-bordered">
+                                    <div class="nk-block-head-content">
+                                        <h4 class="nk-block-title fw-normal">Internet Banking Check Deposit.</h4>
+                                        <div class="nk-block-des">
+                                            <p>you can deposit checks by snapping pictures of the front and back of the check.</p>
+                                        </div>
+                                    </div>
+                                    <!-- .nk-block-head-content -->
+                                    <div class="nk-block-head-content">
+                                        <ul class="nk-block-tools gx-3">
+                                            <li><a href="{% url 'transactions:withdrawal' %}" class="btn btn-secondary btn-light text-light"><span>Transfer Fund</span><em class="icon ni ni-wallet-out"></em></a></li>
+                                        </ul>
+
+                                    </div>
+                                    <!-- .nk-block-head-content -->
+                                </div>
+                                <!-- .nk-block-between -->
+                            </div>
+                            <!-- .nk-block-head -->
+                        </div>
+                    </div>
+                    <div class="card card-bordered">
+                        <div class="card-header font-weight-bold text-light" style="background-color:#033d75;">Deposit a check</div>
+                        <div class="card-inner">
+                            <h5 class="card-title">Check Deposit tips</h5>
+                            <p class="card-text"><em class="icon ni ni-alert-circle text-danger" style="font-size: 18px; font-weight: 600;"></em> Choose the account to deposit the check and the check amount.</p>
+                            <p class="card-text"><em class="icon ni ni-alert-circle text-danger" style="font-size: 18px; font-weight: 600;"></em> Ensure the check has been properly endorsed and that it is flat, on a dark, well-lit surface. Then snap pictures of both the front
+                                and back of the check, keeping it in the correct parameters. Don’t forget to endorse and write ‘for mobile deposit only’ on the back.
+                            </p>
+                            <p class="card-text"><em class="icon ni ni-alert-circle text-danger" style="font-size: 18px; font-weight: 600;"></em> Submit your check for deposit! We’ll send you an email confirmation that we’ve received your deposit and an email confirmation
+                                once it is accepted. Be sure to hold on to your check until you receive this confirmation, once received, destroy the check!
+                            </p>
+                            <hr>
+                                <div class="buysell-field form-group">
+                                    <div class="form-label-group">
+                                        <label class="form-label">Select Account</label>
+                                    </div>
+                                    <div class="dropdown buysell-cc-dropdown">
+                                        <a href="#" class="buysell-cc-choosen dropdown-indicator" data-toggle="dropdown">
+                                            <div class="coin-item coin-btc">
+                                                <div class="coin-icon">
+                                                    <em class="icon ni ni-sign-usd"></em>
+                                                </div>
+                                                <div class="coin-info">
+                                                    <span class="coin-name">{{ user.account.account_type }} ({{ user.account.account_currency }})</span>
+                                                    <span class="coin-text">Available Balance: {{ user.account.account_currency }} {{ user.balance }}</span>
+                                                </div>
+                                            </div>
+                                        </a>
+                                        <div class="dropdown-menu dropdown-menu-auto dropdown-menu-mxh">
+                                            <ul class="buysell-cc-list">
+                                                <li class="buysell-cc-item selected">
+                                                    <a href="javascript:void" class="buysell-cc-opt" data-currency="btc">
+                                                        <div class="coin-item coin-btc">
+                                                            <div class="coin-icon">
+                                                                <em class="icon ni ni-sign-usd"></em>
+                                                            </div>
+                                                            <div class="coin-info">
+                                                                <span class="coin-name">{{ user.account.account_type }} ({{ user.account.account_currency }})</span>
+                                                                <span class="coin-text">Available Balance:    {{ user.account.account_currency }} {{ user.balance }}        	  		 		 		
+        	  		 		 	</span>
+                                                            </div>
+                                                        </div>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <!-- .dropdown-menu -->
+                                    </div>
+                                    <!-- .dropdown -->
+                                </div>
+                                <!-- .buysell-field -->
+<form action="{% url 'transactions:check_deposit' %}" method="post" class="buysell-form" enctype="multipart/form-data">
+  {% csrf_token %}
+
+  <div class="buysell-field form-group">
+    <div class="result"></div>
+    <div class="form-label-group">
+      <label class="form-label" for="buysell-amount">Check Amount</label>
+    </div>
+    <div class="form-control-group">
+      <input type="number" class="form-control form-control-lg form-control-number" id="amount" name="amount" placeholder="2000">
+      <div class="form-dropdown">
+        <div class="text">USD<span></span></div>
+      </div>
+    </div>
+    <div class="form-note-group">
+      <span class="buysell-min form-note-alt"></span>
+      <span class="buysell-rate form-note-alt">You can deposit up to 80,000 {{ user.account.account_currency }} for each federal check</span>
+    </div>
+  </div>
+  <!-- .buysell-field -->
+  <div class="buysell-field form-group row">
+    <div class="form-group col-md-6">
+      <label class="form-label" for="customFileLabel">Front of the check</label>
+      <div class="col-md-12 p-0">
+        <img class="img-responsive" id="output_imageB" src="{% static 'assets/images/size.jpg' %}" style="width:100%; height:130px">
+      </div>
+      <p class="clear-fix"></p>
+      <div class="form-control-wrap">
+        <div class="custom-file">
+          <input type="file" name="front_image" class="custom-file-input" id="fileTag" accept="image/*" onchange="preview_imageB(event)">
+          <label class="custom-file-label" for="customFile">Choose file</label>
+        </div>
+      </div>
+    </div>
+    <div class="form-group col-md-6">
+      <label class="form-label" for="customFileLabel">Back of the check</label>
+      <div class="col-md-12 p-0">
+        <img class="img-responsive" id="output_image" src="{% static 'assets/images/size.jpg' %}" style="width:100%; height:130px">
+      </div>
+      <p class="clear-fix"></p>
+      <div class="form-control-wrap">
+        <div class="custom-file">
+          <input type="file" class="custom-file-input" name="back_image" accept="image/*" onchange="preview_image(event)">
+          <label class="custom-file-label" for="customFile">Choose file</label>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- .buysell-field -->
+  <div class="buysell-field form-action">
+    <button type="submit" name="check" class="btn btn-lg btn-block btn-primary dep">Submit check</button>
+  </div>
+  <!-- .buysell-field -->
+  <div class="form-note text-base text-center">Note: our Flash fund fee will be deducted from your account following the completion of this deposit.</div>
+</form>
+
+
+<script>
+    function preview_image(event) {
+        var reader = new FileReader();
+        reader.onload = function() {
+            var output = document.getElementById('output_image');
+            output.src = reader.result;
+        }
+        reader.readAsDataURL(event.target.files[0]);
+    }
+
+    function preview_imageB(event) {
+        var reader = new FileReader();
+        reader.onload = function() {
+            var output = document.getElementById('output_imageB');
+            output.src = reader.result;
+        }
+        reader.readAsDataURL(event.target.files[0]);
+    }
+</script>
+
+                            <!-- .buysell-form -->
+                        </div>
+                    </div>
+
+                    <!-- footer @e -->
+                </div>
+
+{% endblock content %}
