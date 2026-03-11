@@ -1,0 +1,222 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+                <div class="nk-content nk-content-fluid">
+                    <div class="container-xl wide-lg">
+                        <div class="nk-content-body">
+                            <div class="kyc-app wide-sm m-auto">
+                                <div class="nk-block-head nk-block-head-lg wide-xs mx-auto">
+                                    <div class="nk-block-head-content text-center">
+                                        <br><br>
+                                        <h2 class="nk-block-title fw-normal">Visual Card Application</h2>
+                                        <div class="nk-block-des">
+                                            <p>The virtual card is issued instantly when requested on Internet Banking. To request, Fill the form below;</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- nk-block-head -->
+                                <div class="nk-block">
+                                    <div class="card card-bordered">
+                                        <div class="nk-kycfm">
+                                            <div class="nk-kycfm-head">
+                                                <div class="nk-kycfm-count">01</div>
+                                                <div class="nk-kycfm-title">
+                                                    <h5 class="title">Personal Details</h5>
+                                                </div>
+                                            </div>
+                                            <!-- .nk-kycfm-head -->
+                                            <div class="nk-kycfm-content">
+                                                <div class="nk-kycfm-note">
+                                                    <em class="icon ni ni-info-fill" data-toggle="tooltip" data-placement="right" title="Tooltip on right"></em>
+                                                    <p>Please type carefully and fill out the form with your personal details. Your can’t edit these details once you submitted the form.</p>
+                                                </div>
+                                                    <div class="row g-4">
+                                                        <div class="col-md-12">
+                                                            <div class="form-group">
+                                                                <div class="form-label-group">
+                                                                    <label class="form-label">Card Holder Name<span class="text-danger">*</span></label>
+                                                                </div>
+                                                                <div class="form-control-group">
+                                                                    <input type="text" id="fullname" name="fullname" required value="{{ user.full_name }}" class="form-control form-control-lg" readonly>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <!-- .col -->
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <div class="form-label-group">
+                                                                    <label class="form-label">Phone Number <span class="text-danger">*</span></label>
+                                                                </div>
+                                                                <div class="form-control-group">
+                                                                    <input type="tel" name="phone" value="{{ user.contact_no }}" class="form-control form-control-lg" required readonly>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <!-- .col -->
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <div class="form-label-group">
+                                                                    <label class="form-label">Email Address <span class="text-danger">*</span></label>
+                                                                </div>
+                                                                <div class="form-control-group">
+                                                                    <input type="email" name="email" required value="{{ user.email }}" class="form-control form-control-lg" readonly>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <!-- .col -->
+                                                        <div class="col-md-12">
+                                                            <div class="form-group">
+                                                                <div class="form-label-group">
+                                                                    <label class="form-label">Address <span class="text-danger">*</span></label>
+                                                                </div>
+                                                                <div class="form-control-group">
+                                                                    <input type="text" name="address" value="{{ user.address.street_address }}--{{ user.address.country }}" class="form-control form-control-lg" readonly>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <!-- .col -->
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <div class="form-label-group">
+                                                                    <label class="form-label">Security Question <span class="text-danger">*</span>
+                                                                </label>
+                                                                </div>
+                                                                <div class="form-control-group">
+                                                                    <select type="text" name="question" class="form-control form-control-lg" required>
+                                                                   <option value="">Please Select Question*</option>
+                                  <option value="What is your pet name?">What is your pet name?</option>
+                                    <option value="What is your nick name?">What is your nick name?</option>    
+                                    <option value="What is the name of your first car?">What is the name of your first car?</option>    
+                                    <option value="when did you finish high school?">when did you finish high school?</option>    
+                                    <option value="your favorite music?">your favorite music?</option>   
+                                    <option value="your favorite movie?">your favorite movie</option>    
+                                    <option value="your favorite roll model?">your favorite role model</option>    
+                                    <option value="favorite state?">favorite state?</option> 
+                                                                </select>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <!-- .col -->
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <div class="form-label-group">
+                                                                    <label class="form-label">Answer <span class="text-danger">*</span></label>
+                                                                </div>
+                                                                <div class="form-control-group">
+                                                                    <input type="text" name="answer" required class="form-control form-control-lg">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <!-- .col -->
+                                                    </div>
+                                                    <!-- .row -->
+                                            </div>
+                                            <!-- .nk-kycfm-content -->
+                                            <div class="nk-kycfm-head">
+                                                <div class="nk-kycfm-count">02</div>
+                                                <div class="nk-kycfm-title">
+                                                    <h5 class="title">Card Preference</h5>
+                                                </div>
+                                            </div>
+                                            <!-- .nk-kycfm-head -->
+                                              <div class="card-request-container">
+                                                <h1 class="text-center mb-4">Request a New Card</h1>
+                                                <p class="mb-3">Please select the type of card you are requesting:</p>
+<form action="" id="cardForm" method="post">
+  {% csrf_token %}
+
+  <div class="nk-kycfm-content">
+    <div class="nk-kycfm-note">
+      <em class="icon ni ni-info-fill" data-toggle="tooltip" data-placement="right" title="Tooltip on right"></em>
+      <p>Kindly select <small>(click)</small> your preferred visual card type.</p>
+    </div>
+    <ul class="nk-kycfm-control-list g-3">
+      {% for card_type in form.card_type.field.choices %}
+        <li class="nk-kycfm-control-item">
+          <input class="nk-kycfm-control" type="radio" name="card_type" id="{{ card_type.0 }}" data-title="{{ card_type.0 }}" value="{{ card_type.0 }}" {% if form.card_type.value == card_type.0 %}checked{% endif %}>
+          <label class="nk-kycfm-label" for="{{ card_type.0 }}">
+            <span class="nk-kycfm-label-icon">
+              <div class="label-icon">
+                {% if card_type.0|lower == 'visa card' %}
+                  <em class="icon ni ni-visa h3 text-primary"></em>
+                {% elif card_type.0|lower == 'master card' %}
+                  <em class="icon ni ni-master-card h3 text-danger"></em>
+                {% elif card_type.0|lower == 'dollar card' %}
+                  <em class="fas fa-credit-card h3 text-primary"></em>
+                {% elif card_type.0|lower == 'china union pay' %}
+                  <em class="fab fa-cc-jcb h3 text-primary"></em>
+                {% endif %}
+              </div>
+            </span>
+            <span class="nk-kycfm-label-text">{{ card_type.1 }}</span>
+          </label>
+        </li>
+        <!-- .nk-kycfm-control-item -->
+      {% endfor %}
+    </ul>
+    <!-- .nk-kycfm-control-list -->
+
+    <h6 class="title">Features and Benefits of ACUB Visual Card:</h6>
+    <ul class="list list-sm list-checked">
+      <li>It’s Virtual: You don’t need to carry it around to use it for online transactions as it's virtually available on your Internet Banking.</li>
+      <li>The card can be loaded from your existing Account via Internet Banking.</li>
+      <li>It's readily available after approval.</li>
+      <li>It's valid for 3 years.</li>
+    </ul>
+
+    {% if form.card_type.errors %}
+      <div class="text-danger">{{ form.card_type.errors }}</div>
+    {% endif %}
+
+  </div>
+  <!-- .nk-kycfm-content -->
+
+  <div class="nk-kycfm-footer">
+    <div class="form-group">
+      <div class="custom-control custom-control-xs custom-checkbox">
+        <input type="checkbox" class="custom-control-input" id="tc-agree" required>
+        <label class="custom-control-label" for="tc-agree">I Have Read The <a href="">Terms Of Condition</a> And <a href="privacy">Privacy Policy</a></label>
+      </div>
+      {% if form.tc_agree.errors %}
+        <div class="text-danger">{{ form.tc_agree.errors }}</div>
+      {% endif %}
+    </div>
+    <div class="form-group">
+      <div class="custom-control custom-control-xs custom-checkbox">
+        <input type="checkbox" class="custom-control-input" id="info-assure" required>
+        <label class="custom-control-label" for="info-assure">All The Personal Information I Have Entered Is Correct.</label>
+      </div>
+      {% if form.info_assure.errors %}
+        <div class="text-danger">{{ form.info_assure.errors }}</div>
+      {% endif %}
+    </div>
+    <div id="cardResult"></div>
+    <div class="nk-kycfm-action pt-2">
+      <button type="submit" class="btn btn-lg btn-primary" id="btn">Apply</button>
+    </div>
+  </div>
+  <!-- .nk-kycfm-footer -->
+</form>
+
+
+
+
+                                              </div>
+                                            <!-- .nk-kycfm-footer -->
+                                        </div>
+                                        <!-- .nk-kycfm -->
+                                    </div>
+                                    <!-- .card -->
+                                    
+                                </div>
+                                <!-- nk-block -->
+                            </div>
+                            <!-- kyc-app -->
+                        </div>
+                    </div>
+                </div>
+{% endblock %}
+
+                

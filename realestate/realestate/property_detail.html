@@ -1,0 +1,633 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}{{ property.title }} - Real Estate{% endblock %}
+
+{% block content %}
+<br>
+<br>
+<br>
+<style>
+    /* Mobile Responsive Styles */
+    @media (max-width: 991px) {
+        .sticky-form {
+            position: relative !important;
+            top: 0 !important;
+        }
+        
+        .carousel-inner img {
+            height: 300px !important;
+        }
+        
+        .property-detail-img {
+            height: 300px !important;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .container-fluid {
+            padding-left: 15px !important;
+            padding-right: 15px !important;
+        }
+        
+        .carousel-inner img,
+        .property-detail-img {
+            height: 250px !important;
+        }
+        
+        .quick-stats .col-3 {
+            padding: 5px;
+        }
+        
+        .quick-stats .p-3 {
+            padding: 10px !important;
+        }
+        
+        .quick-stats i {
+            font-size: 1.5rem !important;
+        }
+        
+        .quick-stats p {
+            font-size: 12px;
+        }
+        
+        h2 {
+            font-size: 24px;
+        }
+        
+        h4 {
+            font-size: 18px;
+        }
+        
+        h5 {
+            font-size: 16px;
+        }
+        
+        .badge {
+            font-size: 10px;
+            padding: 4px 8px;
+        }
+        
+        .breadcrumb {
+            font-size: 12px;
+            padding: 8px 0;
+        }
+        
+        .related-property-img {
+            height: 150px !important;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .carousel-inner img,
+        .property-detail-img {
+            height: 200px !important;
+        }
+        
+        h2 {
+            font-size: 20px;
+        }
+        
+        .text-lg {
+            font-size: 16px !important;
+        }
+    }
+</style>
+
+<div class="container-fluid py-3 py-md-4">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'realestate:property_list' %}">Properties</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ property.title|truncatewords:5 }}</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <!-- Left Column - Images and Details -->
+        <div class="col-lg-8 mb-3 mb-lg-0">
+            <!-- Image Gallery -->
+            <div class="card mb-3 mb-md-4">
+                <div class="card-body p-0">
+                    {% if images %}
+                    <div id="propertyCarousel" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-indicators d-none d-md-flex">
+                            {% for image in images %}
+                            <button type="button" data-bs-target="#propertyCarousel" data-bs-slide-to="{{ forloop.counter0 }}" 
+                                    class="{% if forloop.first %}active{% endif %}" aria-label="Slide {{ forloop.counter }}"></button>
+                            {% endfor %}
+                        </div>
+                        <div class="carousel-inner">
+                            {% for image in images %}
+                            <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                                <img src="{{ image.image.url }}" class="d-block w-100" alt="{{ image.caption }}" style="height: 500px; object-fit: cover;">
+                                {% if image.caption %}
+                                <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded">
+                                    <h5>{{ image.caption }}</h5>
+                                </div>
+                                {% endif %}
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% if images.count > 1 %}
+                        <button class="carousel-control-prev" type="button" data-bs-target="#propertyCarousel" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#propertyCarousel" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                        {% endif %}
+                    </div>
+                    {% else %}
+                    <div class="bg-gradient-dark property-detail-img" style="height: 500px; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-home fa-10x text-white"></i>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Property Details -->
+            <div class="card mb-3 mb-md-4">
+                <div class="card-header pb-0">
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center">
+                        <h4 class="mb-2 mb-md-0">{{ property.title }}</h4>
+                        <div class="d-flex gap-1 flex-wrap">
+                            <span class="badge bg-gradient-info">{{ property.get_transaction_type_display }}</span>
+                            {% if property.status == 'available' %}
+                            <span class="badge bg-gradient-success">
+                                {{ property.get_status_display }}
+                            </span>
+                            {% else %}
+                            <span class="badge bg-gradient-warning">
+                                {{ property.get_status_display }}
+                            </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-12 col-md-6 mb-2 mb-md-0">
+                            <h2 class="text-primary mb-1">${{ property.price|floatformat:0|intcomma }}</h2>
+                            {% if property.rent_price %}
+                            <p class="text-muted mb-0">Rent: ${{ property.rent_price|floatformat:0|intcomma }}/month</p>
+                            {% endif %}
+                        </div>
+                        <div class="col-12 col-md-6 text-start text-md-end">
+                            <p class="mb-1"><i class="fas fa-map-marker-alt me-2"></i>{{ property.address }}</p>
+                            <p class="text-muted mb-0">{{ property.city }}, {{ property.state }} {{ property.zip_code }}</p>
+                        </div>
+                    </div>
+
+                    <!-- Quick Stats -->
+                    <div class="row text-center mb-4 quick-stats">
+                        <div class="col-3">
+                            <div class="p-3 border rounded">
+                                <i class="fas fa-bed fa-2x text-primary mb-2"></i>
+                                <p class="mb-0 font-weight-bold">{{ property.bedrooms }}</p>
+                                <p class="text-sm text-muted mb-0 d-none d-sm-block">Bedrooms</p>
+                                <p class="text-sm text-muted mb-0 d-sm-none">Beds</p>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="p-3 border rounded">
+                                <i class="fas fa-bath fa-2x text-info mb-2"></i>
+                                <p class="mb-0 font-weight-bold">{{ property.bathrooms }}</p>
+                                <p class="text-sm text-muted mb-0 d-none d-sm-block">Bathrooms</p>
+                                <p class="text-sm text-muted mb-0 d-sm-none">Baths</p>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="p-3 border rounded">
+                                <i class="fas fa-ruler-combined fa-2x text-success mb-2"></i>
+                                <p class="mb-0 font-weight-bold">{{ property.area_sqft }}</p>
+                                <p class="text-sm text-muted mb-0">Sqft</p>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="p-3 border rounded">
+                                <i class="fas fa-car fa-2x text-warning mb-2"></i>
+                                <p class="mb-0 font-weight-bold">{{ property.garage }}</p>
+                                <p class="text-sm text-muted mb-0 d-none d-sm-block">Garage</p>
+                                <p class="text-sm text-muted mb-0 d-sm-none">Car</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Description -->
+                    <h5>Description</h5>
+                    <p>{{ property.description }}</p>
+
+                    <!-- Features -->
+                    <h5 class="mt-4">Features & Amenities</h5>
+                    <div class="row">
+                        <div class="col-6 col-md-6">
+                            <ul class="list-unstyled">
+                                <li class="mb-2">
+                                    <i class="fas fa-{% if property.has_pool %}check-circle text-success{% else %}times-circle text-danger{% endif %} me-2"></i>
+                                    <span class="d-none d-sm-inline">Swimming Pool</span>
+                                    <span class="d-inline d-sm-none">Pool</span>
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-{% if property.has_garden %}check-circle text-success{% else %}times-circle text-danger{% endif %} me-2"></i>
+                                    Garden
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-{% if property.has_gym %}check-circle text-success{% else %}times-circle text-danger{% endif %} me-2"></i>
+                                    Gym
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-6 col-md-6">
+                            <ul class="list-unstyled">
+                                <li class="mb-2">
+                                    <i class="fas fa-{% if property.has_security %}check-circle text-success{% else %}times-circle text-danger{% endif %} me-2"></i>
+                                    <span class="d-none d-sm-inline">24/7 Security</span>
+                                    <span class="d-inline d-sm-none">Security</span>
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-{% if property.furnished %}check-circle text-success{% else %}times-circle text-danger{% endif %} me-2"></i>
+                                    Furnished
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-{% if property.pet_friendly %}check-circle text-success{% else %}times-circle text-danger{% endif %} me-2"></i>
+                                    <span class="d-none d-sm-inline">Pet Friendly</span>
+                                    <span class="d-inline d-sm-none">Pets OK</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Additional Info -->
+                    <div class="row mt-4">
+                        <div class="col-6 col-md-6">
+                            <p class="mb-2"><strong>Type:</strong> {{ property.property_type.name }}</p>
+                            {% if property.year_built %}
+                            <p class="mb-2"><strong>Built:</strong> {{ property.year_built }}</p>
+                            {% endif %}
+                        </div>
+                        <div class="col-6 col-md-6">
+                            <p class="mb-2"><strong>Views:</strong> {{ property.views }}</p>
+                            <p class="mb-2"><strong>Listed:</strong> {{ property.created_at|date:"M d, Y" }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Google Map -->
+            {% if property.google_map_embed %}
+            <div class="card mb-3 mb-md-4">
+                <div class="card-header pb-0">
+                    <h5>Location on Map</h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="ratio ratio-16x9">
+                        {{ property.google_map_embed|safe }}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Agent Contact - Mobile Only -->
+            <div class="d-lg-none">
+                {% if property.agent_name %}
+                <div class="card mb-3">
+                    <div class="card-header pb-0">
+                        <h5>Contact Agent</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="mb-2"><strong>Agent:</strong> {{ property.agent_name }}</p>
+                        {% if property.agent_phone %}
+                        <p class="mb-2"><strong>Phone:</strong> <a href="tel:{{ property.agent_phone }}">{{ property.agent_phone }}</a></p>
+                        {% endif %}
+                        {% if property.agent_email %}
+                        <p class="mb-0"><strong>Email:</strong> <a href="mailto:{{ property.agent_email }}">{{ property.agent_email }}</a></p>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Right Column - Application Form -->
+        <div class="col-lg-4">
+            <div class="card sticky-form" style="top: 20px;">
+                <div class="card-header pb-0">
+                    <h5>Apply for This Property</h5>
+                </div>
+                <div class="card-body">
+<style>
+/* === FB Premium Blue Notification === */
+.fb-message-zone {
+  position: fixed;
+  top: clamp(50px, 7vh, 90px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 99999;
+  width: min(95%, 620px);
+  transition: all 0.35s ease-in-out;
+}
+
+/* Base Alert */
+.fb-alert-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(0.6rem, 1.2vw, 1rem);
+  padding: clamp(1rem, 2vw, 1.5rem) clamp(1.25rem, 3vw, 2rem);
+  margin-bottom: 1rem;
+  border-radius: 10px;
+  border-left: 6px solid rgba(255, 255, 255, 0.9);
+  background: rgba(30, 80, 200, 0.95);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+  color: #fff;
+  overflow: hidden;
+  opacity: 1;
+  transition: all 0.25s ease;
+  animation: fb-slideDownCenter 0.7s ease-out;
+}
+
+/* Glow and shine */
+.fb-alert-box::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+  animation: fb-shimmer 4s infinite;
+}
+
+/* Content section */
+.fb-alert-body {
+  flex: 1;
+  font-weight: 700;
+  color: #ffffff;
+  text-shadow: 0 2px 6px rgba(0,0,0,0.4);
+}
+
+.fb-alert-body strong {
+  display: block;
+  font-weight: 800;
+  font-size: clamp(16px, 2vw, 19px);
+  letter-spacing: 0.3px;
+}
+
+.fb-alert-body p {
+  margin: 4px 0 0;
+  font-weight: 700;
+  font-size: clamp(13px, 1.8vw, 16px);
+  line-height: 1.6;
+}
+
+/* Icon */
+.fb-icon {
+  flex-shrink: 0;
+  width: clamp(38px, 8vw, 48px);
+  height: clamp(38px, 8vw, 48px);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(20px, 4vw, 25px);
+  background: rgba(255,255,255,0.2);
+  border: 2px solid rgba(255,255,255,0.3);
+  color: #fff;
+  box-shadow: inset 0 0 8px rgba(255,255,255,0.2);
+}
+
+/* Close button (X) */
+.fb-close-btn {
+  flex-shrink: 0;
+  border: none;
+  background: rgba(255,255,255,0.2);
+  color: #ffffff;
+  font-size: clamp(18px, 4vw, 22px);
+  font-weight: 900;
+  width: clamp(32px, 7vw, 42px);
+  height: clamp(32px, 7vw, 42px);
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: center;
+  line-height: 1;
+  transition: all 0.3s ease;
+}
+
+.fb-close-btn:hover {
+  background: rgba(255,255,255,0.35);
+  color: #000;
+}
+
+/* Progress Bar */
+.fb-progress {
+  position: absolute;
+  bottom: 0; left: 0;
+  height: 5px;
+  background: rgba(255,255,255,0.9);
+  border-radius: 0;
+  animation: fb-progress 25s linear forwards;
+}
+
+/* Color Variants */
+.fb-success { background: rgba(40, 150, 90, 0.95); }
+.fb-error { background: rgba(200, 40, 40, 0.95); }
+.fb-warning { background: rgba(230, 140, 20, 0.95); }
+.fb-info { background: rgba(30, 80, 200, 0.95); }
+
+/* Animations */
+@keyframes fb-slideDownCenter {
+  from { transform: translate(-50%, -100px); opacity: 0; }
+  to { transform: translate(-50%, 0); opacity: 1; }
+}
+
+@keyframes fb-slideDownLeft {
+  from { transform: translate(-100%, -100%); opacity: 0; }
+  to { transform: translate(0, 0); opacity: 1; }
+}
+
+@keyframes fb-shimmer {
+  0% { left: -100%; }
+  100% { left: 200%; }
+}
+
+@keyframes fb-progress {
+  from { width: 100%; }
+  to { width: 0%; }
+}
+
+@keyframes fb-fadeOutUp {
+  from { transform: translateY(0); opacity: 1; }
+  to { transform: translateY(-80px); opacity: 0; }
+}
+
+.fb-fade-out {
+  animation: fb-fadeOutUp 0.8s ease-out forwards;
+}
+
+/* Mobile-only custom slide from top-left */
+@media (max-width: 600px) {
+  .fb-message-zone {
+    left: 0;
+    transform: none;
+    width: 100%;
+    padding: 0 10px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .fb-alert-box {
+    width: 100%;
+    animation: fb-slideDownLeft 0.7s ease-out;
+  }
+}
+</style>
+
+{% if messages %}
+<div class="fb-message-zone">
+  {% for message in messages %}
+  <div class="fb-alert-box fb-{{ message.tags }}" id="fb-alert-{{ forloop.counter }}">
+    <div class="fb-icon">
+      {% if message.tags == 'success' %}
+        ✓
+      {% elif message.tags == 'error' or message.tags == 'danger' %}
+        !
+      {% elif message.tags == 'warning' %}
+        ⚠
+      {% elif message.tags == 'info' %}
+        ℹ
+      {% else %}
+        💬
+      {% endif %}
+    </div>
+
+    <div class="fb-alert-body">
+      <strong>
+        {% if message.tags == 'success' %}Success
+        {% elif message.tags == 'error' or message.tags == 'danger' %}Error
+        {% elif message.tags == 'warning' %}Warning
+        {% elif message.tags == 'info' %}Information
+        {% else %}Notification
+        {% endif %}
+      </strong>
+      <p>{{ message }}</p>
+    </div>
+
+    <button class="fb-close-btn" onclick="fbDismiss('{{ forloop.counter }}')">X</button>
+    <div class="fb-progress"></div>
+  </div>
+  {% endfor %}
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  {% for message in messages %}
+  setTimeout(() => fbDismiss('{{ forloop.counter }}'), 25000);
+  {% endfor %}
+});
+
+function fbDismiss(id) {
+  const alert = document.getElementById('fb-alert-' + id);
+  if (alert) {
+    alert.classList.add('fb-fade-out');
+    setTimeout(() => {
+      alert.remove();
+      const zone = document.querySelector('.fb-message-zone');
+      if (zone && zone.children.length === 0) zone.remove();
+    }, 800);
+  }
+}
+
+/* Gentle alert tone */
+{% if messages %}
+try {
+  const ctx = new (window.AudioContext || window.webkitAudioContext)();
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+  osc.frequency.value = 750;
+  gain.gain.setValueAtTime(0.06, ctx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+  osc.start(ctx.currentTime);
+  osc.stop(ctx.currentTime + 0.3);
+} catch(e) {}
+{% endif %}
+</script>
+{% endif %}
+
+
+                    <form method="post">
+                        {% csrf_token %}
+                        {% for field in form %}
+                        <div class="mb-3">
+                            {{ field.label_tag }}
+                            {{ field }}
+                            {% if field.errors %}
+                            <div class="text-danger small">
+                                {{ field.errors }}
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="fas fa-paper-plane me-2"></i>Submit Application
+                        </button>
+                    </form>
+
+                    <!-- Agent Contact - Desktop Only -->
+                    <div class="d-none d-lg-block">
+                        {% if property.agent_name %}
+                        <hr class="my-4">
+                        <h6>Contact Agent</h6>
+                        <p class="text-sm mb-2"><strong>{{ property.agent_name }}</strong></p>
+                        {% if property.agent_phone %}
+                        <p class="text-sm mb-2">
+                            <i class="fas fa-phone me-1"></i>
+                            <a href="tel:{{ property.agent_phone }}">{{ property.agent_phone }}</a>
+                        </p>
+                        {% endif %}
+                        {% if property.agent_email %}
+                        <p class="text-sm mb-0">
+                            <i class="fas fa-envelope me-1"></i>
+                            <a href="mailto:{{ property.agent_email }}">{{ property.agent_email }}</a>
+                        </p>
+                        {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Related Properties -->
+    {% if related_properties %}
+    <div class="row mt-4 mt-md-5">
+        <div class="col-12">
+            <h4 class="mb-3 mb-md-4">Related Properties</h4>
+        </div>
+        {% for prop in related_properties %}
+        <div class="col-6 col-md-3 mb-3 mb-md-4">
+            <div class="card h-100">
+                {% if prop.main_image %}
+                <img src="{{ prop.main_image }}" class="card-img-top related-property-img" alt="{{ prop.title }}" style="height: 200px; object-fit: cover;">
+                {% endif %}
+                <div class="card-body p-2 p-md-3">
+                    <h6 class="card-title" style="font-size: 14px;">{{ prop.title|truncatewords:4 }}</h6>
+                    <p class="text-sm text-muted mb-2">
+                        <i class="fas fa-map-marker-alt me-1"></i>{{ prop.city }}
+                    </p>
+                    <p class="font-weight-bold text-primary mb-2" style="font-size: 14px;">${{ prop.price|floatformat:0|intcomma }}</p>
+                    <a href="{% url 'realestate:property_detail' prop.slug %}" class="btn btn-sm btn-outline-primary w-100">
+                        View
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

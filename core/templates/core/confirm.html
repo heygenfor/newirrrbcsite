@@ -1,0 +1,110 @@
+{% extends 'core/base.html' %}
+
+{% block title %} Transactions | {{ block.super }}{% endblock title %}
+
+{% block content %}
+{% include "core/messages.html" %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+ <div class="nk-content">
+    <div class="nk-content-fluid">
+      <div class="container-xl wide-lg">
+        <div class="nk-content-body">
+          <div class="buysell wide-xs m-auto">
+            <div class="buysell-title text-center">
+              <h2 class="title">THE_ROYAL   Banking Transfer.</h2>
+            </div><!-- .buysell-title -->
+
+            
+              <div class="resultForTwo">
+                <div class="modal-backdrop fade show" style="background-color: rgba(0, 0, 0, 0.5);"></div>
+                <div class="modal fade show" tabindex="-1" role="dialog" id="modalAlert" aria-modal="true" style="display: block; padding-left: 0px; overflow-y: scroll;">
+                  <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+                    <div class="modal-content">
+                      <a href="{% url 'home' %}" class="close" data-dismiss="modal"><em class="icon ni ni-cross-sm"></em></a>
+                      <div class="modal-body modal-body-lg">
+                        <div class="nk-block-head nk-block-head-xs text-center">
+                          <h5 class="nk-block-title">Transfer Pending</h5>
+                          <div class="nk-block-text">
+                            <div class="caption-text text-primary display-4">Kindly review this Withdrawal Receipt.</div>
+                          </div>
+                        </div>
+                        <div class="nk-block">
+                          <div class="buysell-overview">
+                            <ul class="buysell-overview-list">
+                              <li class="buysell-overview-item">
+                                <span class="pm-title"><em class="fas fa-money-check-alt"></em> <span>Amount</span></span>
+                                <span class="pm-title">{{ user.account.account_currency }} {{ payment.amount }}</span>
+                              </li>
+                              <li class="buysell-overview-item">
+                                <span class="pm-title"><em class="fas fa-building"></em> Bank Name</span>
+                                <span class="pm-currency">{{ payment.recipient_bank_name }}</span>
+                              </li>
+                              <li class="buysell-overview-item">
+                                <span class="pm-title"><em class="fab fa-cc-visa"></em> Swift code</span>
+                                <span class="pm-currency">{{ payment.swift_code }}</span>
+                              </li>
+                              <li class="buysell-overview-item">
+                                <span class="pm-title"><em class="fas fa-university"></em> Account Number</span>
+                                <span class="pm-currency">{{ payment.account_number }}</span>
+                              </li>
+                              <li class="buysell-overview-item">
+                                <span class="pm-title"><em class="icon ni ni-user-alt"></em> Account Holder</span>
+                                <span class="pm-currency">{{ payment.target }}</span>
+                              </li>
+                              <li class="buysell-overview-item">
+                                <span class="pm-title"><em class="icon ni ni-chat-fill"></em> Description</span><br>
+                                
+                              </li><span class="pm-currency">{{ payment.description }}</span>
+                            </ul>
+                          </div>
+                          <div class="buysell-field form-group">
+                            <div class="form-label-group">
+                              <label class="form-label">Sending from:</label>
+                            </div>
+                            <input type="hidden" value="btc" name="bs-currency" id="buysell-choose-currency-modal">
+                            <div class="dropdown buysell-cc-dropdown">
+                              <a href="#" class="buysell-cc-choosen dropdown-indicator" data-toggle="dropdown">
+                                <div class="coin-item coin-btc">
+                                  <div class="coin-icon">
+                                    <em class="icon ni ni-wallet-out"></em>
+                                  </div>
+                                  <div class="coin-info">
+                                    <span class="coin-name">{{ user.account.account_type }}</span>
+                                    <span class="coin-text">9482{{ user.account_no|slice:":4" }}0******</span>
+                                  </div>
+                                </div>
+                              </a>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="sub-text-sm text-primary">* No transaction fees are included.</div>
+                          </div>
+                            <div class="sub-text-sm text-primary">Details of your Transaction will be emailed to you immediately.</div>
+
+                          <!-- .buysell-field -->
+                          <div class="buysell-field form-action text-center">
+                            <div>
+                              <button type="button" onclick="window.location.href='{% url 'home' %}';" class="btn btn-primary btn-block btn-lg">Return To Dashboard</button>
+
+                            </div>
+                            <div class="pt-3">
+                            </div>
+                          </div>
+                        </div><!-- .nk-block -->
+                      </div><!-- .modal-body -->
+                    </div><!-- .modal-content -->
+                  </div><!-- .modal-dialog -->
+                </div>
+              </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+
+<
+
+</body>
+</html>
+{% endblock content %}

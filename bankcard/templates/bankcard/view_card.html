@@ -1,0 +1,230 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.0-alpha2/css/bootstrap.min.css">
+<style>
+    .card-bank {
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        color: white;
+        position: relative;
+        padding: 20px;
+        background-size: cover;
+        background-repeat: no-repeat;
+        width: 280px;  /* Standard credit card width */
+        height: 200px; /* Standard credit card height */
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        background-blend-mode: darken;
+        background-color: rgba(0, 0, 0, 0.5); /* Dim effect with opacity */
+        margin: 15px; /* Extra margin for space between cards */
+    }
+
+    .card-bank.visa {
+        background-image: url('https://media.gettyimages.com/id/1196095258/photo/in-this-photo-illustration-a-bank-visa-card-seen-on-a-dark.jpg?s=1024x1024&w=gi&k=20&c=yAynLBarF-gfpGUMaVGQKzqZtU9aLhsRdjI2ivp8LFI=');
+    }
+
+    .card-bank.mastercard {
+        background-image: url('https://media.gettyimages.com/id/1196095182/photo/in-this-photo-illustration-the-mastercard-bank-cards-on-a-dark-blue-background.jpg?s=612x612&w=0&k=20&c=1_m-ZWwt5ABEKbLTRkMGRN4Xofc4Cr-e1lwHxXz1FmM=');
+    }
+
+    .card-bank.china {
+        background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Quick_Pass_EMV_Logo.svg/640px-Quick_Pass_EMV_Logo.svg.png');
+    }
+
+    .card-bank.dollar {
+        background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/American_Express_logo_%282018%29.svg/601px-American_Express_logo_%282018%29.svg.png?20191022102801');
+    }
+
+    .card-logo {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        width: 40px; /* Smaller logo size */
+    }
+
+    .card-bank .card-header {
+        text-transform: uppercase;
+        font-size: 16px;
+        font-weight: bold;
+        text-align: left;
+        color: white;
+    }
+
+    .card-bank .card-body {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 0;
+    }
+
+    .card-number {
+        font-size: 16px;
+        letter-spacing: 2px;
+        margin-bottom: 8px;
+    }
+
+    .card-owner, 
+    .card-expiry, 
+    .card-cvv {
+        font-size: 12px;
+        font-weight: normal;
+    }
+
+    .card-owner span,
+    .card-expiry span,
+    .card-cvv span {
+        font-weight: bold;
+        color: white;
+    }
+
+    .small-copy-button {
+        font-size: 0.7rem;
+        padding: 2px 5px;
+        margin-left: 5px;
+        background-color: rgba(255, 255, 255, 0.3);
+        color: white;
+        border: none;
+        border-radius: 3px;
+        cursor: pointer;
+    }
+
+    .small-copy-button:hover {
+        background-color: rgba(255, 255, 255, 0.5);
+    }
+
+    @media only screen and (max-width: 991px) {
+        .card-bank {
+            width: 280px;
+            height: 190px;
+        }
+
+        .card-number {
+            font-size: 14px;
+        }
+    }
+</style>
+
+
+<div class="container"><br><br><br>
+    <h1 class="mb-4">Your Available Cards</h1>
+
+    {% if user.carddetails_set.all %}
+      <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
+        {% for card in user.carddetails_set.all %}
+          <div class="col">
+            <div class="card card-bank 
+              {% if card.card_type == 'Visa Card' %} visa
+              {% elif card.card_type == 'Master Card' %} mastercard
+              {% elif card.card_type == 'China Union Pay' %} china
+              {% elif card.card_type == 'Dollar Card' %} dollar
+              {% endif %}
+            ">
+              <div class="card-header">{{ card.get_card_type_display|title }}</div>
+              <img src="{% if card.card_type == 'Visa Card' %} https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Visa_Inc._logo.svg/800px-Visa_Inc._logo.svg.png?20170118154621
+                         {% elif card.card_type == 'Master Card' %} https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Mastercard_logo.svg/640px-Mastercard_logo.svg.png
+                         {% elif card.card_type == 'China Union Pay' %} https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Quick_Pass_EMV_Logo.svg/640px-Quick_Pass_EMV_Logo.svg.png
+                         {% elif card.card_type == 'Dollar Card' %} https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/American_Express_logo_%282018%29.svg/601px-American_Express_logo_%282018%29.svg.png?20191022102801
+                         {% endif %}" class="card-logo" alt="{{ card.card_type }} logo">
+              <div class="card-body">
+                <div class="flash-message" style="display: none; color: yellow;">Copied!</div>
+
+                <p class="card-number">**** **** **** {{ card.card_number|slice:"-4" }} 
+                    <button class="small-copy-button" data-clipboard-text="{{ card.card_number }}">Copy</button>
+                </p>
+                <p class="card-owner">Owner: <span>{{ card.card_owner }}</span>
+                    <button class="small-copy-button" data-clipboard-text="{{ card.card_owner }}">Copy</button>
+                </p>
+                <div class="row">
+                  <div class="col-6">
+                    <p class="card-cvv">CVV: <span>{{ card.cvv }}</span>
+                        <button class="small-copy-button" data-clipboard-text="{{ card.cvv }}">Copy</button>
+                    </p>
+                  </div>
+                  <div class="col-6">
+                    <p class="card-expiry">Expiry: <span>{{ card.expiry_date }}</span>
+                        <button class="small-copy-button" data-clipboard-text="{{ card.expiry_date }}">Copy</button>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p>You don't have any cards yet.</p>
+    {% endif %}
+</div>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.8/clipboard.min.js"></script>
+<script>
+    var clipboard = new ClipboardJS('.small-copy-button');
+
+    clipboard.on('success', function(e) {
+        e.clearSelection();
+        var flashMessage = e.trigger.closest('.card-body').querySelector('.flash-message');
+        flashMessage.style.display = 'block';
+        
+        // Hide the flash message after 2 seconds
+        setTimeout(function() {
+            flashMessage.style.display = 'none';
+        }, 1000);
+    });
+
+    clipboard.on('error', function(e) {
+        alert('Copy failed. Please select the text and copy manually.');
+    });
+</script>
+
+
+
+
+
+                <div class="nk-content nk-content-fluid">
+                    <div class="container-xl wide-lg">
+                        <div class="nk-content-body">
+                            <div class="kyc-app wide-sm m-auto">
+                                <div class="nk-block-head nk-block-head-lg wide-xs mx-auto">
+                                    <div class="nk-block-head-content text-center">
+                                        <h2 class="nk-block-title fw-normal">Visual Debit Card</h2>
+                                        <div class="nk-block-des">
+                                            <p>Specially designed for your online transactions.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- nk-block-head -->
+                                <div class="nk-block">
+                                    <div class="card card-bordered">
+                                        <div class="card-inner card-inner-lg">
+                                            <div class="nk-kyc-app p-sm-2 text-center">
+                                                <div class="nk-kyc-app-icon">
+                                                    <em class="icon ni ni-cc-new text-primary"></em>
+                                                </div>
+                                                <div class="nk-kyc-app-text mx-auto">
+                                                    <p class="lead">Royal Bank Virtual Debit Card is a digital payment card designed to facilitate frequent online shoppers with a secure and flexible alternative to physical payment cards. The virtual
+                                                        card is instantly issued opon request.</p>
+                                                </div>
+                                                <div class="nk-kyc-app-action">
+                                                    <a href="{% url 'bankcard:card_request' %}" class="btn btn-lg btn-primary"><em class="icon ni ni-cc-new"></em> Request for a New Virtual Card</a>
+                                                </div>
+                                                <p class="nk-kyc-app-action" style="margin-top: 10px;">
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="text-center pt-4">
+                                        <p>If you have any question, please contact our support team <a href="{% url 'transactions:ticket' %}">support@joinrbc.com</a></p>
+                                    </div>
+                                </div>
+                                <!-- nk-block -->
+                            </div>
+                            <!-- kyc-app -->
+                        </div>
+                    </div>
+                </div>
+{% endblock %}

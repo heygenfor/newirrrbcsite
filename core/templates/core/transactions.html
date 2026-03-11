@@ -1,0 +1,800 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block title %} Dashboard | {{ block.super }}{% endblock title %}
+
+{% block content %}
+{% include "core/messages.html" %}
+
+<style>
+    :root {
+        --color-primary-dark: #0f4c75;
+        --color-primary-light: #3282b8;
+        --color-accent: #00d4ff;
+        --color-gold: #fbbf24;
+        --color-success: #10b981;
+        --color-danger: #ef4444;
+        --color-bg: #f8fafc;
+        --color-text-dark: #0f172a;
+        --color-text-muted: #64748b;
+        --card-radius: 1.25rem;
+        --spacing-md: 1.5rem;
+        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+        --shadow-md: 0 10px 30px -5px rgba(15, 76, 117, 0.08);
+        --shadow-lg: 0 20px 50px -12px rgba(15, 76, 117, 0.15);
+    }
+
+    /* Global/Wrapper Styles */
+    .modern-banking-wrapper {
+        font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        color: var(--color-text-dark);
+        background: linear-gradient(180deg, #f1f5f9 0%, var(--color-bg) 100%);
+        padding: 2rem 1rem;
+        min-height: 100vh;
+    }
+
+    /* --- Grid Layout --- */
+    .mb-grid { 
+        display: grid; 
+        grid-template-columns: 1fr; 
+        gap: 32px;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+    @media(min-width: 992px) { .mb-grid { grid-template-columns: 2.2fr 1fr; gap: 32px; } } 
+    
+    .mb-card {
+        background: white;
+        border-radius: var(--card-radius);
+        box-shadow: var(--shadow-md);
+        padding: 1.75rem;
+        border: 1px solid rgba(15, 76, 117, 0.06);
+        transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .mb-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+
+    /* --- PREMIUM HERO SECTION --- */
+    .hero-section {
+        background: radial-gradient(circle at 100% 0%, #3282b8 0%, #0f4c75 50%, #0a2e4d 100%);
+        border-radius: var(--card-radius);
+        padding: 0;
+        color: white;
+        position: relative;
+        overflow: hidden;
+        margin-bottom: var(--spacing-md);
+        box-shadow: 0 25px 50px -12px rgba(15, 76, 117, 0.5);
+        min-height: 240px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .hero-section::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        opacity: 0.6;
+        z-index: 1;
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 2;
+        padding: 2rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 100%;
+        gap: 1.5rem;
+    }
+
+    .hero-top-row { display: flex; justify-content: space-between; align-items: flex-start; }
+
+    .hero-profile-area { display: flex; align-items: center; gap: 16px; }
+
+    .hero-profile-img {
+        width: 64px; height: 64px; border-radius: 50%;
+        border: 3px solid rgba(255, 255, 255, 0.9);
+        object-fit: cover; box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+
+    .hero-profile-placeholder {
+        width: 64px; height: 64px; border-radius: 50%;
+        background: linear-gradient(135deg, #e2e8f0, #cbd5e1);
+        color: var(--color-primary-dark);
+        display: flex; align-items: center; justify-content: center;
+        font-weight: 800; font-size: 1.5rem;
+        border: 3px solid rgba(255,255,255,0.9);
+    }
+
+    .hero-greeting h5 { font-size: 0.9rem; opacity: 0.9; font-weight: 400; margin: 0; text-transform: uppercase; letter-spacing: 1px; }
+    .hero-greeting h3 {
+        font-size: 1.4rem; font-weight: 700; margin: 0;
+        background: linear-gradient(90deg, #fff, #cbd5e1);
+        -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+
+    .card-tech { text-align: right; }
+    .chip-icon {
+        width: 50px; height: 35px;
+        background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
+        border-radius: 6px; position: relative; margin-bottom: 8px;
+        box-shadow: inset 0 1px 2px rgba(255,255,255,0.4);
+    }
+    .chip-icon::after {
+        content: ''; position: absolute; top: 50%; left: 0; width: 100%; height: 1px;
+        background: rgba(0,0,0,0.2);
+    }
+
+    .hero-bottom-row {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+        border-radius: 16px; padding: 1.25rem 1.5rem;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        display: flex; justify-content: space-between; align-items: flex-end;
+    }
+
+    .balance-group small { display: block; font-size: 0.8rem; letter-spacing: 1.5px; text-transform: uppercase; opacity: 0.8; margin-bottom: 0.5rem; }
+    .balance-display {
+        font-family: 'Space Grotesk', system-ui, sans-serif;
+        font-size: clamp(2rem, 5vw, 3rem); font-weight: 600; line-height: 1; margin: 0;
+        color: white; text-shadow: 0 2px 10px rgba(0,0,0,0.2); white-space: nowrap;
+    }
+
+    .account-info { text-align: right; }
+    .acct-number {
+        font-family: 'Space Mono', monospace; font-size: 1.1rem; letter-spacing: 2px;
+        opacity: 0.9; display: flex; align-items: center; gap: 8px; margin-bottom: 4px;
+    }
+    .copy-btn {
+        background: rgba(255,255,255,0.2); border: none; color: white; width: 28px; height: 28px;
+        border-radius: 6px; display: flex; align-items: center; justify-content: center;
+        cursor: pointer; transition: background 0.2s; font-size: 0.9rem;
+    }
+    .copy-btn:hover { background: rgba(255,255,255,0.4); }
+    .acct-label { font-size: 0.75rem; opacity: 0.7; text-transform: uppercase; }
+
+    /* --- Quick Actions --- */
+    .action-grid {
+        display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem; margin-bottom: var(--spacing-md);
+    }
+    @media(min-width: 768px) { .action-grid { grid-template-columns: repeat(4, 1fr); } }
+
+    .action-btn {
+        padding: 1.5rem 1rem; text-align: center; color: var(--color-text-dark);
+        font-weight: 700; text-decoration: none; transition: all 0.3s;
+    }
+    .action-btn:hover { transform: translateY(-6px); color: var(--color-primary-dark); }
+    .action-icon {
+        width: 56px; height: 56px; border-radius: 16px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.5rem; margin: 0 auto 0.75rem;
+        box-shadow: var(--shadow-sm); transition: all 0.3s;
+    }
+    .action-btn:nth-child(1) .action-icon { background: #eff6ff; color: #1e40af; }
+    .action-btn:nth-child(2) .action-icon { background: #fef2f2; color: #b91c1c; }
+    .action-btn:nth-child(3) .action-icon { background: #fffbeb; color: #b45309; }
+    .action-btn:nth-child(4) .action-icon { background: #ecfdf5; color: #047857; }
+
+    /* --- Tabs & Transactions --- */
+    .custom-tabs { 
+        display: flex; gap: 1.5rem; border-bottom: 2px solid #e2e8f0; margin-bottom: 1.5rem; 
+        overflow-x: auto;
+    }
+    .tab-link { 
+        padding-bottom: 0.75rem; font-weight: 700; color: var(--color-text-muted); cursor: pointer; position: relative; white-space: nowrap;
+    }
+    .tab-link.active { color: var(--color-primary-dark); }
+    .tab-link.active::after {
+        content: ''; position: absolute; bottom: -2px; left: 0; width: 100%; height: 3px;
+        background: var(--color-primary-dark); border-radius: 2px;
+    }
+
+    .tx-item {
+        padding: 1rem 0; border-bottom: 1px solid #f1f5f9; cursor: pointer;
+        display: flex; justify-content: space-between; align-items: center; transition: all 0.2s ease;
+    }
+    .tx-item:hover { background-color: #f8fafc; padding-left: 0.5rem; padding-right: 0.5rem; border-radius: 8px; }
+    
+    .tx-left { display: flex; align-items: center; gap: 1rem; }
+    .tx-icon-box { 
+        width: 48px; height: 48px; border-radius: 12px; 
+        display: flex; align-items: center; justify-content: center; font-size: 1.25rem;
+    }
+    .tx-details h6 { margin: 0; font-weight: 700; font-size: 0.95rem; }
+    .tx-details span { font-size: 0.8rem; color: var(--color-text-muted); }
+    
+    .tx-amount h6 { margin: 0; font-weight: 800; }
+    .text-neg { color: #dc2626; }
+    .text-pos { color: #10b981; }
+
+    /* --- Sidebar Widgets --- */
+    .summary-item { display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; border-bottom: 1px dashed #e2e8f0; }
+    .summary-item:last-child { border-bottom: none; }
+    .summary-label { display: flex; align-items: center; gap: 10px; color: var(--color-text-muted); font-size: 0.9rem; }
+    .summary-val { font-weight: 700; color: var(--color-text-dark); }
+
+    .credit-score-circle {
+        position: relative; width: 150px; height: 150px; margin: 0 auto;
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        border-radius: 50%;
+        background: conic-gradient(var(--color-primary-dark) 0deg, #e2e8f0 0deg);
+        transition: background 1s;
+    }
+    .credit-inner {
+        width: 130px; height: 130px; background: white; border-radius: 50%;
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+    }
+    .score-big { font-size: 2.5rem; font-weight: 800; line-height: 1; color: var(--color-primary-dark); }
+
+    /* --- MODERN RECEIPT MODAL STYLES (NEW) --- */
+    .modal-backdrop.show { opacity: 0.7; backdrop-filter: blur(4px); }
+    
+    .modal-content.receipt-style {
+        border: none;
+        border-radius: 20px;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        overflow: hidden;
+    }
+
+    /* Modal Header Colors */
+    .modal-header-banner {
+        height: 120px;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+    }
+    .modal-header-banner.intl { background: linear-gradient(135deg, #1e40af, #3b82f6); }
+    .modal-header-banner.in { background: linear-gradient(135deg, #059669, #10b981); }
+    .modal-header-banner.out { background: linear-gradient(135deg, #dc2626, #ef4444); }
+
+    /* Big Icon in Header */
+    .receipt-icon-circle {
+        width: 70px; height: 70px;
+        background: rgba(255,255,255,0.2);
+        backdrop-filter: blur(4px);
+        border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 2rem;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        border: 2px solid rgba(255,255,255,0.3);
+    }
+
+    .modal-body.receipt-body {
+        padding: 0 2rem 2rem;
+        text-align: center;
+        position: relative;
+        top: -30px; /* Pull up over banner */
+    }
+
+    .receipt-card {
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
+        padding: 1.5rem;
+        border: 1px solid #f1f5f9;
+    }
+
+    .receipt-amount {
+        font-size: 2rem;
+        font-weight: 800;
+        margin: 0.5rem 0 0.25rem;
+        color: var(--color-text-dark);
+        font-family: 'Space Grotesk', sans-serif;
+    }
+
+    .receipt-status {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    .status-success { background: #ecfdf5; color: #059669; }
+    .status-pending { background: #fffbeb; color: #d97706; }
+    .status-failed { background: #fef2f2; color: #dc2626; }
+
+    .receipt-details-list {
+        margin-top: 1.5rem;
+        text-align: left;
+    }
+
+    .rd-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.75rem 0;
+        border-bottom: 1px dashed #e2e8f0;
+        font-size: 0.9rem;
+    }
+    .rd-row:last-child { border-bottom: none; }
+    .rd-label { color: var(--color-text-muted); }
+    .rd-value { font-weight: 600; color: var(--color-text-dark); text-align: right; }
+
+    .receipt-logo-grid {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin-top: 1rem;
+        opacity: 0.5;
+    }
+    .bank-logo-placeholder { width: 30px; height: 30px; background: #e2e8f0; border-radius: 4px; }
+
+    .modal-close-btn {
+        position: absolute;
+        top: 15px; right: 15px;
+        background: rgba(0,0,0,0.2);
+        border: none;
+        color: white;
+        width: 32px; height: 32px;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex; align-items: center; justify-content: center;
+        transition: background 0.2s;
+        z-index: 10;
+    }
+    .modal-close-btn:hover { background: rgba(0,0,0,0.4); }
+
+    /* Responsive adjustments */
+    @media(max-width: 767px) {
+        .hero-section { min-height: auto; padding-bottom: 0; }
+        .hero-bottom-row { flex-direction: column; align-items: flex-start; gap: 1rem; }
+        .account-info { text-align: left; margin-top: 0.5rem; width: 100%; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1rem; }
+        .hero-profile-img { width: 50px; height: 50px; }
+        .balance-display { font-size: 2.25rem; }
+        
+        .receipt-amount { font-size: 1.75rem; }
+    }
+</style>
+
+<div class="modern-banking-wrapper">
+    <br><br>
+    <div class="mb-grid">
+        
+        <div class="main-col">
+            
+            <!-- Hero Section -->
+            <div class="hero-section">
+                <div class="hero-content">
+                    <div class="hero-top-row">
+                        <div class="hero-profile-area">
+                            {% if user.account.picture %}
+                            <img src="{{ user.account.picture.url }}" alt="Profile" class="hero-profile-img">
+                            {% else %}
+                            <div class="hero-profile-placeholder">
+                                {{ user.first_name|slice:"1" }}
+                            </div>
+                            {% endif %}
+                            
+                            <div class="hero-greeting">
+                                <h5 style="color: white;">Welcome,</h5>
+                                <h3 id="dynamic-greeting">{{ user.username }}</h3>
+                            </div>
+                        </div>
+
+                        <div class="card-tech">
+                            <div class="chip-icon"></div>
+                            <em class="icon ni ni-wifi" style="font-size: 1.5rem; opacity: 0.7;"></em>
+                        </div>
+                    </div>
+
+                    <div class="hero-bottom-row">
+                        <div class="balance-group">
+                            <small>Available Balance</small>
+                            <h2 class="balance-display">
+                                {% if user.account.account_currency == 'USD' %}$
+                                {% elif user.account.account_currency == 'EUR' %}€
+                                {% elif user.account.account_currency == 'GBP' %}£
+                                {% else %}{{ user.account.account_currency }}{% endif %}
+                                {{ user.balance|intcomma }}
+                            </h2>
+                        </div>
+                        
+                        <div class="account-info">
+                            <div class="acct-number">
+                                **** **** {{ user.account_no|slice:"-4:" }}
+                                <button class="copy-btn" onclick="copyToClipboard('{{ user.account_no }}')" title="Copy Account Number">
+                                    <em class="icon ni ni-copy"></em>
+                                </button>
+                            </div>
+                            <div class="acct-label">
+                                {{ user.account.account_currency }} SAVINGS • {{ user.account.account_status|upper }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="action-grid">
+                <a href="{% url 'transactions:withdrawal' %}" class="action-btn mb-card">
+                    <div class="action-icon"><em class="icon ni ni-send-alt"></em></div>
+                    <span>Transfer</span>
+                </a>
+                <a href="{% url 'transactions:paypal_withdrawal' %}" class="action-btn mb-card">
+                    <div class="action-icon"><span class="nk-menu-icon">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/3/31/PayPal_Logo2014.svg" alt="Paypal Logo" style="height: 24px;">
+                    </span></div>
+                    <span>PayPal</span>
+                </a>
+                <a href="{% url 'transactions:withdrawal' %}" class="action-btn mb-card">
+                    <div class="action-icon"><span class="nk-menu-icon">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Logo_Western_Union.svg/132px-Logo_Western_Union.svg.png" alt="Western Union" style="height: 24px;">
+                    </span></div>
+                    <span>Western Union</span>
+                </a>
+                <a href="{% url 'transactions:withdrawal' %}" class="action-btn mb-card">
+                    <div class="action-icon"><span class="nk-menu-icon">
+                        <img src="https://w7.pngwing.com/pngs/319/846/png-transparent-skrill-digital-wallet-neteller-e-commerce-payment-system-android-purple-violet-text-thumbnail.png" alt="Skrill" style="height: 24px;">
+                    </span></div>
+                    <span>Skrill</span>
+                </a>
+            </div>
+
+            <!-- Transactions List -->
+            <div class="mb-card">
+                <h5 class="mb-section-title" style="font-size: 1.2rem; color: var(--color-primary-dark);">Recent Activity</h5>
+                
+                <div class="custom-tabs">
+                    <div class="tab-link active" onclick="openTab('intl', this)">International</div>
+                    <div class="tab-link" onclick="openTab('received', this)">Incoming</div>
+                    <div class="tab-link" onclick="openTab('sent', this)">Outgoing</div>
+                </div>
+
+                <!-- 1. International Tab -->
+                <div id="tab-intl" class="tab-content-panel">
+                    {% for obj in withdrawal|slice:"-5:" reversed %}
+                    <div class="tx-item" data-toggle="modal" data-target="#modalInternational_{{ obj.pk }}">
+                        <div class="tx-left">
+                            <div class="tx-icon-box" style="background: #eff6ff; color: #1e40af;">
+                                <em class="icon ni ni-globe"></em>
+                            </div>
+                            <div class="tx-details">
+                                <h6>{{ obj.target }}</h6>
+                                <span>{{ obj.timestamp|date:"M d" }} • Swift Transfer</span>
+                            </div>
+                        </div>
+                        <div class="tx-amount">
+                            <h6 class="text-neg">- {{ obj.amount|intcomma }}</h6>
+                            <span class="badge badge-dim badge-light">{{ obj.status }}</span>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <p class="text-muted text-center py-3">No recent international activity.</p>
+                    {% endfor %}
+                </div>
+
+                <!-- 2. Incoming Tab -->
+                <div id="tab-received" class="tab-content-panel" style="display: none;">
+                    {% for obj in local_withdrawals_received|slice:"-5:" reversed %}
+                    <div class="tx-item" data-toggle="modal" data-target="#modalIncoming_{{ obj.pk }}">
+                        <div class="tx-left">
+                            <div class="tx-icon-box" style="background: #ecfdf5; color: #047857;">
+                                <em class="icon ni ni-arrow-down-left"></em>
+                            </div>
+                            <div class="tx-details">
+                                <h6>{{ obj.sender_name }}</h6>
+                                <span>{{ obj.timestamp|date:"M d" }} • Incoming</span>
+                            </div>
+                        </div>
+                        <div class="tx-amount">
+                            <h6 class="text-pos">+ {{ obj.amount|intcomma }}</h6>
+                            <span class="badge badge-dim badge-success">Success</span>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <p class="text-muted text-center py-3">No incoming transfers.</p>
+                    {% endfor %}
+                </div>
+
+                <!-- 3. Outgoing Tab -->
+                <div id="tab-sent" class="tab-content-panel" style="display: none;">
+                    {% for obj in local_withdrawals_sent|slice:"-5:" reversed %}
+                    <div class="tx-item" data-toggle="modal" data-target="#modalOutgoing_{{ obj.pk }}">
+                        <div class="tx-left">
+                            <div class="tx-icon-box" style="background: #fef2f2; color: #b91c1c;">
+                                <em class="icon ni ni-arrow-up-right"></em>
+                            </div>
+                            <div class="tx-details">
+                                <h6>{{ obj.recipient_name }}</h6>
+                                <span>{{ obj.timestamp|date:"M d" }} • Payment</span>
+                            </div>
+                        </div>
+                        <div class="tx-amount">
+                            <h6 class="text-neg">- {{ obj.amount|intcomma }}</h6>
+                            <span class="badge badge-dim badge-warning">{{ obj.status }}</span>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <p class="text-muted text-center py-3">No outgoing payments.</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="side-col">
+            <div class="mb-card mb-4 account-summary-widget">
+                <h6 class="mb-3" style="font-weight: 800; color: var(--color-primary-dark);">Account Status</h6>
+                
+                <div class="summary-item">
+                    <span class="summary-label"><em class="icon ni ni-user-circle"></em> Holder</span>
+                    <span class="summary-val">{{ user.full_name }}</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label"><em class="icon ni ni-shield-check"></em> KYC Level</span>
+                    <span class="badge badge-dim badge-success">Tier 3 Verified</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label"><em class="icon ni ni-calendar"></em> Joined</span>
+                    <span class="summary-val">{{ user.date_joined|date:"M Y" }}</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label"><em class="icon ni ni-emails"></em> Email</span>
+                    <span class="summary-val" style="font-size: 0.85rem;">{{ user.email|truncatechars:20 }}</span>
+                </div>
+            </div>
+
+            <div class="mb-card mb-4 text-center">
+                <h6 class="mb-4" style="font-weight: 800;">Credit Health</h6>
+                <div class="credit-score-circle" id="score-circle">
+                    <div class="credit-inner">
+                        <span class="score-big" id="credit-score-val">{{ user.account.credit_score }}</span>
+                        <small class="text-muted">FICO Score</small>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <span class="badge badge-dim {% if user.account.credit_score >= 700 %}badge-success{% else %}badge-warning{% endif %}">
+                        {% if user.account.credit_score >= 700 %}Excellent{% else %}Fair{% endif %}
+                    </span>
+                </div>
+            </div>
+
+            <div class="mb-card mb-4">
+                <h6 class="mb-3" style="font-weight: 800;">Market Watch</h6>
+                <div class="tradingview-widget-container" style="height: 200px; border-radius: 12px; overflow: hidden;">
+                    <div class="tradingview-widget-container__widget"></div>
+                    <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js" async>
+                    {
+                        "symbol": "FX:EURUSD",
+                        "width": "100%", "height": "100%", "locale": "en", "dateRange": "12M",
+                        "colorTheme": "light", "trendLineColor": "#0f4c75", "underLineColor": "#e0f2fe",
+                        "isTransparent": true, "autosize": true
+                    }
+                    </script>
+                </div>
+            </div>
+
+            <div class="mb-card mb-4">
+                <h6 class="mb-3" style="font-weight: 800;">Security Status</h6>
+                <div class="d-flex align-items-center gap-3">
+                    <img id="flag" src="" alt="Flag" style="width: 32px; border-radius: 4px; display: none;">
+                    <div>
+                        <div id="ip" style="font-weight: 700; font-family: monospace;">Scanning IP...</div>
+                        <small id="location" class="text-muted">Encrypting location data...</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ================= MODALS SECTION ================= -->
+
+<!-- 1. INTERNATIONAL MODALS LOOP -->
+{% for obj in withdrawal reversed %}
+<div class="modal fade" id="modalInternational_{{ obj.pk }}" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content receipt-style">
+            <button type="button" class="modal-close-btn" data-dismiss="modal" aria-label="Close">
+                <em class="icon ni ni-cross"></em>
+            </button>
+            <div class="modal-header-banner intl">
+                <div class="receipt-icon-circle">
+                    <em class="icon ni ni-globe"></em>
+                </div>
+            </div>
+            <div class="modal-body receipt-body">
+                <div class="receipt-card">
+                    <h5 class="text-muted text-uppercase" style="font-size: 0.75rem; letter-spacing: 1px;">International Transfer</h5>
+                    <div class="receipt-amount">- {{ obj.amount|intcomma }} {{ user.account.account_currency }}</div>
+                    <span class="receipt-status {% if obj.status == 'success' %}status-success{% else %}status-pending{% endif %}">
+                        {{ obj.status }}
+                    </span>
+
+                    <div class="receipt-details-list">
+                        <div class="rd-row">
+                            <span class="rd-label">Beneficiary</span>
+                            <span class="rd-value">{{ obj.target }}</span>
+                        </div>
+                        <div class="rd-row">
+                            <span class="rd-label">Bank Name</span>
+                            <span class="rd-value">Foreign Bank</span>
+                        </div>
+                        <div class="rd-row">
+                            <span class="rd-label">Date</span>
+                            <span class="rd-value">{{ obj.timestamp|date:"d M, Y" }}</span>
+                        </div>
+                        <div class="rd-row">
+                            <span class="rd-label">Reference</span>
+                            <span class="rd-value">INT-{{ obj.pk|stringformat:"06d" }}</span>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 pt-3 border-top">
+                        <button class="btn btn-outline-light text-primary btn-block" onclick="window.print()">
+                            <em class="icon ni ni-printer mr-2"></em> Save Receipt
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+<!-- 2. INCOMING MODALS LOOP -->
+{% for obj in local_withdrawals_received reversed %}
+<div class="modal fade" id="modalIncoming_{{ obj.pk }}" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content receipt-style">
+            <button type="button" class="modal-close-btn" data-dismiss="modal" aria-label="Close">
+                <em class="icon ni ni-cross"></em>
+            </button>
+            <div class="modal-header-banner in">
+                <div class="receipt-icon-circle">
+                    <em class="icon ni ni-arrow-down-left"></em>
+                </div>
+            </div>
+            <div class="modal-body receipt-body">
+                <div class="receipt-card">
+                    <h5 class="text-muted text-uppercase" style="font-size: 0.75rem; letter-spacing: 1px;">Money Received</h5>
+                    <div class="receipt-amount text-success">+ {{ obj.amount|intcomma }} {{ user.account.account_currency }}</div>
+                    <span class="receipt-status status-success">Completed</span>
+
+                    <div class="receipt-details-list">
+                        <div class="rd-row">
+                            <span class="rd-label">From Sender</span>
+                            <span class="rd-value">{{ obj.sender_name }}</span>
+                        </div>
+                        <div class="rd-row">
+                            <span class="rd-label">Transaction Type</span>
+                            <span class="rd-value">Direct Deposit</span>
+                        </div>
+                        <div class="rd-row">
+                            <span class="rd-label">Date Received</span>
+                            <span class="rd-value">{{ obj.timestamp|date:"d M, Y - H:i" }}</span>
+                        </div>
+                        <div class="rd-row">
+                            <span class="rd-label">Transaction ID</span>
+                            <span class="rd-value">INC-{{ obj.pk|stringformat:"08d" }}</span>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 pt-3 border-top">
+                        <button class="btn btn-outline-light text-success btn-block" onclick="window.print()">
+                            <em class="icon ni ni-file-pdf mr-2"></em> Download PDF
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+<!-- 3. OUTGOING MODALS LOOP -->
+{% for obj in local_withdrawals_sent reversed %}
+<div class="modal fade" id="modalOutgoing_{{ obj.pk }}" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content receipt-style">
+            <button type="button" class="modal-close-btn" data-dismiss="modal" aria-label="Close">
+                <em class="icon ni ni-cross"></em>
+            </button>
+            <div class="modal-header-banner out">
+                <div class="receipt-icon-circle">
+                    <em class="icon ni ni-arrow-up-right"></em>
+                </div>
+            </div>
+            <div class="modal-body receipt-body">
+                <div class="receipt-card">
+                    <h5 class="text-muted text-uppercase" style="font-size: 0.75rem; letter-spacing: 1px;">Payment Sent</h5>
+                    <div class="receipt-amount text-neg">- {{ obj.amount|intcomma }} {{ user.account.account_currency }}</div>
+                    <span class="receipt-status {% if obj.status == 'success' %}status-success{% else %}status-pending{% endif %}">
+                        {{ obj.status }}
+                    </span>
+
+                    <div class="receipt-details-list">
+                        <div class="rd-row">
+                            <span class="rd-label">To Recipient</span>
+                            <span class="rd-value">{{ obj.recipient_name }}</span>
+                        </div>
+                        <div class="rd-row">
+                            <span class="rd-label">Payment Purpose</span>
+                            <span class="rd-value">Funds Transfer</span>
+                        </div>
+                        <div class="rd-row">
+                            <span class="rd-label">Date Sent</span>
+                            <span class="rd-value">{{ obj.timestamp|date:"d M, Y - H:i" }}</span>
+                        </div>
+                        <div class="rd-row">
+                            <span class="rd-label">Reference ID</span>
+                            <span class="rd-value">OUT-{{ obj.pk|stringformat:"08d" }}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="receipt-logo-grid">
+                        <!-- Simulated Payment Processor Logos -->
+                         <em class="icon ni ni-visa" style="font-size: 1.5rem;"></em>
+                         <em class="icon ni ni-master-card" style="font-size: 1.5rem;"></em>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+<script>
+    // Copy Function
+    function copyToClipboard(text) {
+        navigator.clipboard.writeText(text).then(() => {
+            alert("Account Number Copied!");
+        });
+    }
+
+    // Tabs
+    window.openTab = function(tabName, el) {
+        document.querySelectorAll(".tab-content-panel").forEach(x => x.style.display = "none");
+        document.querySelectorAll(".tab-link").forEach(x => x.classList.remove("active"));
+        document.getElementById(`tab-${tabName}`).style.display = "block";
+        if(el) el.classList.add("active");
+    }
+
+    // IP Logic
+    async function fetchIP() {
+        const setD = (i,l,c) => { 
+            if(document.getElementById("ip")) document.getElementById("ip").textContent = i; 
+            if(document.getElementById("location")) document.getElementById("location").textContent = l;
+            if(c && document.getElementById("flag")) {
+                document.getElementById("flag").src = `https://flagcdn.com/w40/${c.toLowerCase()}.png`;
+                document.getElementById("flag").style.display = "block";
+            }
+        };
+        try {
+            const r = await fetch("https://ipapi.co/json/");
+            if(!r.ok) throw new Error();
+            const d = await r.json();
+            setD(d.ip, `${d.city}, ${d.country_name}`, d.country_code);
+        } catch(e) {
+            try {
+                const r2 = await fetch("https://ipwho.is/");
+                const d2 = await r2.json();
+                setD(d2.ip, `${d2.city}, ${d2.country}`, d2.country_code);
+            } catch(er) { setD("Hidden", "Secure Connection", null); }
+        }
+    }
+
+    // Credit Score Circle Animation
+    function drawScore() {
+        const el = document.getElementById('score-circle');
+        const scoreStr = document.getElementById('credit-score-val').textContent;
+        const score = parseInt(scoreStr);
+        if(!el || isNaN(score)) return;
+        
+        const pct = ((score - 300) / 550) * 100; // 300-850 range
+        setTimeout(() => {
+            el.style.background = `conic-gradient(var(--color-primary-dark) ${pct}%, #e2e8f0 0deg)`;
+        }, 300);
+    }
+
+    window.onload = () => { fetchIP(); drawScore(); };
+</script>
+{% endblock content %}

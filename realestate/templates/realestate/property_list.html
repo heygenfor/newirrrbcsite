@@ -1,0 +1,262 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}Real Estate Properties{% endblock %}
+
+{% block content %}
+                            <br>
+                            <br>
+                                                        <br>
+<style>
+    /* Mobile Responsive Styles */
+    @media (max-width: 768px) {
+        .container-fluid {
+            padding-left: 15px !important;
+            padding-right: 15px !important;
+        }
+        
+        .card {
+            margin-bottom: 1rem;
+        }
+        
+        .property-card-img {
+            height: 200px !important;
+        }
+        
+        .search-form-mobile .form-control,
+        .search-form-mobile .btn {
+            font-size: 14px;
+            padding: 8px 12px;
+        }
+        
+        .property-stats {
+            font-size: 12px;
+        }
+        
+        .badge {
+            font-size: 10px;
+            padding: 4px 8px;
+        }
+        
+        h4 {
+            font-size: 18px;
+        }
+        
+        h5 {
+            font-size: 16px;
+        }
+        
+        .card-title {
+            font-size: 14px;
+        }
+        
+        .text-lg {
+            font-size: 16px !important;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .property-card-img {
+            height: 180px !important;
+        }
+        
+        .btn-sm {
+            font-size: 12px;
+            padding: 6px 10px;
+        }
+    }
+</style>
+
+<div class="container-fluid py-3 py-md-4">
+    <!-- Search/Filter Section -->
+    <div class="row mb-3 mb-md-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header pb-0">
+                    <h6 class="mb-2 mb-md-0">Search Properties</h6>
+                </div>
+                <div class="card-body search-form-mobile">
+                    <form method="get" action="{% url 'realestate:property_list' %}">
+                        <!-- Mobile: Stack all fields -->
+                        <div class="row">
+                            <div class="col-12 col-md-4 mb-2 mb-md-3">
+                                {{ form.search }}
+                            </div>
+                            <div class="col-6 col-md-2 mb-2 mb-md-3">
+                                {{ form.transaction_type }}
+                            </div>
+                            <div class="col-6 col-md-2 mb-2 mb-md-3">
+                                {{ form.status }}
+                            </div>
+                            <div class="col-6 col-md-2 mb-2 mb-md-3">
+                                {{ form.city }}
+                            </div>
+                            <div class="col-6 col-md-2 mb-2 mb-md-3">
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="fas fa-search me-1"></i><span class="d-none d-sm-inline">Search</span><span class="d-inline d-sm-none">Go</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6 col-md-3 mb-2 mb-md-0">
+                                {{ form.min_price }}
+                            </div>
+                            <div class="col-6 col-md-3 mb-2 mb-md-0">
+                                {{ form.max_price }}
+                            </div>
+                            <div class="col-6 col-md-3 mb-2 mb-md-0">
+                                {{ form.min_bedrooms }}
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <a href="{% url 'realestate:property_list' %}" class="btn btn-outline-secondary w-100">
+                                    <i class="fas fa-times me-1"></i><span class="d-none d-sm-inline">Clear</span>
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Featured Properties -->
+    {% if featured_properties %}
+    <div class="row mb-3 mb-md-4">
+        <div class="col-12">
+            <h4 class="mb-2 mb-md-3">Featured Properties</h4>
+        </div>
+        {% for property in featured_properties %}
+        <div class="col-12 col-sm-6 col-lg-4 mb-3 mb-md-4">
+            <div class="card h-100">
+                {% if property.main_image %}
+                <img src="{{ property.main_image }}" class="card-img-top property-card-img" alt="{{ property.title }}" style="height: 250px; object-fit: cover;">
+                {% else %}
+                <div class="bg-gradient-primary property-card-img" style="height: 250px; display: flex; align-items: center; justify-content: center;">
+                    <i class="fas fa-home fa-3x fa-md-5x text-white"></i>
+                </div>
+                {% endif %}
+                <div class="card-body">
+                    <div class="mb-2">
+                        <span class="badge bg-gradient-success">Featured</span>
+                        <span class="badge bg-gradient-info">{{ property.get_transaction_type_display }}</span>
+                    </div>
+                    <h5 class="card-title">{{ property.title|truncatewords:8 }}</h5>
+                    <p class="card-text text-sm mb-2">
+                        <i class="fas fa-map-marker-alt me-1"></i>{{ property.city }}, {{ property.state }}
+                    </p>
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="text-lg font-weight-bold text-primary">${{ property.price|floatformat:0|intcomma }}</span>
+                        <span class="text-sm text-muted">{{ property.area_sqft }} sqft</span>
+                    </div>
+                    <div class="d-flex justify-content-between text-sm property-stats mb-3">
+                        <span><i class="fas fa-bed me-1"></i>{{ property.bedrooms }}</span>
+                        <span><i class="fas fa-bath me-1"></i>{{ property.bathrooms }}</span>
+                        <span><i class="fas fa-car me-1"></i>{{ property.garage }}</span>
+                    </div>
+                    <a href="{% url 'realestate:property_detail' property.slug %}" class="btn btn-primary btn-sm w-100">
+                        View Details
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- All Properties -->
+    <div class="row">
+        <div class="col-12">
+            <h4 class="mb-2 mb-md-3">All Properties <span class="text-muted" style="font-size: 14px;">({{ total_count }} found)</span></h4>
+        </div>
+        {% for property in properties %}
+        <div class="col-12 col-sm-6 col-lg-4 mb-3 mb-md-4">
+            <div class="card h-100">
+                {% if property.main_image %}
+                <img src="{{ property.main_image }}" class="card-img-top property-card-img" alt="{{ property.title }}" style="height: 250px; object-fit: cover;">
+                {% else %}
+                <div class="bg-gradient-dark property-card-img" style="height: 250px; display: flex; align-items: center; justify-content: center;">
+                    <i class="fas fa-home fa-3x fa-md-5x text-white"></i>
+                </div>
+                {% endif %}
+                <div class="card-body">
+                    <div class="mb-2">
+                        <span class="badge bg-gradient-info">{{ property.get_transaction_type_display }}</span>
+                        {% if property.status == 'available' %}
+                        <span class="badge bg-gradient-success">
+                            {{ property.get_status_display }}
+                        </span>
+                        {% else %}
+                        <span class="badge bg-gradient-warning">
+                            {{ property.get_status_display }}
+                        </span>
+                        {% endif %}
+                    </div>
+                    <h5 class="card-title">{{ property.title|truncatewords:8 }}</h5>
+                    <p class="card-text text-sm mb-2">
+                        <i class="fas fa-map-marker-alt me-1"></i>{{ property.city }}, {{ property.state }}
+                    </p>
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="text-lg font-weight-bold text-primary">${{ property.price|floatformat:0|intcomma }}</span>
+                        <span class="text-sm text-muted">{{ property.area_sqft }} sqft</span>
+                    </div>
+                    <div class="d-flex justify-content-between text-sm property-stats mb-3">
+                        <span><i class="fas fa-bed me-1"></i>{{ property.bedrooms }}</span>
+                        <span><i class="fas fa-bath me-1"></i>{{ property.bathrooms }}</span>
+                        <span><i class="fas fa-car me-1"></i>{{ property.garage }}</span>
+                    </div>
+                    <a href="{% url 'realestate:property_detail' property.slug %}" class="btn btn-primary btn-sm w-100">
+                        View Details
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="alert alert-info text-center">
+                <i class="fas fa-info-circle me-2"></i>No properties found matching your criteria.
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    {% if properties.has_other_pages %}
+    <div class="row mt-3 mt-md-4">
+        <div class="col-12">
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center flex-wrap">
+                    {% if properties.has_previous %}
+                    <li class="page-item mb-2">
+                        <a class="page-link" href="?page={{ properties.previous_page_number }}">
+                            <span class="d-none d-sm-inline">Previous</span>
+                            <span class="d-inline d-sm-none"><i class="fas fa-chevron-left"></i></span>
+                        </a>
+                    </li>
+                    {% endif %}
+                    
+                    {% for num in properties.paginator.page_range %}
+                    {% if num == properties.number or num == 1 or num == properties.paginator.num_pages or num >= properties.number|add:"-2" and num <= properties.number|add:"2" %}
+                    <li class="page-item {% if properties.number == num %}active{% endif %} mb-2">
+                        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                    </li>
+                    {% elif num == 2 or num == properties.paginator.num_pages|add:"-1" %}
+                    <li class="page-item disabled mb-2"><span class="page-link">...</span></li>
+                    {% endif %}
+                    {% endfor %}
+                    
+                    {% if properties.has_next %}
+                    <li class="page-item mb-2">
+                        <a class="page-link" href="?page={{ properties.next_page_number }}">
+                            <span class="d-none d-sm-inline">Next</span>
+                            <span class="d-inline d-sm-none"><i class="fas fa-chevron-right"></i></span>
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

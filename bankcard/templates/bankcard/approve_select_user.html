@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Approve Bank Card</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Inter", sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        background-color: #F7F9FC;
+      }
+      h1 {
+        font-weight: 600;
+        font-size: 32px;
+        line-height: 48px;
+        color: #07074D;
+        margin-bottom: 32px;
+      }
+      form {
+        width: 100%;
+        max-width: 550px;
+        padding: 32px;
+        background-color: white;
+        border-radius: 5px;
+        box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.05);
+      }
+      label {
+        color: #07074D;
+        font-weight: 500;
+        font-size: 16px;
+        line-height: 24px;
+        margin-bottom: 8px;
+        display: block;
+      }
+      select,
+      textarea {
+        width: 100%;
+        padding: 10px 0;
+        border: none;
+        border-bottom: 1px solid #DDE3EC;
+        background: #FFFFFF;
+        font-weight: 500;
+        font-size: 16px;
+        color: #07074D;
+        outline: none;
+        resize: none;
+      }
+      select::placeholder,
+      textarea::placeholder {
+        color: #536387;
+      }
+      select:focus,
+      textarea:focus {
+        border-color: #6A64F1;
+      }
+      select:focus + label,
+      textarea:focus + label {
+        color: #6A64F1;
+      }
+      button[type="button"] {
+        font-size: 16px;
+        border-radius: 5px;
+        padding: 12px 25px;
+        border: none;
+        font-weight: 500;
+        background-color: #6A64F1;
+        color: white;
+        cursor: pointer;
+        margin-top: 25px;
+      }
+      button[type="button"]:hover {
+        box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.05);
+      }
+      button[type="submit"] {
+        font-size: 16px;
+        border-radius: 5px;
+        padding: 12px 25px;
+        border: none;
+        font-weight: 500;
+        background-color: #6A64F1;
+        color: white;
+        cursor: pointer;
+        margin-top: 25px;
+      }
+      button[type="submit"]:hover {
+        box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.05);
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Select a User</h1>
+<form method="post">
+  {% csrf_token %}
+  <label for="user-select">Select a user:</label>
+  <select id="user-select" name="user">
+    {% for user in users %}
+      <option value="{{ user.email }}">{{ user.full_name }}</option>
+    {% endfor %}
+  </select>
+
+  <label for="card-type-select">Select a card type:</label>
+  <select id="card-type-select" name="card_type">
+    {% for choice in form.card_type.field.choices %}
+      <option value="{{ choice.0 }}">{{ choice.1 }}</option>
+    {% endfor %}
+  </select>
+
+
+  <button type="submit">Submit</button>
+</form>
+
+          <button type="button" onclick="window.location.href='{% url 'admin:index' %}'">Go Back</button>
+
+
+
+    <script>
+    function goBack() {
+      window.history.back();
+    }
+    </script>
+
+      
+
+

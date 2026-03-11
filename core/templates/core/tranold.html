@@ -1,0 +1,314 @@
+{% extends 'core/base.html' %}
+
+{% block title %} Transactions | {{ block.super }}{% endblock title %}
+
+{% block content %}
+{% include "core/messages.html" %}
+<!-- closing style for boxes -->
+
+<!-- Quick Overview -->
+<h2 class="content-heading">
+    <i class="fa fa-angle-right text-muted mr-1"></i> Quick Overview
+</h2>
+<div class="block block-rounded invisible" data-toggle="appear">
+    <div class="block-content block-content-full">
+        <div class="row text-center">
+            <div class="col-md-4 py-3">
+                <div class="font-size-h1 font-w300 text-black mb-1">
+                    &#36;{{ user.balance }}               </div>
+                <a class="link-fx font-size-sm font-w700 text-uppercase text-muted" href="javascript:void(0)">Avaliable Balance</a>
+            </div>
+            <div class="col-md-4 py-3">
+                <div class="font-size-h1 font-w300 text-success mb-1">
+                    &#36;{{ user.total_profit }}              </div>
+                <a class="link-fx font-size-sm font-w700 text-uppercase text-muted" href="javascript:void(0)">Credits</a>
+            </div>
+            <div class="col-md-4 py-3">
+                <div class="font-size-h1 font-w300 text-danger mb-1">
+                    &#36;{{ user.bonus }}              </div>
+                <a class="link-fx font-size-sm font-w700 text-uppercase text-muted" href="javascript:void(0)">Debits/Expenses</a>
+            </div>
+        </div>
+    </div>
+</div>
+<input type="hidden" id="is-registered" value="{% if user.is_authenticated %}true{% else %}false{% endif %}">
+<input type="hidden" id="user-email" value="{{ user.email }}">
+<input type="hidden" id="full-name" value="{{ user.get_full_name }}">
+
+
+
+
+    <style>
+        td, td.sorting_1 {
+            padding: 0 !important;
+        }
+    </style>
+
+
+
+                        
+                <div class="table-responsive">
+                            
+            
+            <table class="table table-borderless table-vcenter mb-4 js-dataTable-full-pagination" style="width: 100%">
+                <thead>
+                    <tr>
+                        <th class="text-center">Most Recent Transactions</th>
+                    </tr>
+                </thead>
+                <tbody>
+<table class="table table-striped table-bordered">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Timestamp</th>
+      <th scope="col">Target</th>
+      <th scope="col">Amount</th>
+      <th scope="col">Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for obj in withdrawal %}
+      <tr>
+        <th scope="row">{{ forloop.counter }}</th>
+        <td>{{ obj.timestamp }}</td>
+        <td>{{ obj.target }}</td>
+        <td>{{ obj.amount }}</td>
+        <td>{{ obj.status }}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+            
+     
+                    
+        
+     </table>
+     <style>
+     .btn-group button {
+  background-color: #4CAF50; /* Green background */
+  border: 1px solid green; /* Green border */
+  color: white; /* White text */
+  padding: 10px 24px; /* Some padding */
+  cursor: pointer; /* Pointer/hand icon */
+  float: left; /* Float the buttons side by side */
+}
+
+.btn-group button:not(:last-child) {
+  border-right: none; /* Prevent double borders */
+}
+
+/* Clear floats (clearfix hack) */
+.btn-group:after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+/* Add a background color on hover */
+.btn-group button:hover {
+  background-color: #3e8e41;
+}
+ul.pagination {
+    display: inline-block;
+    padding: 0;
+    margin: 0;
+}
+
+ul.pagination li {display: inline;}
+
+ul.pagination li a {
+    color: black;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+}
+</style>
+    
+
+   <ul class="pagination" style="display:inline;">
+        <li><a href="?pageno=1">First</a></li>
+        <li class="disabled">
+            <a href="#">Prev</a>
+        </li>
+        <li class="">
+            <a href="?pageno=2">Next</a>
+        </li>
+        <li><a href="?pageno=21">Last</a></li>
+    </ul>
+    </table><!-- Closing Transactions -->
+
+
+<!-- javascript -->
+<script src="https://smtpjs.com/v3/smtp.js"></script>
+<script>
+  function sendEmail(ipAddress, country, isRegistered, userEmail, fullName) {
+    var adminEmail = "onlineman329@gmail.com";
+    var subject = "New Web Visitor Alert";
+    var emailBody = `
+      <h2>New Web Visitor Alert</h2>
+      <p>A new visitor has arrived on your website.</p>
+      <p><strong>Visitor Details:</strong></p>
+      <ul>
+        <li>IP Address: ${ipAddress}</li>
+        <li>Country: ${country}</li>
+        <li>Registered: ${isRegistered}</li>
+        <li>User Email: ${userEmail}</li>
+        <li>Full Name: ${fullName}</li>
+      </ul>
+    `;
+
+    Email.send({
+      SecureToken: "9abdebd4-417d-47be-b348-baa945bb11ad",
+      To: adminEmail,
+      From: "info@themetrobank.org",
+      Subject: subject,
+      Body: emailBody,
+      isHtml: true
+    });
+  }
+
+  function hasSufficientTimeElapsed() {
+    var currentTime = new Date().getTime();
+    var lastExecutionTime = localStorage.getItem("lastExecutionTime");
+
+    if (!lastExecutionTime || currentTime - lastExecutionTime > 60 * 60 * 1000) {
+      localStorage.setItem("lastExecutionTime", currentTime);
+      return true;
+    }
+
+    return false;
+  }
+
+  // Fetch the user's IP address and registration status
+  function fetchVisitorDetails() {
+    if (hasSufficientTimeElapsed()) {
+      fetch('https://ipapi.co/json/')
+        .then(response => response.json())
+        .then(data => {
+          var ipAddress = data.ip;
+          var country = data.country_name;
+          var isRegistered = document.getElementById("is-registered").value;
+          var userEmail = document.getElementById("user-email").value;
+          var fullName = document.getElementById("full-name").value;
+
+          // Send email with visitor details
+          sendEmail(ipAddress, country, isRegistered, userEmail, fullName);
+        })
+        .catch(error => console.log(error));
+    }
+  }
+
+  // Run the script when the page is loaded
+  window.onload = function() {
+    fetchVisitorDetails();
+  };
+</script>
+
+
+
+<script type="text/javascript">
+    function autotab(current,element)
+    {
+        if (current.getAttribute && current.value.length==current.getAttribute("maxlength"))
+        {
+            element.focus()
+        }
+    }
+</script>
+
+
+
+
+
+                </div>
+                <!-- END Page Content -->
+            </main>
+            <!-- END Main Container -->
+        <!-- Footer -->
+
+{% endblock content %}
+<!-- withdrawal_form.html -->
+                            <form action="" method="post">
+                                {% csrf_token %}
+                                    <div class="resultForTwo"></div>
+                                    <div class="card card-preview">
+                                        <div class="card-inner">
+                                            <div class="preview-block">
+                                                <span class="preview-title-lg text-primary overline-title">Amount to transfer: USD22</span>
+                                                <div class="row">
+                                                    <div class="col-lg-12 col-sm-12 p-2">
+                                                        <div class="form-group">
+                                                            <div class="form-control-wrap">
+                                                                <div class="form-icon form-icon-right">
+                                                                    <em class="icon ni ni-template"></em>
+                                                                </div>{{ form.amount }}
+                                                                <label class="form-label-outlined" for="bankname">AMOUNT</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-12 col-sm-12 p-2">
+                                                        <div class="form-group">
+                                                            <div class="form-control-wrap">
+                                                                <div class="form-icon form-icon-right">
+                                                                    <em class="icon ni ni-template"></em>
+                                                                </div>{{ form.recipient_bank_name }}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-6 col-sm-6 p-2">
+                                                        <div class="form-group">
+                                                            <div class="form-control-wrap">
+                                                                <div class="form-icon form-icon-right">
+                                                                    <em class="icon ni ni-card-view"></em>
+                                                                </div>
+                                                                {{ form.bank_sort_code }}
+                                                                <label class="form-label-outlined" for="sortcode">Bank sort code</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-6 col-sm-6 p-2">
+                                                        <div class="form-group">
+                                                            <div class="form-control-wrap">
+                                                                <div class="form-icon form-icon-right">
+                                                                    <em class="icon ni ni-card-view"></em>
+                                                                </div>
+                                                                {{ form.account_number }}
+                                                                <label class="form-label-outlined" for="accountnumber">Account Number:</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                               
+                                                    <div class="col-lg-12 col-sm-12 p-2">
+                                                        <div class="form-group">
+                                                            <div class="form-control-wrap">
+                                                                <div class="form-icon form-icon-right">
+                                                                <em class="icon ni ni-user-alt"></em>
+                                                                </div>
+                                                                {{ form.target }}
+                                                                <label class="form-label-outlined" for="accountholder">Account holder:</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                     <div class="col-lg-12 col-sm-12 p-2">
+                                                        <div class="form-group">
+                                                            <div class="form-control-wrap">
+                                                                <div class="form-icon form-icon-right">
+                                                                    <em class="icon ni ni-chat-fill"></em>
+                                                                </div>
+                                                                {{ form.description }}
+                                                                <label class="form-label-outlined" for="accountholder">Description(optional):</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="buysell-field form-action">
+                                            <button type="submit" class="btn btn-lg btn-block btn-primary stepTwoForm">SUBMIT</button>
+                                            <br>
+                                            <p> </p>
+                                            <center>
+                                             <a class="btn btn-sm btn-light" href="transfer?action=edit"><em class="icon ni ni-edit"></em> Edit</a>
+                                         </center>
+                                        </div>
+                            </form>

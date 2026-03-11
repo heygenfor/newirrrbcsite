@@ -1,0 +1,341 @@
+{% load static %}
+<!doctype html>
+{% load static %}
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+
+        <title>{{ title }}</title>
+
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <meta name="robots" content="noindex, nofollow">
+
+        <!-- Open Graph Meta -->
+        <meta property="og:title" content="">
+        <meta property="og:site_name" content="">
+        <meta property="og:description" content="">
+        <meta property="og:type" content="website">
+        <meta property="og:url" content="">
+        <meta property="og:image" content="">
+
+        <!-- Icons -->
+        <!-- The following icons can be replaced with your own, they are used by desktop and mobile browsers -->
+        <link rel="shortcut icon" href="{% static 'asseta/media/photos/p2.png' %}">
+        <link rel="icon" type="image/png" sizes="192x192" href="{% static 'asseta/media/photos/p2.png' %}">
+        <link rel="apple-touch-icon" sizes="180x180" href="{% static 'asseta/media/photos/p2.png' %}">
+        <!-- END Icons -->
+        <!-- END Icons -->
+        
+        <!-- Fonts and framework -->
+        <link rel="stylesheet" href="{% static 'asseta/js/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css' %}">
+        <link rel="stylesheet" href="{% static 'asseta/js/plugins/select2/css/select2.min.css' %}">
+
+        <!-- Page JS Plugins CSS -->
+        <link rel="stylesheet" href="{% static 'asseta/js/plugins/datatables/dataTables.bootstrap4.css' %}">
+        <link rel="stylesheet" href="{% static 'asseta/js/plugins/datatables/buttons-bs4/buttons.bootstrap4.min.css' %}">
+
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+        <link rel="stylesheet" id="css-main" href="{% static 'asseta/css/dashmix.min.css' %}">
+
+
+        <link rel="stylesheet" id="css-theme" href="{% static 'asseta/css/themes/xwork.min.css' %}">
+        <!-- END Stylesheets -->
+        
+        <script src="{% static 'asseta/js/dashmix.core.min.js' %}"></script>
+
+     <!-- Start of Async Drift Code -->
+    <script>
+    "use strict";
+
+    !function() {
+      var t = window.driftt = window.drift = window.driftt || [];
+      if (!t.init) {
+        if (t.invoked) return void (window.console && console.error && console.error("Drift snippet included twice."));
+        t.invoked = !0, t.methods = [ "identify", "config", "track", "reset", "debug", "show", "ping", "page", "hide", "off", "on" ], 
+        t.factory = function(e) {
+          return function() {
+            var n = Array.prototype.slice.call(arguments);
+            return n.unshift(e), t.push(n), t;
+          };
+        }, t.methods.forEach(function(e) {
+          t[e] = t.factory(e);
+        }), t.load = function(t) {
+          var e = 3e5, n = Math.ceil(new Date() / e) * e, o = document.createElement("script");
+          o.type = "text/javascript", o.async = !0, o.crossorigin = "anonymous", o.src = "https://js.driftt.com/include/" + n + "/" + t + ".js";
+          var i = document.getElementsByTagName("script")[0];
+          i.parentNode.insertBefore(o, i);
+        };
+      }
+    }();
+    drift.SNIPPET_VERSION = '0.3.1';
+    drift.load('cfv7i3g9z5nb');
+    </script>
+    <!-- End of Async Drift Code -->   
+    </head>
+    <body>
+        
+        <script type="text/javascript">
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
+}
+</script>
+
+<script type="text/javascript">
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({pageLanguage: 'en'}, 'google_translate_element');
+}
+</script>
+
+<script type="text/javascript" src="{% static 'assets/element.js' %}"></script>
+        <div id="page-container" class="sidebar-o side-scroll page-header-fixed page-header-dark main-content-boxed">
+<nav id="sidebar" aria-label="Main Navigation">
+    <!-- Side Header (mini Sidebar mode) -->
+    <div class="smini-visible-block">
+        <div class="content-header bg-header-dark">
+
+        </div>
+    </div>
+    <!-- END Side Header (mini Sidebar mode) -->
+
+    <!-- Side Header (normal Sidebar mode) -->
+    <div class="smini-hidden">
+        <div class="content-header justify-content-lg-center bg-header-dark">
+
+
+            <!-- Options -->
+            <div class="d-lg-none">
+
+                <a class="text-white ml-2" data-toggle="layout" data-action="sidebar_close" href="javascript:void(0)">
+                    <i class="fa fa-times-circle"></i>
+                </a>
+                <!-- END Close Sidebar -->
+            </div>
+            <!-- END Options -->
+        </div>
+    </div>
+    <!-- END Side Header (normal Sidebar mode) -->
+
+    <!-- Sidebar Scrolling -->
+    <div class="js-sidebar-scroll">
+        <!-- Side Actions -->
+        <!-- bg-body-light -->
+        <div class="content-side content-side-full text-center ">
+            <div class="smini-hide">
+                <img class="img-avatar" src="{{ user.account.picture.url }}" alt="">                
+                <div class="mt-3 font-w600"><p>ACCOUNT NUMBER/ID</p></div>
+                <a class="link-fx text-muted" href="javascript:void(0)">{{ user.account_no }}  </a>
+            </div>
+        </div>
+        <!-- END Side Actions -->
+
+        <!-- Side Navigation -->
+        <div class="content-side">
+            <ul class="nav-main">
+                <li class="nav-main-item">
+                    <a class="nav-main-link active" href="{% url 'home' %}">
+                        <i class="nav-main-link-icon fa fa-rocket"></i>
+                        <span class="nav-main-link-name">Overview</span>
+                    </a>
+                </li>
+                <li class="nav-main-heading">Manage</li>
+
+                <li class="nav-main-item">
+                    <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu" aria-haspopup="true" aria-expanded="false" href="#">
+                        <i class="nav-main-link-icon fa fa-funnel-dollar"></i>
+                        <span class="nav-main-link-name">History</span>
+                    </a>
+                    <ul class="nav-main-submenu">
+                        <li class="nav-main-item">
+                            <a class="nav-main-link" href="{% url 'transactions:recent_international_withdrawals' %}">
+                                <span class="nav-main-link-name">Interntional Transfers</span>
+                            </a>
+                        </li>
+                        <li class="nav-main-item">
+                            <a class="nav-main-link" href="{% url 'transactions:recent_withdrawals' %}">
+                                <span class="nav-main-link-name">Local Transfers</span>
+                            </a>
+                        </li>
+                        <li class="nav-main-item">
+                            <a class="nav-main-link" href="{% url 'transactions:recent_payments' %}">
+                                <span class="nav-main-link-name">Deposits History</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-main-item">
+                    <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu" aria-haspopup="true" aria-expanded="false" href="#">
+                        <i class="nav-main-link-icon fab fa-cc-mastercard"></i>
+                        <span class="nav-main-link-name">Cards</span>
+                    </a>
+                    <ul class="nav-main-submenu">
+
+                        <li class="nav-main-item">
+                            <a class="nav-main-link" href="{% url 'bankcard:user_cards' %}">
+                                <span class="nav-main-link-name">Available Cards</span>
+                            </a>
+                        </li>
+                        <li class="nav-main-item">
+                            <a class="nav-main-link" href="{% url 'bankcard:card_request' %}" id="r_card" data-id="41">
+                                <i class="nav-main-link-icon fa fa-plus-circle text-secondary"></i>
+                                <span class="nav-main-link-name">Request Card</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-main-item">
+                    <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu" aria-haspopup="true" aria-expanded="false" href="#">
+                        <i class="nav-main-link-icon fa fa-money-check-alt"></i>
+                        <span class="nav-main-link-name">Transfer</span>
+                    </a>
+                    <ul class="nav-main-submenu">
+                        <li class="nav-main-item">
+                            <a class="nav-main-link" href="{% url 'transactions:Withdrawal_international_view' %}">
+                                <i class="nav-main-link-icon fa fa-exchange-alt text-secondary"></i>
+                                <span class="nav-main-link-name">Transfer Funds(International)</span>
+                            </a>
+                        </li>
+                        <li class="nav-main-item">
+                            <a class="nav-main-link" href="{% url 'transactions:withdrawal' %}">
+                                <i class="nav-main-link-icon fa fa-exchange-alt text-secondary"></i>
+                                <span class="nav-main-link-name">Transfer Funds(Local)</span>
+                            </a>
+                        </li>
+
+                        </li>
+                        <li class="nav-main-item">
+                            <a class="nav-main-link" href="{% url 'transactions:payment_create' %}">
+                                <i class="nav-main-link-icon fa fa-exchange-alt text-secondary"></i>
+                                <span class="nav-main-link-name">Deposit/Add Money</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="nav-main-heading">Dashboards</li>
+                <li class="nav-main-item">
+                    <a class="nav-main-link" href="{% url 'accounts:logout' %}">
+                        <i class="nav-main-link-icon fa fa-sign-out-alt"></i>
+                        <span class="nav-main-link-name">Logout</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <!-- END Side Navigation -->
+    </div>
+    <!-- END Sidebar Scrolling -->
+</nav>
+
+<header id="page-header">
+    <!-- Header Content -->
+    <div class="content-header">
+        <!-- Left Section -->
+        <div class="d-flex align-items-center">
+            <!-- Toggle Sidebar -->
+            <!-- Layout API, functionality initialized in Template._uiApiLayout()-->
+            <button type="button" class="btn btn-dual" data-toggle="layout" data-action="sidebar_toggle">
+                <i class="fa fa-fw fa-stream fa-flip-horizontal"></i>
+            </button>
+            
+            <div id="google_translate_element" class="ml-4"></div>
+            <!-- END Toggle Sidebar -->
+        </div>
+        <!-- END Left Section -->
+
+        <!-- Right Section -->
+        <div>
+
+            <!-- User Dropdown -->
+            <div class="dropdown d-inline-block">
+                <button type="button" class="btn btn-dual" id="page-header-user-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="far fa-fw fa-user-circle"></i>
+                    <i class="fa fa-fw fa-angle-down ml-1 d-none d-sm-inline-block"></i>
+                </button>
+                <div class="dropdown-menu dropdown-menu-right p-0" aria-labelledby="page-header-user-dropdown">
+                    <div class="bg-primary-darker rounded-top font-w600 text-white text-center p-3">
+                        <img class="img-avatar" src="{{ user.account.picture.url }}" alt="">  
+
+                    </div>
+                    <div class="p-2">
+
+                        <div role="separator" class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{% url 'accounts:logout' %}">
+                            <i class="fa fa-fw fa-arrow-alt-circle-left mr-1"></i> Log Out
+                        </a>
+                    </div>
+                    <div class="p-2">
+
+                        <div role="separator" class="dropdown-divider"></div>
+                        <p><b>Account Name: </b>{{ user.full_name }}</p>
+                        <p><b>Account Username: </b>{{ user.username }}</p>
+                        <p><b>Account No: </b>{{ user.account_no }}</p>
+                    </div>
+                </div>
+            </div>
+            <!-- END User Dropdown -->
+        </div>
+        <!-- END Right Section -->
+    </div>
+
+</header>            <!-- Main Container -->
+            <main id="main-container">
+                <!-- Page Content -->
+                <div class="content">
+
+                    <!-- style for the boxes -->
+
+<!-- closing style for boxes -->
+{% block content %}
+
+{% endblock content %}
+</div>
+        <footer id="page-footer" class="bg-body">
+            <div class="content py-0">
+                <div class="row font-size-sm">
+                    <div class="col-sm-6 order-sm-2 mb-1 mb-sm-0 text-center text-sm-right">
+                        Powerdered by <a class="font-w600" href="#">METRO BANK UK</a>
+                    </div>
+                    <div class="col-sm-6 order-sm-1 text-center text-sm-left">
+                        <a class="font-w600" href="#" target="_blank"></a> All Right Reserved  &copy; 2018 - 2022                    </div>
+                </div>
+            </div>
+        </footer>
+        <!-- END Footer -->
+
+
+        </div>
+
+
+        <div class="modal fade" id="modal_container" tabindex="-1" aria-labelledby="modal_containerLabel" aria-hidden="true">
+            <!--  modal-dialog-scrollable modal-fullscreen-sm-down -->
+            <!-- modal-dialog-centered -->
+            <div id="modal-dialog" class="modal-dialog modal-dialog-centered"></div>
+        </div>
+
+
+
+        <script src="{% static 'asseta/js/dashmix.app.min.js' %}"></script>
+
+
+        <!-- Page JS Plugins -->
+        <script src="{% static 'asseta/js/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js' %}"></script>
+        <script src="{% static 'asseta/js/plugins/bootstrap-maxlength/bootstrap-maxlength.min.js' %}"></script>
+        <script src="{% static 'asseta/js/plugins/select2/js/select2.full.min.js' %}"></script>
+        <script src="{% static 'asseta/js/plugins/jquery.maskedinput/jquery.maskedinput.min.js' %}"></script>
+        <script src="{% static 'asseta/js/plugins/flatpickr/flatpickr.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'asseta/js/plugins/datatables/jquery.dataTables.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'asseta/js/plugins/datatables/dataTables.bootstrap4.min.js' %}"></script>
+
+    <!-- Page JS Code -->
+    <script type="text/javascript" src="{% static 'asseta/js/pages/be_tables_datatables.min.js' %}"></script>
+        <script>
+            jQuery(function() {
+                Dashmix.helpers(['flatpickr', 'datepicker', 'colorpicker', 'maxlength', 'select2', 'rangeslider', 'masked-inputs', 'pw-strength']);
+            });
+        </script>
+
+
+    </body>
+</html>
