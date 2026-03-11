@@ -1,0 +1,106 @@
+/* static/admin/css/toggle_switch.css */
+.toggle-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 0;
+}
+
+.modern-toggle {
+    position: relative;
+    display: inline-block;
+    width: 52px;
+    height: 28px;
+    cursor: pointer;
+}
+
+.modern-toggle input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+    position: absolute;
+}
+
+.toggle-track {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #e4e4e7;
+    transition: all 0.3s ease;
+    border-radius: 28px;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.toggle-indicator {
+    position: absolute;
+    height: 24px;
+    width: 24px;
+    left: 2px;
+    bottom: 2px;
+    background-color: white;
+    transition: all 0.3s ease;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.modern-toggle input:checked + .toggle-track {
+    background-color: #79aec8;
+}
+
+.modern-toggle input:checked + .toggle-track .toggle-indicator {
+    transform: translateX(24px);
+}
+
+.modern-toggle input:focus + .toggle-track {
+    box-shadow: 0 0 0 2px rgba(121, 174, 200, 0.2);
+}
+
+/* Hover effects */
+.modern-toggle:hover .toggle-track {
+    background-color: #d4d4d8;
+}
+
+.modern-toggle:hover input:checked + .toggle-track {
+    background-color: #5b8ba3;
+}
+
+.toggle-label {
+    font-size: 13px;
+    color: #666;
+    user-select: none;
+}
+
+/* For dark mode support */
+@media (prefers-color-scheme: dark) {
+    .toggle-track {
+        background-color: #3f3f46;
+    }
+    
+    .toggle-label {
+        color: #a1a1aa;
+    }
+    
+    .modern-toggle:hover .toggle-track {
+        background-color: #52525b;
+    }
+}
+
+/* Responsive design */
+@media screen and (max-width: 767px) {
+    .modern-toggle {
+        width: 46px;
+        height: 24px;
+    }
+    
+    .toggle-indicator {
+        height: 20px;
+        width: 20px;
+    }
+    
+    .modern-toggle input:checked + .toggle-track .toggle-indicator {
+        transform: translateX(22px);
+    }
+}
