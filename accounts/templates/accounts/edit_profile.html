@@ -1,0 +1,180 @@
+
+
+{% extends 'core/base.html' %}
+
+{% block content %}
+{% load static %}
+{% include "core/messages.html" %}
+
+<div class="nk-content nk-content-fluid">
+    <div class="container-xl wide-lg">
+        <div class="nk-content-body">
+            <div class="nk-block-head nk-block-head-lg">
+                <div class="nk-block-head-content">
+                    <h2 class="nk-block-title fw-normal">Account Settings</h2>
+                    <div class="nk-block-des">
+                        <p>You have full control to manage your own account settings.</p>
+                    </div>
+                </div>
+            </div>
+            <ul class="nk-nav nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" data-toggle="tab" href="#personal-info">Personal Info</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#security-settings">Security Settings</a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active" id="personal-info">
+                    <div class="card card-bordered">
+                        <div class="card-inner-group">
+                            <div class="card-inner">
+                                <div class="between-center flex-wrap g-3">
+                                    <div class="nk-block-text">
+                                        <div class="user-avatar lg">
+                                            <img src="{{ user.account.picture.url }}" alt="Profile Picture" class="proof-of-pay-link" data-bs-toggle="tooltip" title="View Profile Picture">
+                                        </div>
+                                        <div class="user-info mt-3">
+                                            <h4>{{ user.get_full_name }}</h4>
+                                            <span class="sub-text">{{ user.username }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="nk-block-actions">
+                                        <a href="{% url 'accounts:login_history' %}" class="btn btn-outline-light">
+                                            <em class="icon ni ni-arrow-left"></em>
+                                            <span>Back to Profile</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-inner">
+                                <form method="POST" enctype="multipart/form-data" class="gy-3">
+                                    {% csrf_token %}
+                                    {% for field in user_form %}
+                                    <div class="row g-3 align-center">
+                                        <div class="col-lg-5">
+                                            <div class="form-group">
+                                                <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                                <span class="form-note">{{ field.help_text }}</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-7">
+                                            <div class="form-group">
+                                                {{ field }}
+                                                {% if field.errors %}
+                                                <div class="form-control-feedback text-danger">
+                                                    {% for error in field.errors %}
+                                                    {{ error }}
+                                                    {% endfor %}
+                                                </div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                    <div class="card-inner">
+                                        <div class="form-group">
+                                            <div class="mb-4">
+                                                <label class="form-label">Your Avatar</label>
+                                                <div class="mb-4">
+                                                    <img id="avatar-preview" style="max-width:90px;" class="img-avatar" src="{{ user.account.picture.url }}" alt="Current Avatar" />
+                                                </div>
+                                                <div class="mb-4">
+                                                    <label for="{{ account_form.picture.id_for_label }}" class="form-label">Choose a new avatar</label><br> <small style="font-size:10px;">Encrypted</small> 
+                                                    {{ account_form.picture }}
+                                                    {% if account_form.picture.errors %}
+                                                    <div class="invalid-feedback d-block">
+                                                        {% for error in account_form.picture.errors %}
+                                                        {{ error }}
+                                                        {% endfor %}
+                                                    </div>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <script>
+                                    document.addEventListener('DOMContentLoaded', function() {
+                                        const avatarInput = document.getElementById('{{ account_form.picture.id_for_label }}');
+                                        const avatarPreview = document.getElementById('avatar-preview');
+
+                                        avatarInput.addEventListener('change', function(event) {
+                                            const file = event.target.files[0];
+                                            if (file) {
+                                                const reader = new FileReader();
+                                                reader.onload = function(e) {
+                                                    avatarPreview.src = e.target.result;
+                                                }
+                                                reader.readAsDataURL(file);
+                                            }
+                                        });
+                                    });
+                                    </script>
+
+                                    <div class="row g-3">
+                                        <div class="col-lg-7 offset-lg-5">
+                                            <div class="form-group mt-2">
+                                                <button type="submit" name="update_profile" class="btn btn-lg btn-primary">Update Profile</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane" id="security-settings">
+                    <div class="card card-bordered">
+                        <div class="card-inner-group">
+                            <div class="card-inner">
+                                <div class="between-center flex-wrap flex-md-nowrap g-3">
+                                    <div class="nk-block-text">
+                                        <h6>Change Password</h6>
+                                        <p>Set a unique password to protect your account.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-inner">
+                                <form method="POST" class="gy-3">
+                                    {% csrf_token %}
+                                    {% for field in password_form %}
+                                    <div class="row g-3 align-center">
+                                        <div class="col-lg-5">
+                                            <div class="form-group">
+                                                <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-7">
+                                            <div class="form-group">
+                                                {{ field }}
+                                                {% if field.errors %}
+                                                <div class="form-control-feedback text-danger">
+                                                    {% for error in field.errors %}
+                                                    {{ error }}
+                                                    {% endfor %}
+                                                </div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                    <div class="row g-3">
+                                        <div class="col-lg-7 offset-lg-5">
+                                            <div class="form-group mt-2">
+                                                <button type="submit" name="change_password" class="btn btn-lg btn-primary">Change Password</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

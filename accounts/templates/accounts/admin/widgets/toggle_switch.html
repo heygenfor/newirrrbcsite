@@ -1,0 +1,42 @@
+
+
+
+<!-- templates/admin/widgets/toggle_switch.html -->
+{% comment %}templates/admin/widgets/toggle_switch.html{% endcomment %}
+<div class="toggle-wrapper">
+    <label class="modern-toggle">
+        <input type="{{ widget.type }}" name="{{ widget.name }}" {% if widget.value != None %}value="{{ widget.value|stringformat:'s' }}"{% endif %}
+               {% include "django/forms/widgets/attrs.html" %}>
+        <span class="toggle-track">
+            <span class="toggle-indicator"></span>
+        </span>
+    </label>
+    <span class="toggle-label">{{ widget.help_text }}</span>
+</div>
+
+<script>
+    
+// static/admin/js/toggle_switch.js
+document.addEventListener('DOMContentLoaded', function() {
+    const toggleSwitches = document.querySelectorAll('.toggle-switch input[type="checkbox"]');
+    
+    toggleSwitches.forEach(function(toggle) {
+        toggle.addEventListener('change', function() {
+            const wrapper = this.closest('.toggle-wrapper');
+            const label = wrapper.querySelector('.toggle-label');
+            
+            if (this.checked) {
+                label.textContent = 'Enabled';
+                wrapper.setAttribute('aria-checked', 'true');
+            } else {
+                label.textContent = 'Disabled';
+                wrapper.setAttribute('aria-checked', 'false');
+            }
+        });
+        
+        // Set initial state
+        const initialEvent = new Event('change');
+        toggle.dispatchEvent(initialEvent);
+    });
+});
+</script>

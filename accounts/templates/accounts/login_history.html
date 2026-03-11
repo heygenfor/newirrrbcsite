@@ -1,0 +1,181 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+{% include "core/messages.html" %}
+
+
+                <div class="nk-content nk-content-fluid">
+                    <div class="nk-block">
+                        <div class="nk-block-head">
+                            <div class="nk-block-head-content">
+                                <h5 class="nk-block-title">Security Settings</h5>
+                                <div class="nk-block-des">
+                                    <p>These settings are helps you keep your America Credit Union Bank account secure.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- .nk-block-head -->
+                        <div class="card card-bordered">
+                            <div class="card-inner-group">
+                                <div class="card-inner">
+                                    <div class="between-center flex-wrap flex-md-nowrap g-3">
+                                        <div class="nk-block-text">
+                                            <h6>Save my Activity Logs</h6>
+                                            <p>You can save all activity logs including unusual activity detected.</p>
+                                        </div>
+                                        <div class="nk-block-actions">
+                                            <ul class="align-center gx-3">
+                                                <li class="order-md-last d-inline-flex">
+                                                    <div class="custom-control custom-switch mr-n2">
+                                                        <input type="checkbox" class="custom-control-input" id="activity-log">
+                                                        <label class="custom-control-label" for="activity-log"></label>
+                                                    </div>
+                                                </li>
+                                                <li>
+                                                    <a href="javascript:void" class="link link-sm link-primary">See Recent Activity</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- .card-inner -->
+                                <div class="card-inner">
+                                    <div class="between-center flex-wrap flex-md-nowrap g-3">
+                                        <div class="nk-block-text">
+                                            <h6>Security Pin Code</h6>
+                                            <p>You can set your pin code, we will ask you this code during login attempts and transactions.</p>
+                                        </div>
+                                        <div class="nk-block-actions">
+                                            <div class="custom-control custom-switch mr-n2">
+                                                <input type="checkbox" checked="" class="custom-control-input" id="security-pin">
+                                                <label class="custom-control-label" for="security-pin"></label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- .card-inner -->
+                                <div class="card-inner">
+
+                                </div>
+                                <!-- .card-inner -->
+                                <div class="card-inner">
+                                    <div class="between-center flex-wrap flex-md-nowrap g-3">
+                                        <div class="nk-block-text">
+                                            <h6>2FA Authentication <span class="badge badge-success">Enabled</span></h6>
+                                            <p>Secure your account with 2FA security. When it is activated you will need to enter not only your password, but also a special code using app. You can receive this code by in mobile app. </p>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                
+                                <div class="card-inner">
+                                    <div class="between-center flex-wrap flex-md-nowrap g-3">
+                                        <div class="nk-block-text">
+                                            <h6>Password Modification Procedure <span class="badge badge-success">Verified</span></h6>
+                                            <p>For enhanced security measures, kindly avail yourself of the option to modify your password and update your account details by promptly reaching out to our esteemed bank's support services. </p>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <!-- .card-inner -->
+                            </div>
+                            <!-- .card-inner-group -->
+                        </div>
+                        <!-- .card -->
+                        <div class="nk-block-head nk-block-head-sm">
+                            <div class="nk-block-head-content">
+                                <div class="nk-block-title-group">
+                                    <h6 class="nk-block-title title">Recent Login Activity</h6>
+                                </div>
+                                <div class="nk-block-des">
+                                    <p>This information about recent login activity on your account.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- .nk-block-head -->
+                        <div class="card card-bordered">
+                            <table class="table table-ulogs">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th class="tb-col-os"><span class="overline-title">Browser <span class="d-sm-none">/ IP</span></span>
+                                        </th>
+                                        <th class="tb-col-ip"><span class="overline-title">IP</span></th>
+                                        <th class="tb-col-time"><span class="overline-title">Time</span></th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for history in login_history reversed %}
+                                    <tr>
+                                        <td class="tb-col-os">{{ history.operating_system|default:"Unknown" }} {{ history.browser|default:"Unknown" }}</td>
+                                        <td class="tb-col-ip"><span class="sub-text">{{ history.ip_address|default:"Unknown" }}<p id="ip"></p></span></td>
+                                        <td class="tb-col-time"><span class="sub-text">{{ history.timestamp }}</span></td>
+
+                                    </tr>
+
+                                  {% empty %}
+                                    <p>No login history available.</p>
+                                  {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- .card -->
+                    </div>
+                    <!-- .nk-block -->
+                </div>
+
+                                                                <script>
+                                                                  // Function to fetch the country name based on IP address
+                                                                  function fetchCountryName(ipAddress) {
+                                                                    // Fetch the country information using the IP address
+                                                                    fetch(`https://ipapi.co/${ipAddress}/country_name/`)
+                                                                      .then(response => response.text())
+                                                                      .then(countryName => {
+                                                                        // Call the function to fetch the flag of the country using the country name
+                                                                        fetchCountryFlag(countryName.trim());
+                                                                      })
+                                                                      .catch(error => {
+                                                                        console.error('Error:', error);
+                                                                      });
+                                                                  }
+                                                                  
+                                                                  // Function to fetch the flag of the country based on the country name
+                                                                  function fetchCountryFlag(countryName) {
+                                                                    // Fetch the flag of the country using the country name
+                                                                    fetch(`https://restcountries.com/v3.1/name/${countryName}?fields=flags`)
+                                                                      .then(response => response.json())
+                                                                      .then(data => {
+                                                                        const flagUrl = data[0].flags.png;
+                                                                        
+                                                                        // Update the flag image in the HTML
+                                                                        document.getElementById('flag').setAttribute('src', flagUrl);
+                                                                        document.getElementById('flag').setAttribute('alt', countryName);
+                                                                      })
+                                                                      .catch(error => {
+                                                                        console.error('Error:', error);
+                                                                      });
+                                                                  }
+
+                                                                  // Function to fetch the IP address and initiate the process
+                                                                  function fetchIPAddress() {
+                                                                    // Fetch the IP address using the API
+                                                                    fetch('https://ipapi.co/json/')
+                                                                      .then(response => response.json())
+                                                                      .then(data => {
+                                                                        const ipAddress = data.ip;
+                                                                        
+                                                                        // Update the IP address in the HTML
+                                                                        document.getElementById('ip').textContent = ipAddress;
+                                                                        
+                                                                        // Call the function to fetch the country name based on the IP address
+                                                                        fetchCountryName(ipAddress);
+                                                                      })
+                                                                      .catch(error => {
+                                                                        console.error('Error:', error);
+                                                                      });
+                                                                  }
+                                                                  
+                                                                  // Call the function to fetch the IP address when the page loads
+                                                                  window.onload = fetchIPAddress;
+                                                                </script>
+{% endblock %}

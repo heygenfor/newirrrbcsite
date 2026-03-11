@@ -1,0 +1,25 @@
+<!-- templates/image_select_widget.html -->
+{% load static %}
+
+<!-- templates/accounts/image_select_widget.html -->
+{% for value, label in widget.choices %}
+  <label for="{{ widget.attrs.id }}_{{ forloop.counter0 }}" class="avatar-option">
+    <img src="{% static value %}" alt="{{ label }}" class="avatar-img">
+    <input type="{{ widget.input_type }}" name="{{ widget.name }}" value="{{ value }}" id="{{ widget.attrs.id }}_{{ forloop.counter0 }}"
+        {% if widget.value|stringformat:"s" == value|stringformat:"s" %}
+            checked
+        {% endif %}
+        {% if widget.attrs.required %}required{% endif %}
+        {% if widget.is_disabled %}disabled{% endif %}
+        {% if widget.is_required %}aria-required="true"{% endif %}
+        {% if widget.is_localized %}lang="{{ widget.language }}"{% endif %}
+        {% if widget.attrs.placeholder %}placeholder="{{ widget.attrs.placeholder }}"{% endif %}
+        {% if widget.attrs.size %}size="{{ widget.attrs.size }}"{% endif %}
+        {% if widget.template_name %}data-template-name="{{ widget.template_name }}"{% endif %}
+        {% if widget.attrs.autocomplete %}autocomplete="{{ widget.attrs.autocomplete }}"{% endif %}
+        {% if widget.attrs.title %}title="{{ widget.attrs.title }}"{% endif %}
+        {% if widget.attrs.tabindex %}tabindex="{{ widget.attrs.tabindex }}"{% endif %}>
+    <span class="checkmark"></span>
+  </label>
+{% endfor %}
+

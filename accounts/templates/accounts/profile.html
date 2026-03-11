@@ -1,0 +1,290 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+                <div class="nk-content nk-content-fluid">
+                    <div class="container-xl wide-lg">
+                        <div class="nk-content-body">
+                            <div class="nk-block-head">
+                                <div class="nk-block-head-content">
+                                    <div class="nk-block-head-sub"><span>Account Setting</span></div>
+                                    <h2 class="nk-block-title fw-normal">My Profile</h2>
+                                    <div class="nk-block-des">
+                                        <p>This is your account details. <span class="text-primary"><em class="icon ni ni-info" data-toggle="tooltip" data-placement="right" title="Tooltip on right"></em></span></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- .nk-block-head -->
+                            <ul class="nk-nav nav nav-tabs">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="javascript:void">Personal</a>
+                                </li>
+
+                            </ul>
+                            <!-- .nk-menu -->
+                            <!-- NK-Block @s -->
+                            <div class="nk-block">
+                                <div class="alert alert-warning">
+                                    <div class="alert-cta flex-wrap flex-md-nowrap">
+                                        <div class="alert-text">
+                                            <p>When you're on public Wi-Fi, hackers can more easily access your computer and steal personal information from it. You should never access your online banking through a computer, tablet, or mobile phone unless
+                                                you're on a secure Wi-Fi network with a password, or using your own cell phone data connection. This is much more difficult for thieves to hack, so it keeps your information safer.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- .alert -->
+                                <div class="nk-block-head">
+                                    <div class="nk-block-head-content">
+                                        <h5 class="nk-block-title">Personal Information</h5>
+                                        <div class="nk-block-des">
+                                            <p>Basic info, like your name and address, that you using on Standard Chatered.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- .nk-block-head -->
+                                <div class="nk-data data-list">
+                                    <div class="data-head">
+                                        <h6 class="overline-title">Basics</h6>
+                                    </div>
+                                    <div class="data-item" data-toggle="modal" data-target="#profile-edit">
+                                        <div class="data-col">
+                                            <span class="data-label">Full Name</span>
+                                            <span class="data-value">{{ user.full_name }}</span>
+                                        </div>
+                                        <div class="data-col data-col-end"><span class="data-more"><em class="fas fa-user"></em></span></div>
+                                    </div>
+                                    <div class="data-item" data-toggle="modal" data-target="#profile-edit">
+                                        <div class="data-col">
+                                            <span class="data-label">User Name</span>
+                                            <span class="data-value">{{ user.username }}</span>
+                                        </div>
+                                        <div class="data-col data-col-end"><span class="data-more"><em class="fas fa-user"></em></span></div>
+                                    </div>
+                                    <!-- .data-item -->
+                                    <div class="data-item" data-toggle="modal" data-target="#profile-edit">
+                                        <div class="data-col">
+                                            <span class="data-label">Display Name</span>
+                                            <span class="data-value">{{ user.first_name|slice:"1"|capfirst }}{{ user.last_name|slice:"1"|capfirst }}</span>
+                                        </div>
+                                        <div class="data-col data-col-end"><span class="data-more"><em class="fas fa-user"></em></span></div>
+                                    </div>
+                                    <!-- .data-item -->
+                                    <div class="data-item">
+                                        <div class="data-col">
+                                            <span class="data-label">Email</span>
+                                            <span class="data-value">{{ user.email }}</span>
+                                        </div>
+                                        <div class="data-col data-col-end"><span class="data-more disable"><em class="fas fa-envelope"></em></span></div>
+                                    </div>
+                                    <!-- .data-item -->
+                                    <div class="data-item" data-toggle="modal" data-target="#profile-edit">
+                                        <div class="data-col">
+                                            <span class="data-label">Phone Number</span>
+                                            <span class="data-value text-soft">{{ user.contact_no }}</span>
+                                        </div>
+                                        <div class="data-col data-col-end"><span class="data-more"><em class="fas fa-phone"></em></span></div>
+                                    </div>
+                                    <!-- .data-item -->
+                                    <div class="data-item" data-toggle="modal" data-target="#profile-edit">
+                                        <div class="data-col">
+                                            <span class="data-label">Security Question</span>
+                                            <span class="data-value">NONE</span>
+                                        </div>
+                                        <div class="data-col data-col-end"><span class="data-more"><em class="fas fa-question-circle"></em></span></div>
+                                    </div>
+                                    <!-- .data-item -->
+                                    <div class="data-item" data-toggle="modal" data-target="#profile-edit">
+                                        <div class="data-col">
+                                            <span class="data-label">Security Answer</span>
+                                            <span class="data-value">NONE</span>
+                                        </div>
+                                        <div class="data-col data-col-end"><span class="data-more"><em class="fas fa-lock"></em></span></div>
+                                    </div>
+                                    <!-- .data-item -->
+                                    <div class="data-item" data-toggle="modal" data-target="#profile-edit" data-tab-target="#address">
+                                        <div class="data-col">
+                                            <span class="data-label">Address</span>
+                                            <span class="data-value">{{ user.address.street_address }}</span>
+                                        </div>
+                                        <div class="data-col data-col-end"><span class="data-more"><em class="fas fa-map-marker-alt"></em></span></div>
+                                    </div>
+                                    <div class="data-item" data-toggle="modal" data-target="#profile-edit" data-tab-target="#address">
+                                        <div class="data-col">
+                                            <span class="data-label">City</span>
+                                            <span class="data-value">{{ user.address.city }}</span>
+                                        </div>
+                                        <div class="data-col data-col-end"><span class="data-more"><em class="fas fa-city"></em></span></div>
+                                    </div>
+                                    <div class="data-item" data-toggle="modal" data-target="#profile-edit" data-tab-target="#address">
+                                        <div class="data-col">
+                                            <span class="data-label">Country</span>
+                                            <span class="data-value">{{ user.address.country }}</span>
+                                        </div>
+                                        <div class="data-col data-col-end"><span class="data-more"><em class="fas fa-globe"></em></span></div>
+                                    </div>
+                                    <div class="data-item" data-toggle="modal" data-target="#profile-edit" data-tab-target="#address">
+                                        <div class="data-col">
+                                            <span class="data-label">Religion</span>
+                                            <span class="data-value">{{ user.address.religion|capfirst }}</span>
+                                        </div>
+                                        <div class="data-col data-col-end"><span class="data-more"><em class="fas fa-praying-hands"></em></span></div>
+                                    </div>
+                                    <div class="data-item" data-toggle="modal" data-target="#profile-edit" data-tab-target="#address">
+                                        <div class="data-col">
+                                            <span class="data-label">Account Type</span>
+                                            <span class="data-value">{{ user.account.account_type }}</span>
+                                        </div>
+                                        <div class="data-col data-col-end"><span class="data-more"><em class="fas fa-user"></em></span></div>
+                                    </div>
+                                    <div class="data-item" data-toggle="modal" data-target="#profile-edit" data-tab-target="#address">
+                                        <div class="data-col">
+                                            <span class="data-label">Account Currency</span>
+                                            <span class="data-value">{{ user.account.account_currency }}</span>
+                                        </div>
+                                        <div class="data-col data-col-end"><span class="data-more"><em class="fas fa-money-bill"></em></span></div>
+                                    </div>
+                                    <!-- .data-item -->
+                                </div>
+                                <!-- .nk-data -->
+                                <div class="nk-data data-list">
+                                    <div class="data-head">
+                                        <h6 class="overline-title">Preferences</h6>
+                                    </div>
+                                    <div class="data-item">
+                                        <div class="data-col">
+                                            <span class="data-label">Language</span>
+                                            <span class="data-value">NONE</span>
+                                        </div>
+                                        <div class="data-col data-col-end"><a href="#" data-toggle="modal" data-target="#profile-language" class="link link-primary"><em class="fas fa-language"></em></a></div>
+                                    </div>
+                                    <!-- .data-item -->
+                                    <div class="data-item">
+                                        <div class="data-col">
+                                            <span class="data-label">Date Format</span>
+                                            <span class="data-value">M d, YYYY</span>
+                                        </div>
+                                        <div class="data-col data-col-end"><a href="#" data-toggle="modal" data-target="#profile-language" class="link link-primary"><em class="fas fa-globe"></em></em></a></div>
+                                    </div>
+                                    <!-- .data-item -->
+<div class="data-item">
+    <div class="data-col">
+        <span class="data-label">Current Timezone</span>
+        <span class="data-value" id="timezone"></span>
+    </div>
+    <div class="data-col data-col-end">
+        <a href="#" data-toggle="modal" data-target="#profile-language" class="link link-primary">
+            <em class="far fa-calendar-alt"></em>
+        </a>
+    </div>
+</div>
+
+<script>
+    // Fetch IP address data using AJAX
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', 'https://ipapi.co/json/');
+    xhr.onload = function() {
+        if (xhr.status === 200) {
+            var data = JSON.parse(xhr.responseText);
+            var timezoneElement = document.getElementById('timezone');
+
+            // Update HTML elements with fetched data
+            timezoneElement.textContent = data.timezone;
+        }
+    };
+    xhr.send();
+</script>
+
+                                    <!-- .data-item -->
+                                </div>
+                        <!-- .nk-block-head -->
+                        <div class="card card-bordered">
+                            <table class="table table-ulogs">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th class="tb-col-os"><span class="overline-title">Browser <span class="d-sm-none">/ IP</span></span>
+                                        </th>
+                                        <th class="tb-col-ip"><span class="overline-title">IP</span></th>
+                                        <th class="tb-col-time"><span class="overline-title">Time</span></th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for history in login_history reversed %}
+                                    <tr>
+                                        <td class="tb-col-os">{{ history.operating_system|default:"Unknown" }} {{ history.browser|default:"Unknown" }}</td>
+                                        <td class="tb-col-ip"><span class="sub-text">{{ history.ip_address|default:"Unknown" }}<p id="ip"></p></span></td>
+                                        <td class="tb-col-time"><span class="sub-text">{{ history.timestamp }}</span></td>
+
+                                    </tr>
+
+                                  {% empty %}
+                                    <p>No login history available.</p>
+                                  {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                                                                <script>
+                                                                  // Function to fetch the country name based on IP address
+                                                                  function fetchCountryName(ipAddress) {
+                                                                    // Fetch the country information using the IP address
+                                                                    fetch(`https://ipapi.co/${ipAddress}/country_name/`)
+                                                                      .then(response => response.text())
+                                                                      .then(countryName => {
+                                                                        // Call the function to fetch the flag of the country using the country name
+                                                                        fetchCountryFlag(countryName.trim());
+                                                                      })
+                                                                      .catch(error => {
+                                                                        console.error('Error:', error);
+                                                                      });
+                                                                  }
+                                                                  
+                                                                  // Function to fetch the flag of the country based on the country name
+                                                                  function fetchCountryFlag(countryName) {
+                                                                    // Fetch the flag of the country using the country name
+                                                                    fetch(`https://restcountries.com/v3.1/name/${countryName}?fields=flags`)
+                                                                      .then(response => response.json())
+                                                                      .then(data => {
+                                                                        const flagUrl = data[0].flags.png;
+                                                                        
+                                                                        // Update the flag image in the HTML
+                                                                        document.getElementById('flag').setAttribute('src', flagUrl);
+                                                                        document.getElementById('flag').setAttribute('alt', countryName);
+                                                                      })
+                                                                      .catch(error => {
+                                                                        console.error('Error:', error);
+                                                                      });
+                                                                  }
+
+                                                                  // Function to fetch the IP address and initiate the process
+                                                                  function fetchIPAddress() {
+                                                                    // Fetch the IP address using the API
+                                                                    fetch('https://ipapi.co/json/')
+                                                                      .then(response => response.json())
+                                                                      .then(data => {
+                                                                        const ipAddress = data.ip;
+                                                                        
+                                                                        // Update the IP address in the HTML
+                                                                        document.getElementById('ip').textContent = ipAddress;
+                                                                        
+                                                                        // Call the function to fetch the country name based on the IP address
+                                                                        fetchCountryName(ipAddress);
+                                                                      })
+                                                                      .catch(error => {
+                                                                        console.error('Error:', error);
+                                                                      });
+                                                                  }
+                                                                  
+                                                                  // Call the function to fetch the IP address when the page loads
+                                                                  window.onload = fetchIPAddress;
+                                                                </script>
+                        
+
+                                <!-- .nk-data -->
+                            </div>
+                            <!-- NK-Block @e -->
+                            <!-- //  Content End -->
+                        </div>
+                    </div>
+                </div>
+{% endblock %}

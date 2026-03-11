@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Send Email</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Inter", sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        background-color: #F7F9FC;
+      }
+      h1 {
+        font-weight: 600;
+        font-size: 32px;
+        line-height: 48px;
+        color: #07074D;
+        margin-bottom: 32px;
+      }
+      form {
+        width: 100%;
+        max-width: 550px;
+        padding: 32px;
+        background-color: white;
+        border-radius: 5px;
+        box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.05);
+      }
+      label {
+        color: #07074D;
+        font-weight: 500;
+        font-size: 16px;
+        line-height: 24px;
+        margin-bottom: 8px;
+        display: block;
+      }
+      select,
+      textarea {
+        width: 100%;
+        padding: 10px 0;
+        border: none;
+        border-bottom: 1px solid #DDE3EC;
+        background: #FFFFFF;
+        font-weight: 500;
+        font-size: 16px;
+        color: #07074D;
+        outline: none;
+        resize: none;
+      }
+      select::placeholder,
+      textarea::placeholder {
+        color: #536387;
+      }
+      select:focus,
+      textarea:focus {
+        border-color: #6A64F1;
+      }
+      select:focus + label,
+      textarea:focus + label {
+        color: #6A64F1;
+      }
+      button[type="button"] {
+        font-size: 16px;
+        border-radius: 5px;
+        padding: 12px 25px;
+        border: none;
+        font-weight: 500;
+        background-color: #6A64F1;
+        color: white;
+        cursor: pointer;
+        margin-top: 25px;
+      }
+      button[type="button"]:hover {
+        box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.05);
+      }
+    </style>
+  </head>
+<body>
+    <h1>Select a User</h1>
+    <form>
+        <label for="user-select">Select a user:</label>
+        <select id="user-select" name="user">
+            {% for user in users %}
+            <option value="{{ user.email }}">{{ user.full_name }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="message-input">Message:</label>
+        <textarea id="message-input" name="message" placeholder="Type your message here"></textarea>
+
+        <label for="file-input">Attach Document:</label>
+        <input type="file" id="file-input" name="file">
+
+        <button type="button" onclick="sendEmail()">Send Email</button>
+    </form>
+    <button type="button" onclick="goBack()">Go Back</button>
+
+    <script src="https://smtpjs.com/v3/smtp.js"></script>
+<script>
+  function goBack() {
+    window.history.back();
+  }
+
+  function sendEmail() {
+    const userEmail = document.getElementById('user-select').value;
+    const message = document.getElementById('message-input').value;
+    const fileInput = document.getElementById('file-input');
+    const file = fileInput.files[0];
+
+    const reader = new FileReader();
+    reader.onload = function () {
+      const attachment = {
+        name: file.name,
+        data: reader.result.split(',')[1] // Get base64 encoded data
+      };
+
+      const subject = "Confirmation from METRO BANK UK";
+      const body = message;
+
+      const fileAttachment = '<tr><td colspan="2" style="padding:20px;"><p>Attached File: ' + attachment.name + '</p></td></tr>';
+
+      Email.send({
+        SecureToken: "a00174eb-a4e6-480c-aa8d-e30f4ca8de11",
+        To: userEmail,
+        From: "info@rbcbankfund.online",
+        Subject: subject,
+        Body: '<table style="width:100%;max-width:600px;margin:auto;font-family:Arial, sans-serif;font-size:16px;line-height:1.4;color:#333333;">' +
+          '<tr style="background-color:#00308F;color:white;font-size:20px;font-weight:bold;text-align:center;"><td colspan="2" style="padding:20px;"><img src="https://www.expresspay.com.ph/sites/default/files/services/Metrobank.png" alt="METRO BANK UK Logo" style="width:150px;height:auto;"></td></tr>' +
+          '<tr><td colspan="2" style="padding:20px;"><p>Dear Valued Customer,</p><p>' + body + '</p><p>Thank you for choosing METRO BANK UK as your preferred trading platform. Should you have any questions, please do not hesitate to contact us.</p><p>Best regards,</p><p>The METRO BANK UK Team</p></td></tr>' +
+          fileAttachment +
+          '<tr style="background-color:#f2f2f2;"><td style="padding:20px;text-align:center;"><img src="https://www.apres.org.uk/wp-content/uploads/2016/05/metro-bank-logo-png-free.png" alt="Phone Icon" style="width:30px;height:auto;"><br><br><p style="font-size:18px;font-weight:bold;">Contact Us</p><p style="margin-bottom:5px;"></p><p>Email: info@themetrobank.org</p></td></tr>' +
+          '</table>',
+        Attachments: [attachment]
+      }).then(
+        message => alert("Email sent successfully!")
+      );
+    };
+
+    reader.readAsDataURL(file); // Read file as base64 data
+  }
+</script>
+
+</body>

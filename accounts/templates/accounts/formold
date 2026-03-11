@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+{% load crispy_forms_tags %}
+
+<html lang="en">
+{% load static %}
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="9I2up1iCY8MRp5B86FaGgvVOKTeuzEMI6jkSlKIb">
+    <title> Register</title>
+
+    <meta name="description" content="We are online">
+
+    <!-- Google / Search Engine Tags -->
+    <meta itemprop="name" content="IBCOINEX LIMITED - Welcome to IBCOINEX">
+    <meta itemprop="description" content="We are online">
+    <meta itemprop="image" content="{% static 'temp/images/meta.png' %}">
+
+    <link rel="icon" href="{% static 'img/op3.png' %}" type="image/png" />
+
+    <link href="{% static 'temp/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css" />
+    <!-- Icons -->
+    <link href="{% static 'temp/css/materialdesignicons.min.css' %}" rel="stylesheet" type="text/css" />
+
+    <!-- Magnific -->
+    <link rel="stylesheet" href="{% static 'temp/css/line.css' %}">
+    <link href="{% static 'temp/css/flexslider.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'temp/css/magnific-popup.css' %}" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+
+    <!-- Slider -->
+    <link rel="stylesheet" href="{% static 'temp/css/owl.carousel.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'temp/css/owl.theme.default.min.css' %}" />
+    <!-- Main Css -->
+    <link href="{% static 'temp/css/style.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'temp/css/colors/default.css' %}" rel="stylesheet">
+<!-- Start of Async Drift Code -->
+    <script>
+    "use strict";
+
+    !function() {
+      var t = window.driftt = window.drift = window.driftt || [];
+      if (!t.init) {
+        if (t.invoked) return void (window.console && console.error && console.error("Drift snippet included twice."));
+        t.invoked = !0, t.methods = [ "identify", "config", "track", "reset", "debug", "show", "ping", "page", "hide", "off", "on" ], 
+        t.factory = function(e) {
+          return function() {
+            var n = Array.prototype.slice.call(arguments);
+            return n.unshift(e), t.push(n), t;
+          };
+        }, t.methods.forEach(function(e) {
+          t[e] = t.factory(e);
+        }), t.load = function(t) {
+          var e = 3e5, n = Math.ceil(new Date() / e) * e, o = document.createElement("script");
+          o.type = "text/javascript", o.async = !0, o.crossorigin = "anonymous", o.src = "https://js.driftt.com/include/" + n + "/" + t + ".js";
+          var i = document.getElementsByTagName("script")[0];
+          i.parentNode.insertBefore(o, i);
+        };
+      }
+    }();
+    drift.SNIPPET_VERSION = '0.3.1';
+    drift.load('cfv7i3g9z5nb');
+    </script>
+    <!-- End of Async Drift Code -->
+</head>
+
+
+<body class="h-100 bg-soft-primary">
+    <section class="y auth">
+        <div class="container">
+            <div class="pb-3 row justify-content-center">
+
+                <div class="col-12 col-md-6 col-lg-6 col-sm-10 col-xl-6">
+
+
+
+
+
+                    <div class="bg-white shadow card login-page roundedd border-1 ">
+                        <div class="card-body">
+                            <h4 class="text-center card-title">Create an Account</h4>
+<form method="POST" action="" enctype='multipart/form-data'>
+    {% csrf_token %}
+    
+    {{ user_form|crispy }}
+    {{ account_form|crispy }}
+    {{ address_form|crispy }}
+    <br>
+    <input class="btn btn-success" type="submit" value='Submit'>
+                                        <div class="text-center col-12">
+                                        <p class="mt-3 mb-0"><small class="mr-2 text-dark">Already have an account
+                                                </small> <a href="{% url 'accounts:login' %}" class="text-dark font-weight-bold">Login</a></p>
+                                    </div>
+</form>
+                        </div>
+                    </div>
+                    <!---->
+                </div>
+                <!--end col-->
+            </div>
+            <!--end row-->
+        </div>
+        <!--end container-->
+    </section>
+    <!--end section-->
+
+
+ 
+
+    <!-- javascript -->
+    <script src="{% static 'temp/js/jquery-3.5.1.min.js' %}"></script>
+    <script src="{% static 'temp/js/bootstrap.bundle.min.js' %}"></script>
+
+    <!-- SLIDER -->
+    <script src="{% static 'temp/js/owl.carousel.min.js' %}"></script>
+    <script src="{% static 'temp/js/owl.init.js' %}"></script>
+    <!-- Icons -->
+    <script src="{% static 'temp/js/feather.min.js' %}"></script>
+    <script src="{% static 'temp/js/bundle.js' %}"></script>
+
+    <script src="{% static 'temp/js/app.js' %}"></script>
+    <script src="{% static 'temp/js/widget.js' %}"></script>
+    <script>
+        $('#input1').on('keypress', function(e) {
+            return e.which !== 32;
+        });
+    </script>
+   <script type="text/javascript">
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({pageLanguage: 'en'}, 'google_translate_element');
+    }
+    </script>
+    <script type="text/javascript" src="{% static 'assets/element.js' %}"></script>
+</body>
+
+</html>

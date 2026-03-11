@@ -1,0 +1,104 @@
+{% extends 'core/base.html' %}
+
+{% block title %} Transactions | {{ block.super }}{% endblock title %}
+{% block content %}
+{% include "core/messages.html" %}
+{% load static %}
+<div>
+    <div>
+        <div>
+            <div>
+                <!--Page Content-->
+                <div class="row">
+                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                        <div class="site-card">
+                            <div class="site-card-header">
+                                <h3 class="title">Profile Settings</h3>
+                            </div>
+                            <div class="site-card-body">
+<form action="{% url 'accounts:update_profile' %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <div class="row">
+        <div class="col-xl-3"></div>
+    </div>
+
+    <div class="progress-steps-form">
+        <div class="col-xl-3">
+            <div class="mb-3">
+                <div class="body-title">Avatar:</div>
+                <div class="wrap-custom-file">
+                    <input type="file" name="picture" id="picture" accept=".gif, .jpg, .png" />
+
+                    <label for="picture">
+                        <img class="upload-icon" src="{% static 'assets/passport/sample.png' %}" alt="" />
+                        <span>Update Avatar</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xl-6 col-md-12">
+            <label for="{{ user_form.first_name.id_for_label }}" class="form-label">First Name</label>
+            <div class="input-group">
+                {{ user_form.first_name }}
+            </div>
+        </div>
+        <div class="col-xl-6 col-md-12">
+            <label for="{{ user_form.last_name.id_for_label }}" class="form-label">Last Name</label>
+            <div class="input-group">
+                {{ user_form.last_name }}
+            </div>
+        </div>
+        <div class="col-xl-6 col-md-12">
+            <label for="{{ user_form.username.id_for_label }}" class="form-label">Username</label>
+            <div class="input-group">
+                {{ user_form.username }}
+            </div>
+        </div>
+        <div class="col-xl-6 col-md-12">
+            <label for="{{ account_form.gender.id_for_label }}" class="form-label">Gender</label>
+            <div class="input-group">
+                {{ account_form.gender }}
+            </div>
+        </div>
+
+        <div class="col-xl-6 col-md-12">
+            <label for="{{ user_form.email.id_for_label }}" class="form-label">Email Address</label>
+            <div class="input-group">
+                {{ user_form.email }}
+            </div>
+        </div>
+
+        <div class="col-xl-6 col-md-12">
+            <label for="{{ address_form.postal_code.id_for_label }}" class="form-label">Zip</label>
+            <div class="input-group">
+                {{ address_form.postal_code }}
+            </div>
+        </div>
+
+        <div class="col-xl-6 col-md-12">
+            <label for="{{ address_form.country.id_for_label }}" class="form-label">Country</label>
+            <div class="input-group" style="">
+                {{ address_form.country }}
+            </div>
+        </div>
+        <div class="col-xl-6 col-md-12">
+            <button type="submit" class="site-btn blue-btn">Save Changes</button>
+        </div>
+    </div>
+</form>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--Page Content-->
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
